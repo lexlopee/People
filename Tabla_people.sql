@@ -1,6 +1,5 @@
---DROP SCHEMA IF EXISTS people CASCADE;
+DROP SCHEMA IF EXISTS people CASCADE;
 CREATE SCHEMA people AUTHORIZATION postgres;
-
 
 --Tabla rangos
 CREATE TABLE people.rango (
@@ -13,8 +12,8 @@ CREATE TABLE people.rango (
 
     constraint pk_id_rang primary key(id_rango),
     constraint ck_niv_rang check (nivel between 0 and 100)
-
 );
+
 --Tabla usuarios
  CREATE TABLE people.usuario (
     id_usuario INTEGER generated always as identity ,
@@ -24,12 +23,13 @@ CREATE TABLE people.rango (
     contraseña VARCHAR(255) NOT NULL,
     rol VARCHAR(50),
     fecha_alt DATE NOT NULL,
-     fecha_baja DATE NOT null,
+    fecha_baja DATE NOT null,
 
      constraint pk_id_usu primary Key( id_usuario),
      constraint ck_rol_usu check (rol in('administrador','creador','donante')),
      constraint fk_id_rang_usu foreign key (id_rango)references people.rango(id_rango)
 );
+
 -- TABLA CATEGORIA
 CREATE TABLE people.categoria (
     id_categoria INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -53,6 +53,7 @@ CREATE TABLE people.organizacion (
     CONSTRAINT fk_id_usu_org FOREIGN KEY (id_usuario) REFERENCES people.usuario(id_usuario),
     CONSTRAINT ck_est_org CHECK (estado_verificacion IN ('pendiente', 'verificada', 'rechazada'))
 );
+
 -- TABLA CAMPAÑA
 CREATE TABLE people.campaña (
     id_campaña INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -80,6 +81,7 @@ CREATE TABLE people.campaña_categoria (
     CONSTRAINT fk_id_cam_rel FOREIGN KEY (id_campaña) REFERENCES people.campaña(id_campaña),
     CONSTRAINT fk_id_cat_rel FOREIGN KEY (id_categoria) REFERENCES people.categoria(id_categoria)
 );
+
 -- TABLA DONACION
 CREATE TABLE people.donacion (
     id_donacion INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -138,6 +140,7 @@ CREATE TABLE people.reportes (
     CONSTRAINT fk_id_usu_rep FOREIGN KEY (id_usuario) REFERENCES people.usuario(id_usuario),
     CONSTRAINT fk_id_cam_rep FOREIGN KEY (id_campaña) REFERENCES people.campaña(id_campaña)
 );
+
 --Tabla TRANSACCION
 CREATE TABLE people.transaccion (
     id_transaccion INTEGER GENERATED ALWAYS AS IDENTITY,
@@ -147,6 +150,7 @@ CREATE TABLE people.transaccion (
     CONSTRAINT pk_id_tra PRIMARY KEY(id_transaccion),
     CONSTRAINT fk_id_don_tra FOREIGN KEY (id_donacion) REFERENCES people.donacion(id_donacion)
 );
+
 --Tabla CAMPAING UPDATE
 CREATE TABLE people.campaign_updates (
     id_update INTEGER GENERATED ALWAYS AS IDENTITY,
