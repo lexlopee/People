@@ -1,0 +1,27 @@
+{
+  "HEADER": {
+    "SEARCH": "Buscar...",
+    "DONATE": "Donar",
+    "FUNDRAISE": "Recolectar fondos",
+    "BLOG": "Blog",
+    "ABOUT": "Acerca de",
+    "LOGIN": "Iniciar sesión",
+    "REGISTER": "Crear cuenta"
+  },
+  "FOOTER": {
+    "DESCRIPTION": "Plataforma de crowdfunding creada para impulsar proyectos liderados por mujeres.",
+    "ABOUT_US": "Sobre nosotros",
+    "WHO_WE_ARE": "Quiénes somos",
+    "OUR_PURPOSE": "Nuestro propósito",
+    "TRANSPARENCY": "Transparencia",
+    "HELP": "Ayuda",
+    "SUPPORT_CENTER": "Centro de soporte",
+    "HOW_TO_CREATE": "Cómo crear una campaña",
+    "FAQ": "Preguntas frecuentes",
+    "LEGAL": "Legal",
+    "TERMS": "Términos y condiciones",
+    "PRIVACY": "Política de privacidad",
+    "COOKIES": "Cookies",
+    "COPYRIGHT": "Todos los derechos reservados."
+  }
+}

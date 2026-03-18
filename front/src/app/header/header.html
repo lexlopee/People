@@ -11,19 +11,34 @@
     <div class="flex-1 max-w-md">
       <input
         type="text"
-        placeholder="Buscar..."
+        placeholder="{{ 'HEADER.SEARCH' | translate }}"
         class="w-full px-4 py-2 rounded-md text-black focus:outline-none"
       />
     </div>
 
-    <!-- BOTONES DE SESIÓN -->
+    <!-- BOTONES DE SESIÓN + SELECTOR DE IDIOMA -->
     <div class="flex items-center gap-3">
+
+      <!-- Selector de idioma -->
+      <div class="relative group cursor-pointer">
+        <span class="flex items-center gap-2">
+          🌐 {{ currentLang.toUpperCase() }}
+        </span>
+
+        <div class="absolute left-0 mt-2 hidden group-hover:block bg-white text-black rounded-md shadow-lg w-32">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('es')">Español</li>
+            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('en')">English</li>
+          </ul>
+        </div>
+      </div>
+
       <button class="px-4 py-2 rounded-md bg-white text-[#755D7A] font-semibold hover:bg-[#FFD3A1] transition">
-        Iniciar sesión
+        {{ 'HEADER.LOGIN' | translate }}
       </button>
 
       <button class="px-4 py-2 rounded-md bg-[#FFD3A1] text-black font-semibold hover:bg-[#7F468A] hover:text-white transition">
-        Crear cuenta
+        {{ 'HEADER.REGISTER' | translate }}
       </button>
     </div>
   </div>
@@ -34,51 +49,51 @@
 
       <!-- DONAR -->
       <li class="relative group cursor-pointer">
-        <span>Donar</span>
+        <span>{{ 'HEADER.DONATE' | translate }}</span>
         <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56">
           <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Categorías</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CATEGORIES' | translate }}</li>
           </ul>
         </div>
       </li>
 
       <!-- RECOLECTAR FONDOS -->
       <li class="relative group cursor-pointer">
-        <span>Recolectar fondos</span>
+        <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
         <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
           <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Iniciar campaña</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Categorías</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Recaudación en equipo</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.START_CAMPAIGN' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CATEGORIES' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.TEAM_FUNDRAISING' | translate }}</li>
           </ul>
         </div>
       </li>
 
       <!-- BLOG -->
       <li class="relative group cursor-pointer">
-        <span>Blog</span>
+        <span>{{ 'HEADER.BLOG' | translate }}</span>
         <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
           <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Recaudaciones</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Consejos</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Ideas</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.RECAUDACIONES' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CONSEJOS' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.IDEAS' | translate }}</li>
           </ul>
         </div>
       </li>
 
       <!-- ACERCA DE -->
       <li class="relative group cursor-pointer">
-        <span>Acerca de</span>
+        <span>{{ 'HEADER.ABOUT' | translate }}</span>
         <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72">
           <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Cómo funciona</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Garantía</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Países participantes</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Precios</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Centro de ayuda</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Información</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Centro de prensa</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Empleos</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.HOW_IT_WORKS' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.GUARANTEE' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.COUNTRIES' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.PRICES' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.HELP_CENTER' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.INFO' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.PRESS' | translate }}</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.JOBS' | translate }}</li>
           </ul>
         </div>
       </li>

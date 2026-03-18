@@ -1,0 +1,27 @@
+{
+  "HEADER": {
+    "SEARCH": "Search...",
+    "DONATE": "Donate",
+    "FUNDRAISE": "Fundraise",
+    "BLOG": "Blog",
+    "ABOUT": "About",
+    "LOGIN": "Log in",
+    "REGISTER": "Sign up"
+  },
+  "FOOTER": {
+    "DESCRIPTION": "Crowdfunding platform created to support women-led projects.",
+    "ABOUT_US": "About us",
+    "WHO_WE_ARE": "Who we are",
+    "OUR_PURPOSE": "Our purpose",
+    "TRANSPARENCY": "Transparency",
+    "HELP": "Help",
+    "SUPPORT_CENTER": "Support center",
+    "HOW_TO_CREATE": "How to create a campaign",
+    "FAQ": "Frequently asked questions",
+    "LEGAL": "Legal",
+    "TERMS": "Terms and conditions",
+    "PRIVACY": "Privacy policy",
+    "COOKIES": "Cookies",
+    "COPYRIGHT": "All rights reserved."
+  }
+}

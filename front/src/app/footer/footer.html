@@ -1,1 +1,54 @@
-<p>footer works!</p>
+<footer class="w-full bg-[#755D7A] text-[#FCF4FB] py-12 px-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+
+    <!-- Logo + descripción -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">People</h2>
+      <p class="text-sm opacity-80">
+        {{ 'FOOTER.DESCRIPTION' | translate }}
+      </p>
+    </div>
+
+    <!-- Sección: Sobre nosotros -->
+    <div>
+      <h3 class="text-lg font-semibold mb-3 text-[#FFD3A1]">
+        {{ 'FOOTER.ABOUT_US' | translate }}
+      </h3>
+      <ul class="space-y-2">
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.WHO_WE_ARE' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.OUR_PURPOSE' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.TRANSPARENCY' | translate }}</a></li>
+      </ul>
+    </div>
+
+    <!-- Sección: Ayuda -->
+    <div>
+      <h3 class="text-lg font-semibold mb-3 text-[#FFD3A1]">
+        {{ 'FOOTER.HELP' | translate }}
+      </h3>
+      <ul class="space-y-2">
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.SUPPORT_CENTER' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.HOW_TO_CREATE' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.FAQ' | translate }}</a></li>
+      </ul>
+    </div>
+
+    <!-- Sección: Legal -->
+    <div>
+      <h3 class="text-lg font-semibold mb-3 text-[#FFD3A1]">
+        {{ 'FOOTER.LEGAL' | translate }}
+      </h3>
+      <ul class="space-y-2">
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.TERMS' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.PRIVACY' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1]" href="#">{{ 'FOOTER.COOKIES' | translate }}</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Línea inferior -->
+  <div class="mt-10 border-t border-[#FCF4FB]/30 pt-6 text-center text-sm opacity-70">
+    © {{ currentYear }} People — {{ 'FOOTER.COPYRIGHT' | translate }}
+  </div>
+</footer>
