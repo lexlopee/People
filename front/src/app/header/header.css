@@ -1,0 +1,4 @@
+/* Asegura que los dropdowns no parpadeen al pasar el ratón */
+.group:hover .group-hover\:block {
+  display: block;
+}

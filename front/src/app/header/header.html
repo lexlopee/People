@@ -1,1 +1,88 @@
-<p>header works!</p>
+<header class="sticky top-0 z-50 bg-[#755D7A] text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-4">
+
+    <!-- LOGO -->
+    <div class="flex items-center gap-2 cursor-pointer">
+      <div class="w-10 h-10 bg-[#FCF4FB] rounded-md"></div>
+      <span class="text-xl font-semibold">TuLogo</span>
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="flex-1 max-w-md">
+      <input
+        type="text"
+        placeholder="Buscar..."
+        class="w-full px-4 py-2 rounded-md text-black focus:outline-none"
+      />
+    </div>
+
+    <!-- BOTONES DE SESIÓN -->
+    <div class="flex items-center gap-3">
+      <button class="px-4 py-2 rounded-md bg-white text-[#755D7A] font-semibold hover:bg-[#FFD3A1] transition">
+        Iniciar sesión
+      </button>
+
+      <button class="px-4 py-2 rounded-md bg-[#FFD3A1] text-black font-semibold hover:bg-[#7F468A] hover:text-white transition">
+        Crear cuenta
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="bg-[#7F468A] text-white">
+    <ul class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-8">
+
+      <!-- DONAR -->
+      <li class="relative group cursor-pointer">
+        <span>Donar</span>
+        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Categorías</li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- RECOLECTAR FONDOS -->
+      <li class="relative group cursor-pointer">
+        <span>Recolectar fondos</span>
+        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Iniciar campaña</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Categorías</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Recaudación en equipo</li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- BLOG -->
+      <li class="relative group cursor-pointer">
+        <span>Blog</span>
+        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Recaudaciones</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Consejos</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Ideas</li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- ACERCA DE -->
+      <li class="relative group cursor-pointer">
+        <span>Acerca de</span>
+        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Cómo funciona</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Garantía</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Países participantes</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Precios</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Centro de ayuda</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Información</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Centro de prensa</li>
+            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">Empleos</li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </nav>
+</header>
