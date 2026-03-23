@@ -1,12 +1,26 @@
 {
   "HEADER": {
     "SEARCH": "Search...",
+    "LOGIN": "Log in",
+    "REGISTER": "Sign up",
     "DONATE": "Donate",
     "FUNDRAISE": "Fundraise",
     "BLOG": "Blog",
     "ABOUT": "About",
-    "LOGIN": "Log in",
-    "REGISTER": "Sign up"
+    "CATEGORIES": "Categories",
+    "START_CAMPAIGN": "Start a campaign",
+    "TEAM_FUNDRAISING": "Team fundraising",
+    "RECAUDACIONES": "Fundraisers",
+    "CONSEJOS": "Fundraising tips",
+    "IDEAS": "Fundraising ideas",
+    "HOW_IT_WORKS": "How it works",
+    "GUARANTEE": "Guarantee",
+    "COUNTRIES": "Countries",
+    "PRICES": "Pricing",
+    "HELP_CENTER": "Help center",
+    "INFO": "More information",
+    "PRESS": "Press",
+    "JOBS": "Jobs"
   },
   "FOOTER": {
     "DESCRIPTION": "Crowdfunding platform created to support women-led projects.",

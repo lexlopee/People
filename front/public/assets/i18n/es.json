@@ -1,12 +1,26 @@
 {
   "HEADER": {
     "SEARCH": "Buscar...",
+    "LOGIN": "Iniciar sesión",
+    "REGISTER": "Crear cuenta",
     "DONATE": "Donar",
     "FUNDRAISE": "Recolectar fondos",
     "BLOG": "Blog",
     "ABOUT": "Acerca de",
-    "LOGIN": "Iniciar sesión",
-    "REGISTER": "Crear cuenta"
+    "CATEGORIES": "Categorías",
+    "START_CAMPAIGN": "Crear una campaña",
+    "TEAM_FUNDRAISING": "Recaudación de fondos en equipo",
+    "RECAUDACIONES": "Recaudaciones de fondos",
+    "CONSEJOS": "Consejos para recaudar fondos",
+    "IDEAS": "Ideas para recaudar fondos",
+    "HOW_IT_WORKS": "Cómo funciona",
+    "GUARANTEE": "Garantía",
+    "COUNTRIES": "Países",
+    "PRICES": "Precios",
+    "HELP_CENTER": "Centro de ayuda",
+    "INFO": "Más información",
+    "PRESS": "Prensa",
+    "JOBS": "Empleo"
   },
   "FOOTER": {
     "DESCRIPTION": "Plataforma de crowdfunding creada para impulsar proyectos liderados por mujeres.",

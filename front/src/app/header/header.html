@@ -1,31 +1,20 @@
 <header class="sticky top-0 z-50 bg-[#755D7A] text-white shadow-md">
   <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-4">
-
-    <!-- LOGO -->
     <div class="flex items-center gap-2 cursor-pointer">
-      <div class="w-10 h-10 bg-[#FCF4FB] rounded-md"></div>
-      <span class="text-xl font-semibold">TuLogo</span>
+      <img src="/assets/img/LogoPeople.png" alt="Logo People" class="w-10 h-10 object-contain" />
+      <span class="text-xl font-semibold">People</span>
     </div>
 
-    <!-- BUSCADOR -->
     <div class="flex-1 max-w-md">
-      <input
-        type="text"
-        placeholder="{{ 'HEADER.SEARCH' | translate }}"
-        class="w-full px-4 py-2 rounded-md text-black focus:outline-none"
-      />
+      <input type="text" placeholder="{{ 'HEADER.SEARCH' | translate }}" class="w-full px-4 py-2 rounded-md text-black focus:outline-none" />
     </div>
 
-    <!-- BOTONES DE SESIÓN + SELECTOR DE IDIOMA -->
-    <div class="flex items-center gap-3">
-
-      <!-- Selector de idioma -->
-      <div class="relative group cursor-pointer">
-        <span class="flex items-center gap-2">
-          🌐 {{ currentLang.toUpperCase() }}
+    <div class="flex items-center gap-4">
+      <div class="relative group cursor-pointer py-2"> 
+        <span class="flex items-center gap-2"> 
+          🌐 {{ currentLang.toUpperCase() }} 
         </span>
-
-        <div class="absolute left-0 mt-2 hidden group-hover:block bg-white text-black rounded-md shadow-lg w-32">
+        <div class="absolute left-0 top-full hidden group-hover:block bg-white text-black rounded-md shadow-lg w-32 z-50">
           <ul class="py-2">
             <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('es')">Español</li>
             <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('en')">English</li>
@@ -43,61 +32,78 @@
     </div>
   </div>
 
-  <!-- NAVBAR -->
   <nav class="bg-[#7F468A] text-white">
-    <ul class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-8">
+  <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8">
+    
+    <li class="relative group cursor-pointer py-3">
+      <span>{{ 'HEADER.DONATE' | translate }}</span>
+      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56 z-50 overflow-hidden">
+        <ul class="py-1">
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.CATEGORIES' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
 
-      <!-- DONAR -->
-      <li class="relative group cursor-pointer">
-        <span>{{ 'HEADER.DONATE' | translate }}</span>
-        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56">
-          <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CATEGORIES' | translate }}</li>
-          </ul>
-        </div>
-      </li>
+    <li class="relative group cursor-pointer py-3">
+      <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
+      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+        <ul class="py-1">
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.START_CAMPAIGN' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.CATEGORIES' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.TEAM_FUNDRAISING' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
 
-      <!-- RECOLECTAR FONDOS -->
-      <li class="relative group cursor-pointer">
-        <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
-        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
-          <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.START_CAMPAIGN' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CATEGORIES' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.TEAM_FUNDRAISING' | translate }}</li>
-          </ul>
-        </div>
-      </li>
+    <li class="relative group cursor-pointer py-3">
+      <span>{{ 'HEADER.BLOG' | translate }}</span>
+      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+        <ul class="py-1">
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.RECAUDACIONES' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.CONSEJOS' | translate }}
+            </a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+              {{ 'HEADER.IDEAS' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
 
-      <!-- BLOG -->
-      <li class="relative group cursor-pointer">
-        <span>{{ 'HEADER.BLOG' | translate }}</span>
-        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64">
-          <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.RECAUDACIONES' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.CONSEJOS' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.IDEAS' | translate }}</li>
-          </ul>
-        </div>
-      </li>
-
-      <!-- ACERCA DE -->
-      <li class="relative group cursor-pointer">
-        <span>{{ 'HEADER.ABOUT' | translate }}</span>
-        <div class="absolute left-0 mt-2 hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72">
-          <ul class="py-2">
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.HOW_IT_WORKS' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.GUARANTEE' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.COUNTRIES' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.PRICES' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.HELP_CENTER' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.INFO' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.PRESS' | translate }}</li>
-            <li class="px-4 py-2 hover:bg-[#FFD3A1] cursor-pointer">{{ 'HEADER.JOBS' | translate }}</li>
-          </ul>
-        </div>
-      </li>
-
-    </ul>
-  </nav>
+    <li class="relative group cursor-pointer py-3">
+      <span>{{ 'HEADER.ABOUT' | translate }}</span>
+      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72 z-50 overflow-hidden">
+        <ul class="py-1">
+          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HOW_IT_WORKS' | translate }}</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.GUARANTEE' | translate }}</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HELP_CENTER' | translate }}</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>
 </header>
