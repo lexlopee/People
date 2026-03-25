@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -15,7 +15,10 @@ export function HttpLoaderFactory(http: HttpClient) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(),
+
+    // 👇 ESTA ES LA LÍNEA IMPORTANTE
+    provideHttpClient(withFetch()),
+
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
