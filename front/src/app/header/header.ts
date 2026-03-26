@@ -12,10 +12,7 @@ export class Header {
 
   currentLang = 'es';
 
-  constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang('es');
-    this.translate.use('es');
-  }
+  constructor(private translate: TranslateService) {} // 👈 sin setDefaultLang ni use()
 
   changeLang(lang: string) {
     this.currentLang = lang;
