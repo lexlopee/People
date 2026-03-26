@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
+;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
