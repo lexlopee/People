@@ -33,77 +33,82 @@
   </div>
 
   <nav class="bg-[#7F468A] text-white">
-  <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8">
-    
-    <li class="relative group cursor-pointer py-3">
-      <span>{{ 'HEADER.DONATE' | translate }}</span>
-      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56 z-50 overflow-hidden">
-        <ul class="py-1">
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.CATEGORIES' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </li>
+    <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8">
 
-    <li class="relative group cursor-pointer py-3">
-      <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
-      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
-        <ul class="py-1">
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.START_CAMPAIGN' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.CATEGORIES' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.TEAM_FUNDRAISING' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </li>
+      <!-- DONAR -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.DONATE' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li>
+              <a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.CATEGORIES' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
 
-    <li class="relative group cursor-pointer py-3">
-      <span>{{ 'HEADER.BLOG' | translate }}</span>
-      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
-        <ul class="py-1">
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.RECAUDACIONES' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.CONSEJOS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
-              {{ 'HEADER.IDEAS' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </li>
+      <!-- RECOLECTAR FONDOS -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li>
+              <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.START_CAMPAIGN' | translate }}
+              </a>
+            </li>
+            <li>
+              <a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.CATEGORIES' | translate }}
+              </a>
+            </li>
+            <li>
+              <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.TEAM_FUNDRAISING' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
 
-    <li class="relative group cursor-pointer py-3">
-      <span>{{ 'HEADER.ABOUT' | translate }}</span>
-      <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72 z-50 overflow-hidden">
-        <ul class="py-1">
-          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HOW_IT_WORKS' | translate }}</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.GUARANTEE' | translate }}</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HELP_CENTER' | translate }}</a></li>
-        </ul>
-      </div>
-    </li>
-  </ul>
-</nav>
+      <!-- BLOG -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.BLOG' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li>
+              <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.RECAUDACIONES' | translate }}
+              </a>
+            </li>
+            <li>
+              <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.CONSEJOS' | translate }}
+              </a>
+            </li>
+            <li>
+              <a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.IDEAS' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- ACERCA DE -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.ABOUT' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HOW_IT_WORKS' | translate }}</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.GUARANTEE' | translate }}</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HELP_CENTER' | translate }}</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </nav>
 </header>
