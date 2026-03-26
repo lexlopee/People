@@ -1,32 +1,33 @@
 import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-categoria',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, TranslateModule],
   templateUrl: './categoria.html',
   styleUrls: ['./categoria.css']
 })
 export class Categoria {
   categorias = [
-    'Medicina',
-    'In memoriam',
-    'Emergencia',
-    'Organización sin ánimo de lucro',
-    'Educación',
-    'Animales',
-    'Medioambiente',
-    'Empresa',
-    'Comunidad',
-    'Competición',
-    'Artes creativas',
-    'Evento',
-    'Religión',
-    'Familia',
-    'Deportes',
-    'Viajes',
-    'Voluntariado',
-    'Deseos'
+    'CATEGORIES.MEDICINE',
+    'CATEGORIES.IN_MEMORIAM',
+    'CATEGORIES.EMERGENCY',
+    'CATEGORIES.NONPROFIT',
+    'CATEGORIES.EDUCATION',
+    'CATEGORIES.ANIMALS',
+    'CATEGORIES.ENVIRONMENT',
+    'CATEGORIES.BUSINESS',
+    'CATEGORIES.COMMUNITY',
+    'CATEGORIES.COMPETITION',
+    'CATEGORIES.CREATIVE_ARTS',
+    'CATEGORIES.EVENT',
+    'CATEGORIES.RELIGION',
+    'CATEGORIES.FAMILY',
+    'CATEGORIES.SPORTS',
+    'CATEGORIES.TRAVEL',
+    'CATEGORIES.VOLUNTEERING',
+    'CATEGORIES.WISHES'
   ];
 }
