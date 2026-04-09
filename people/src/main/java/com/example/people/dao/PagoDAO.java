@@ -42,6 +42,14 @@ public interface PagoDAO {
     List<PagosEntity> findByProyecto(Integer idProyecto);
 
     /**
+     * Obtiene todos los pagos asociados a una campaña.
+     *
+     * @param idCampania ID de la campaña.
+     * @return Lista de pagos asociados a esa campaña.
+     */
+    List<PagosEntity> findByCampania(Integer idCampania);
+
+    /**
      * Calcula el total recaudado por un proyecto.
      *
      * @param idProyecto ID del proyecto.
@@ -65,6 +73,8 @@ public interface PagoDAO {
      */
     void delete(Integer id);
 }
+
+
 
 
 

@@ -36,7 +36,11 @@ public class PagoImplDAO implements PagoDAO {
 
     @Override
     public List<PagosEntity> findByUsuario(Integer idUsuario) {
-        String jpql = "FROM PagoEntity p WHERE p.idUsuario = :idUsuario";
+        String jpql = """
+            SELECT p FROM PagosEntity p
+            WHERE p.donante.id = :idUsuario
+        """;
+
         return entityManager.createQuery(jpql, PagosEntity.class)
                 .setParameter("idUsuario", idUsuario)
                 .getResultList();
@@ -44,15 +48,41 @@ public class PagoImplDAO implements PagoDAO {
 
     @Override
     public List<PagosEntity> findByProyecto(Integer idProyecto) {
-        String jpql = "FROM PagoEntity p WHERE p.idProyecto = :idProyecto";
+        // ⚠ Este método se mantiene por compatibilidad,
+        // pero tu entidad NO tiene "proyecto", así que lo adaptamos a "campania".
+        String jpql = """
+            SELECT p FROM PagosEntity p
+            WHERE p.campania.id = :idProyecto
+        """;
+
         return entityManager.createQuery(jpql, PagosEntity.class)
                 .setParameter("idProyecto", idProyecto)
                 .getResultList();
     }
 
+    /**
+     * Nuevo método necesario para CampaniaService.
+     * Obtiene todos los pagos asociados a una campaña.
+     */
+    @Override
+    public List<PagosEntity> findByCampania(Integer idCampania) {
+        String jpql = """
+            SELECT p FROM PagosEntity p
+            WHERE p.campania.id = :idCampania
+        """;
+
+        return entityManager.createQuery(jpql, PagosEntity.class)
+                .setParameter("idCampania", idCampania)
+                .getResultList();
+    }
+
     @Override
     public Double obtenerTotalRecaudado(Integer idProyecto) {
-        String jpql = "SELECT SUM(p.monto) FROM PagoEntity p WHERE p.idProyecto = :idProyecto";
+        String jpql = """
+            SELECT SUM(p.monto) FROM PagosEntity p
+            WHERE p.campania.id = :idProyecto
+        """;
+
         Double total = entityManager.createQuery(jpql, Double.class)
                 .setParameter("idProyecto", idProyecto)
                 .getSingleResult();
@@ -62,7 +92,12 @@ public class PagoImplDAO implements PagoDAO {
 
     @Override
     public boolean usuarioHaPagado(Integer idUsuario, Integer idProyecto) {
-        String jpql = "SELECT COUNT(p) FROM PagoEntity p WHERE p.idUsuario = :idUsuario AND p.idProyecto = :idProyecto";
+        String jpql = """
+            SELECT COUNT(p) FROM PagosEntity p
+            WHERE p.donante.id = :idUsuario
+            AND p.campania.id = :idProyecto
+        """;
+
         Long count = entityManager.createQuery(jpql, Long.class)
                 .setParameter("idUsuario", idUsuario)
                 .setParameter("idProyecto", idProyecto)
@@ -79,4 +114,5 @@ public class PagoImplDAO implements PagoDAO {
         }
     }
 }
+
 
