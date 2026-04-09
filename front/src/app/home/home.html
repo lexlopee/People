@@ -1,0 +1,132 @@
+<!-- ===================== HERO ===================== -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-badge">{{ 'HOME.HERO_BADGE' | translate }}</span>
+    <h1 class="hero-title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
+    <p class="hero-subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
+    <div class="hero-buttons">
+      <a routerLink="/register" class="btn-primary">{{ 'HOME.HERO_CTA_PRIMARY' | translate }}</a>
+      <a routerLink="/categoria" class="btn-secondary">{{ 'HOME.HERO_CTA_SECONDARY' | translate }}</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS ===================== -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let s of stats">
+      <span class="stat-number">{{ s.key | translate }}</span>
+      <span class="stat-label">{{ s.label | translate }}</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUIÉNES SOMOS ===================== -->
+<section class="about-section">
+  <div class="section-container two-col">
+    <div class="about-text">
+      <span class="section-tag">{{ 'HOME.ABOUT_TAG' | translate }}</span>
+      <h2 class="section-title">{{ 'HOME.ABOUT_TITLE' | translate }}</h2>
+      <p class="section-body">{{ 'HOME.ABOUT_P1' | translate }}</p>
+      <p class="section-body">{{ 'HOME.ABOUT_P2' | translate }}</p>
+      <a routerLink="/categoria" class="btn-outline">{{ 'HOME.ABOUT_CTA' | translate }}</a>
+    </div>
+    <div class="about-image-placeholder">
+      <div class="image-placeholder-box">
+        <span class="placeholder-icon">🖼️</span>
+        <span class="placeholder-text">{{ 'HOME.IMAGE_PLACEHOLDER' | translate }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CÓMO FUNCIONA ===================== -->
+<section class="how-section">
+  <div class="section-container">
+    <span class="section-tag center">{{ 'HOME.HOW_TAG' | translate }}</span>
+    <h2 class="section-title center">{{ 'HOME.HOW_TITLE' | translate }}</h2>
+    <p class="section-body center">{{ 'HOME.HOW_SUBTITLE' | translate }}</p>
+
+    <div class="steps-grid">
+      <div class="step-card" *ngFor="let step of steps; let i = index">
+        <div class="step-number">{{ i + 1 }}</div>
+        <div class="step-icon">{{ step.icon }}</div>
+        <h3 class="step-title">{{ step.title | translate }}</h3>
+        <p class="step-desc">{{ step.desc | translate }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NUESTROS VALORES ===================== -->
+<section class="values-section">
+  <div class="section-container">
+    <span class="section-tag center">{{ 'HOME.VALUES_TAG' | translate }}</span>
+    <h2 class="section-title center">{{ 'HOME.VALUES_TITLE' | translate }}</h2>
+
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let v of values">
+        <span class="value-icon">{{ v.icon }}</span>
+        <h3 class="value-title">{{ v.title | translate }}</h3>
+        <p class="value-desc">{{ v.desc | translate }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MISIÓN ===================== -->
+<section class="mission-section">
+  <div class="section-container two-col reverse">
+    <div class="about-image-placeholder">
+      <div class="image-placeholder-box">
+        <span class="placeholder-icon">🖼️</span>
+        <span class="placeholder-text">{{ 'HOME.IMAGE_PLACEHOLDER' | translate }}</span>
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="section-tag">{{ 'HOME.MISSION_TAG' | translate }}</span>
+      <h2 class="section-title">{{ 'HOME.MISSION_TITLE' | translate }}</h2>
+      <p class="section-body">{{ 'HOME.MISSION_P1' | translate }}</p>
+      <p class="section-body">{{ 'HOME.MISSION_P2' | translate }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TESTIMONIOS ===================== -->
+<section class="testimonials-section">
+  <div class="section-container">
+    <span class="section-tag center">{{ 'HOME.TESTIMONIALS_TAG' | translate }}</span>
+    <h2 class="section-title center">{{ 'HOME.TESTIMONIALS_TITLE' | translate }}</h2>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-avatar-placeholder"></div>
+        <p class="testimonial-quote">{{ 'HOME.TESTIMONIAL_1_QUOTE' | translate }}</p>
+        <span class="testimonial-author">{{ 'HOME.TESTIMONIAL_1_AUTHOR' | translate }}</span>
+      </div>
+      <div class="testimonial-card featured">
+        <div class="testimonial-avatar-placeholder"></div>
+        <p class="testimonial-quote">{{ 'HOME.TESTIMONIAL_2_QUOTE' | translate }}</p>
+        <span class="testimonial-author">{{ 'HOME.TESTIMONIAL_2_AUTHOR' | translate }}</span>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-avatar-placeholder"></div>
+        <p class="testimonial-quote">{{ 'HOME.TESTIMONIAL_3_QUOTE' | translate }}</p>
+        <span class="testimonial-author">{{ 'HOME.TESTIMONIAL_3_AUTHOR' | translate }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2 class="cta-title">{{ 'HOME.CTA_TITLE' | translate }}</h2>
+    <p class="cta-subtitle">{{ 'HOME.CTA_SUBTITLE' | translate }}</p>
+    <div class="hero-buttons">
+      <a routerLink="/register" class="btn-primary">{{ 'HOME.CTA_BTN_PRIMARY' | translate }}</a>
+      <a routerLink="/categoria" class="btn-secondary">{{ 'HOME.CTA_BTN_SECONDARY' | translate }}</a>
+    </div>
+  </div>
+</section>
