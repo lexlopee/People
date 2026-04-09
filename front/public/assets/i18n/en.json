@@ -83,7 +83,12 @@
     "SPORTS": "Sports",
     "TRAVEL": "Travel",
     "VOLUNTEERING": "Volunteering",
-    "WISHES": "Wishes"
+    "WISHES": "Wishes",
+    "BACK": "← Back to categories",
+    "DETAIL_SUBTITLE": "Explore campaigns in this category and support the causes you care about most.",
+    "CAMPAIGNS_COUNT": "Available campaigns",
+    "CREATE_CAMPAIGN": "Create campaign",
+    "PLACEHOLDER_NOTE": "Campaigns will appear here once connected to the backend."
   },
   "HOME": {
     "HERO_BADGE": "✨ YOUR TEXT HERE",
