@@ -4,6 +4,7 @@ import { Categoria } from './component/categoria/categoria';
 import { CategoriaDetalle } from './component/categoria-detalle/categoria-detalle';
 import { Login } from './login/login';
 import { Register } from './register/register';
+import { Legal } from './legal/legal';
 
 export const routes: Routes = [
   { path: '',                      component: Home },
@@ -11,5 +12,6 @@ export const routes: Routes = [
   { path: 'categoria/:slug',       component: CategoriaDetalle },
   { path: 'login',                 component: Login },
   { path: 'register',              component: Register },
+  { path: 'legal/:slug',           component: Legal },
   { path: '**',                    redirectTo: '' }
 ];

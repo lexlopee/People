@@ -1,0 +1,117 @@
+/* ===== LEGAL PAGE ===== */
+
+.legal-page {
+  min-height: 100vh;
+  background: #FCF4FB;
+}
+
+/* Hero */
+.legal-hero {
+  background: linear-gradient(135deg, #755D7A 0%, #7F468A 50%, #4a2d6e 100%);
+  padding: 4rem 2rem 3rem;
+}
+
+.legal-hero-content {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.legal-back {
+  display: inline-block;
+  color: rgba(252, 244, 251, 0.75);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s;
+}
+
+.legal-back:hover {
+  color: #FFD3A1;
+}
+
+.legal-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.legal-updated {
+  font-size: 0.85rem;
+  color: rgba(252, 244, 251, 0.65);
+  font-style: italic;
+}
+
+/* Body */
+.legal-body {
+  padding: 3rem 2rem 5rem;
+}
+
+.legal-container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Intro */
+.legal-intro {
+  font-size: 1.05rem;
+  color: #4a4a6a;
+  line-height: 1.85;
+  margin-bottom: 2.5rem;
+  padding: 1.5rem 2rem;
+  background: #ffffff;
+  border-left: 4px solid #7F468A;
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 2px 12px rgba(117, 93, 122, 0.07);
+}
+
+/* Sections */
+.legal-section {
+  margin-bottom: 2.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(117, 93, 122, 0.06);
+  border: 1px solid rgba(117, 93, 122, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.legal-section:hover {
+  box-shadow: 0 4px 24px rgba(117, 93, 122, 0.12);
+}
+
+.legal-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #7F468A;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.legal-section-body {
+  font-size: 0.95rem;
+  color: #4a4a6a;
+  line-height: 1.85;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .legal-hero {
+    padding: 3rem 1.25rem 2rem;
+  }
+
+  .legal-body {
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  .legal-intro {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .legal-section {
+    padding: 1.5rem 1.25rem;
+  }
+}

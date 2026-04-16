@@ -1,0 +1,30 @@
+<div class="legal-page">
+
+  <!-- Cabecera de la página -->
+  <div class="legal-hero">
+    <div class="legal-hero-content">
+      <a routerLink="/" class="legal-back">{{ 'LEGAL.BACK' | translate }}</a>
+      <h1 class="legal-title">{{ currentPage.titleKey | translate }}</h1>
+      <p *ngIf="currentPage.updatedKey" class="legal-updated">
+        {{ currentPage.updatedKey | translate }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="legal-body">
+    <div class="legal-container">
+
+      <!-- Intro -->
+      <p class="legal-intro">{{ currentPage.introKey | translate }}</p>
+
+      <!-- Secciones -->
+      <div class="legal-section" *ngFor="let s of currentPage.sections">
+        <h2 class="legal-section-title">{{ s.titleKey | translate }}</h2>
+        <p class="legal-section-body">{{ s.bodyKey | translate }}</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
