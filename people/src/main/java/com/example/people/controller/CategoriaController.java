@@ -21,4 +21,4 @@ public class CategoriaController {
         // Retornar la lista de categorías mapeadas desde tu base de datos
         return ResponseEntity.ok(new ArrayList<>());
     }
-}
+}//
