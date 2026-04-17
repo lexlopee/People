@@ -12,6 +12,7 @@ export const routes: Routes = [
   { path: 'categoria/:slug',       component: CategoriaDetalle },
   { path: 'login',                 component: Login },
   { path: 'register',              component: Register },
-  { path: 'legal/:slug',           component: Legal },
+  { path: 'legal',                 component: Legal },        // ← sin :slug
+  { path: 'legal/:slug',           component: Legal },        // ← mantener por compatibilidad
   { path: '**',                    redirectTo: '' }
 ];

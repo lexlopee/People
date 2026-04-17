@@ -15,9 +15,9 @@
         {{ 'FOOTER.ABOUT_US' | translate }}
       </h3>
       <ul class="space-y-2">
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="about">{{ 'FOOTER.WHO_WE_ARE' | translate }}</a></li>
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="about">{{ 'FOOTER.OUR_PURPOSE' | translate }}</a></li>
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="transparency">{{ 'FOOTER.TRANSPARENCY' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('about')">{{ 'FOOTER.WHO_WE_ARE' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('about')">{{ 'FOOTER.OUR_PURPOSE' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('transparency')">{{ 'FOOTER.TRANSPARENCY' | translate }}</a></li>
       </ul>
     </div>
 
@@ -39,9 +39,9 @@
         {{ 'FOOTER.LEGAL' | translate }}
       </h3>
       <ul class="space-y-2">
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="terms">{{ 'FOOTER.TERMS' | translate }}</a></li>
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="privacy">{{ 'FOOTER.PRIVACY' | translate }}</a></li>
-        <li><a class="hover:text-[#FFD3A1]" [routerLink]="['/legal']" fragment="cookies">{{ 'FOOTER.COOKIES' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('terms')">{{ 'FOOTER.TERMS' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('privacy')">{{ 'FOOTER.PRIVACY' | translate }}</a></li>
+        <li><a class="hover:text-[#FFD3A1] cursor-pointer" (click)="goTo('cookies')">{{ 'FOOTER.COOKIES' | translate }}</a></li>
       </ul>
     </div>
 

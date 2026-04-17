@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -10,7 +10,31 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './legal.html',
   styleUrls: ['./legal.css']
 })
-export class Legal {
+export class Legal implements OnInit {
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    // Si viene con parámetro de ruta /legal/:slug, hacemos scroll automático
+    this.route.params.subscribe(params => {
+      if (params['slug']) {
+        setTimeout(() => {
+          const el = document.getElementById(params['slug']);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+
+    // También soportamos query param: /legal?section=terms
+    this.route.queryParams.subscribe(params => {
+      if (params['section']) {
+        setTimeout(() => {
+          const el = document.getElementById(params['section']);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+  }
 
   termsSections = [
     { titleKey: 'LEGAL.TERMS_S1_TITLE', bodyKey: 'LEGAL.TERMS_S1_BODY' },
