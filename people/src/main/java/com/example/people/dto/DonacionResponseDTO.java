@@ -1,6 +1,7 @@
-package com.example.people.DTO;
+package com.example.people.dto;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

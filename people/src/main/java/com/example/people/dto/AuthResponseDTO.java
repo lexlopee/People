@@ -1,4 +1,4 @@
-package com.example.people.DTO;
+package com.example.people.dto;
 
 import lombok.Data;
 
@@ -10,7 +10,6 @@ public class AuthResponseDTO {
     private String email;
     private String rol;
 
-    // Un constructor útil para cuando lo implementes
     public AuthResponseDTO(String token, Integer idUsuario, String email, String rol) {
         this.token = token;
         this.idUsuario = idUsuario;

@@ -1,6 +1,7 @@
 package com.example.people.dao;
 
 import com.example.people.entity.CategoriaEntity;
+
 import java.util.List;
 
 /**

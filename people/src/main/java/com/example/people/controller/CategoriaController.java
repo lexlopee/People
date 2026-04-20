@@ -1,10 +1,12 @@
 package com.example.people.controller;
 
-import com.example.people.DTO.CategoriaDTO;
+import com.example.people.dto.CategoriaDTO;
 import com.example.people.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,4 +23,4 @@ public class CategoriaController {
         // Retornar la lista de categorías mapeadas desde tu base de datos
         return ResponseEntity.ok(new ArrayList<>());
     }
-}//
+}

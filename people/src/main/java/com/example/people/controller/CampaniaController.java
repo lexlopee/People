@@ -1,7 +1,7 @@
 package com.example.people.controller;
 
-import com.example.people.DTO.CampaniaRequestDTO;
-import com.example.people.DTO.CampaniaResponseDTO;
+import com.example.people.dto.CampaniaRequestDTO;
+import com.example.people.dto.CampaniaResponseDTO;
 import com.example.people.entity.CampaniaEntity;
 import com.example.people.service.CampaniaService;
 import jakarta.validation.Valid;

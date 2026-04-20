@@ -1,4 +1,4 @@
-package com.example.people.DTO;
+package com.example.people.dto;
 import lombok.Data;
 
 @Data

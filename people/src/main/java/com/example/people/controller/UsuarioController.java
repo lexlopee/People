@@ -1,7 +1,7 @@
 package com.example.people.controller;
 
-import com.example.people.DTO.UsuarioRequestDTO;
-import com.example.people.DTO.UsuarioResponseDTO;
+import com.example.people.dto.UsuarioRequestDTO;
+import com.example.people.dto.UsuarioResponseDTO;
 import com.example.people.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
