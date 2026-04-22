@@ -1,0 +1,63 @@
+<div class="campanas-page">
+
+  <div class="campanas-hero">
+    <h1 class="campanas-title">Campañas activas</h1>
+    <p class="campanas-subtitle">Apoya los proyectos liderados por mujeres que están cambiando el mundo.</p>
+  </div>
+
+  <div class="campanas-grid">
+
+    <article class="campana-card" *ngFor="let c of campanas">
+
+      <!-- Cabecera con emoji e icono verificada -->
+      <div class="campana-card-top">
+        <div class="campana-emoji-box">{{ c.emoji }}</div>
+        <div class="campana-badges">
+          <span class="campana-badge campana-badge--estado campana-badge--{{ c.estado }}">
+            {{ c.estado }}
+          </span>
+          <span class="campana-badge campana-badge--verificada" *ngIf="c.verificada">
+            ✅ Verificada
+          </span>
+          <span class="campana-badge campana-badge--pendiente" *ngIf="!c.verificada">
+            ⏳ En revisión
+          </span>
+        </div>
+      </div>
+
+      <!-- Categorías -->
+      <div class="campana-categorias">
+        <span class="campana-categoria" *ngFor="let cat of c.categorias">{{ cat }}</span>
+      </div>
+
+      <!-- Título y descripción -->
+      <h2 class="campana-card-title">{{ c.titulo }}</h2>
+      <p class="campana-card-desc">{{ c.descripcion }}</p>
+
+      <!-- Promotora -->
+      <p class="campana-promotora">👤 {{ c.promotora }}</p>
+
+      <!-- Barra de progreso -->
+      <div class="campana-progreso-label">
+        <span class="campana-monto-actual">{{ c.montoActual | currency:'EUR':'symbol':'1.0-0' }}</span>
+        <span class="campana-pct">{{ getPorcentaje(c) }}%</span>
+      </div>
+      <div class="campana-progreso-bar">
+        <div
+          class="campana-progreso-fill"
+          [style.width.%]="getPorcentaje(c)"
+          [class.campana-progreso-fill--high]="getPorcentaje(c) >= 75">
+        </div>
+      </div>
+      <div class="campana-progreso-meta">
+        <span>Meta: {{ c.montoObjetivo | currency:'EUR':'symbol':'1.0-0' }}</span>
+        <span>{{ getDiasRestantes(c.fechaFin) }} días restantes</span>
+      </div>
+
+      <!-- CTA -->
+      <button class="campana-btn-donar">💜 Donar ahora</button>
+
+    </article>
+
+  </div>
+</div>

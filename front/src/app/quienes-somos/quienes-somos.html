@@ -1,0 +1,78 @@
+<div class="about-page">
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="about-hero-content">
+      <a routerLink="/" class="about-back">{{ 'ABOUT.BACK' | translate }}</a>
+      <span class="about-badge">{{ 'ABOUT.BADGE' | translate }}</span>
+      <h1 class="about-hero-title">{{ 'ABOUT.HERO_TITLE' | translate }}</h1>
+      <p class="about-hero-subtitle">{{ 'ABOUT.HERO_SUBTITLE' | translate }}</p>
+    </div>
+    <div class="about-hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <section class="about-section about-section--white">
+    <div class="about-container about-two-col">
+      <div class="about-text">
+        <span class="about-tag">{{ 'ABOUT.STORY_TAG' | translate }}</span>
+        <h2 class="about-title">{{ 'ABOUT.STORY_TITLE' | translate }}</h2>
+        <p class="about-body">{{ 'ABOUT.STORY_P1' | translate }}</p>
+        <p class="about-body">{{ 'ABOUT.STORY_P2' | translate }}</p>
+      </div>
+      <div class="about-image-box">
+        <span class="about-image-icon">💜</span>
+        <span class="about-image-label">People</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISIÓN -->
+  <section class="about-section about-section--purple">
+    <div class="about-container about-two-col about-two-col--reverse">
+      <div class="about-image-box about-image-box--light">
+        <span class="about-image-icon">🌟</span>
+        <span class="about-image-label">4TheWomen</span>
+      </div>
+      <div class="about-text">
+        <span class="about-tag about-tag--light">{{ 'ABOUT.MISSION_TAG' | translate }}</span>
+        <h2 class="about-title about-title--light">{{ 'ABOUT.MISSION_TITLE' | translate }}</h2>
+        <p class="about-body about-body--light">{{ 'ABOUT.MISSION_P1' | translate }}</p>
+        <p class="about-body about-body--light">{{ 'ABOUT.MISSION_P2' | translate }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALORES -->
+  <section class="about-section about-section--white">
+    <div class="about-container">
+      <div class="about-center-header">
+        <span class="about-tag">{{ 'ABOUT.VALUES_TAG' | translate }}</span>
+        <h2 class="about-title">{{ 'ABOUT.VALUES_TITLE' | translate }}</h2>
+      </div>
+      <div class="about-values-grid">
+        <div class="about-value-card" *ngFor="let v of values">
+          <span class="about-value-icon">{{ v.icon }}</span>
+          <h3 class="about-value-title">{{ v.titleKey | translate }}</h3>
+          <p class="about-value-desc">{{ v.descKey | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEMA / CTA -->
+  <section class="about-cta">
+    <div class="about-cta-content">
+      <h2 class="about-cta-title">{{ 'ABOUT.CTA_TITLE' | translate }}</h2>
+      <p class="about-cta-subtitle">{{ 'ABOUT.CTA_SUBTITLE' | translate }}</p>
+      <div class="about-cta-buttons">
+        <a routerLink="/register" class="about-btn-primary">{{ 'ABOUT.CTA_BTN_PRIMARY' | translate }}</a>
+        <a routerLink="/categoria" class="about-btn-secondary">{{ 'ABOUT.CTA_BTN_SECONDARY' | translate }}</a>
+      </div>
+    </div>
+  </section>
+
+</div>

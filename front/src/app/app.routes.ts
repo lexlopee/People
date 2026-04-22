@@ -5,6 +5,7 @@ import { CategoriaDetalle } from './component/categoria-detalle/categoria-detall
 import { Login } from './login/login';
 import { Register } from './register/register';
 import { Legal } from './legal/legal';
+import { QuienesSomos } from './quienes-somos/quienes-somos';
 
 export const routes: Routes = [
   { path: '',                      component: Home },
@@ -12,7 +13,8 @@ export const routes: Routes = [
   { path: 'categoria/:slug',       component: CategoriaDetalle },
   { path: 'login',                 component: Login },
   { path: 'register',              component: Register },
-  { path: 'legal',                 component: Legal },        // ← sin :slug
-  { path: 'legal/:slug',           component: Legal },        // ← mantener por compatibilidad
+  { path: 'legal',                 component: Legal },
+  { path: 'legal/:slug',           component: Legal },
+  { path: 'quienes-somos',         component: QuienesSomos },
   { path: '**',                    redirectTo: '' }
 ];
