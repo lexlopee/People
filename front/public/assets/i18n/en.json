@@ -21,7 +21,8 @@
     "HELP_CENTER": "Help center",
     "INFO": "More information",
     "PRESS": "Press",
-    "JOBS": "Jobs"
+    "JOBS": "Jobs",
+    "EXAMPLE_CAMPAIGN": "Example campaign"
   },
   "FOOTER": {
     "DESCRIPTION": "Crowdfunding platform created to support women-led projects.",

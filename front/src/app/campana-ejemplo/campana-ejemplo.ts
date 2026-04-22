@@ -3,20 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-export interface Campaña {
-  id: number;
-  titulo: string;
-  descripcion: string;
-  promotora: string;
-  categorias: string[];
-  montoObjetivo: number;
-  montoActual: number;
-  fechaFin: string;
-  estado: 'activa' | 'finalizada' | 'pendiente';
-  verificada: boolean;
-  emoji: string;
-}
-
 @Component({
   selector: 'app-campana-ejemplo',
   standalone: true,
@@ -26,56 +12,49 @@ export interface Campaña {
 })
 export class CampanaEjemplo {
 
-  campanas: Campaña[] = [
-    {
-      id: 1,
-      titulo: 'Taller de Costura Creativa',
-      descripcion: 'Ampliamos nuestro taller en Madrid para dar empleo a 10 mujeres de Lavapiés. Formación profesional + máquinas industriales + mercado online.',
-      promotora: 'María García · Coser con Arte S.L.',
-      categorias: ['Empresa', 'Comunidad'],
-      montoObjetivo: 8000,
-      montoActual: 6240,
-      fechaFin: '2025-12-01',
-      estado: 'activa',
-      verificada: true,
-      emoji: '🧵'
-    },
-    {
-      id: 2,
-      titulo: 'GreenMujer: Huertos Urbanos',
-      descripcion: 'Transformamos solares abandonados en Barcelona en huertos urbanos productivos. Formación en agricultura ecológica para 20 mujeres.',
-      promotora: 'Ana Rodríguez · GreenMujer Cooperativa',
-      categorias: ['Medioambiente', 'Comunidad'],
-      montoObjetivo: 12000,
-      montoActual: 4800,
-      fechaFin: '2026-02-15',
-      estado: 'activa',
-      verificada: true,
-      emoji: '🌱'
-    },
-    {
-      id: 3,
-      titulo: 'Colección "Todas Caben"',
-      descripcion: 'Primera colección de moda inclusiva tallas 34-60, producida en talleres locales con materiales sostenibles. Diseño para todos los cuerpos.',
-      promotora: 'Sofía Martínez · Diseñadora Independiente',
-      categorias: ['Artes creativas', 'Empresa'],
-      montoObjetivo: 5000,
-      montoActual: 750,
-      fechaFin: '2026-03-01',
-      estado: 'activa',
-      verificada: false,
-      emoji: '👗'
-    }
-  ];
+  // Datos de la campaña de ejemplo
+  campana = {
+    titulo: 'Fondo de Medicamentos para Mujeres sin Recursos',
+    categoria: 'Medicina',
+    emoji: '💊',
+    promotora: 'Dra. Isabel Cano · Asociación Salud Solidaria',
+    ubicacion: 'Sevilla, España',
+    verificada: true,
+    estado: 'activa' as const,
+    montoObjetivo: 15000,
+    montoActual: 10875,
+    donantes: 312,
+    fechaFin: '2026-05-30',
+  };
 
-  getPorcentaje(campaña: Campaña): number {
-    return Math.min(100, Math.round((campaña.montoActual / campaña.montoObjetivo) * 100));
+  get porcentaje(): number {
+    return Math.min(100, Math.round((this.campana.montoActual / this.campana.montoObjetivo) * 100));
   }
 
-  getDiasRestantes(fechaFin: string): number {
+  get diasRestantes(): number {
     const hoy = new Date();
-    const fin = new Date(fechaFin);
+    const fin = new Date(this.campana.fechaFin);
     const diff = fin.getTime() - hoy.getTime();
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }
+
+
+  donacionesRecientes = [
+    { inicial: 'M', nombre: 'María G.', importe: '50 €', tiempo: 'Hace 2 min' },
+    { inicial: 'L', nombre: 'Laura P.', importe: '30 €', tiempo: 'Hace 15 min' },
+    { inicial: 'A', nombre: 'Anónima', importe: '100 €', tiempo: 'Hace 1 h' },
+    { inicial: 'S', nombre: 'Sara T.', importe: '20 €', tiempo: 'Hace 3 h' },
+  ];
+  updates = [
+    {
+      fecha: '18 abril 2026',
+      titulo: '¡Superamos el 70%! Primeras entregas realizadas',
+      cuerpo: 'Gracias a vuestra generosidad hemos podido entregar los primeros lotes de medicamentos a 45 mujeres en situación de exclusión social en los barrios de Triana y Polígono Sur. Las fotos y los testimonios están en nuestra web.',
+    },
+    {
+      fecha: '1 abril 2026',
+      titulo: 'Campaña validada y en marcha',
+      cuerpo: 'Tras pasar la validación manual de People, lanzamos oficialmente la campaña. Nuestro objetivo es cubrir tratamientos crónicos (diabetes, hipertensión, tiroides) para mujeres que no pueden costeárselos. Cada 30 € cubre un mes de tratamiento completo.',
+    },
+  ];
 }

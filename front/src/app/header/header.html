@@ -2,8 +2,7 @@
   <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-4">
     <a routerLink="/" class="flex items-center gap-2 cursor-pointer no-underline text-white">
       <img src="\assets\img\4TheWomen.png" alt="Logo People" class="w-40 h-20 object-contain" />
-      <span class="text-xl font-semibold">Crowdfunding <p></p>
-                                           for Women by Women</span>
+      <span class="text-xl font-semibold">Crowdfunding <p></p> for Women by Women</span>
     </a>
 
     <div class="flex-1 max-w-md">
@@ -38,6 +37,13 @@
   <nav class="bg-[#7F468A] text-white">
     <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8">
 
+      <!-- QUIÉNES SOMOS -->
+      <li class="relative group cursor-pointer py-3">
+        <a routerLink="/quienes-somos" class="no-underline text-white hover:text-[#FFD3A1] transition-colors">
+          {{ 'HEADER.WHO_WE_ARE' | translate }}
+        </a>
+      </li>
+
       <!-- DONAR -->
       <li class="relative group cursor-pointer py-3">
         <span>{{ 'HEADER.DONATE' | translate }}</span>
@@ -48,15 +54,13 @@
                 {{ 'HEADER.CATEGORIES' | translate }}
               </a>
             </li>
+            <li>
+              <a routerLink="/campana-ejemplo" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.EXAMPLE_CAMPAIGN' | translate }}
+              </a>
+            </li>
           </ul>
         </div>
-      </li>
-
-      <!-- QUIÉNES SOMOS -->
-      <li class="relative group cursor-pointer py-3">
-        <a routerLink="/quienes-somos" class="no-underline text-white hover:text-[#FFD3A1] transition-colors">
-          {{ 'HEADER.WHO_WE_ARE' | translate }}
-        </a>
       </li>
 
       <!-- RECOLECTAR -->
@@ -66,7 +70,11 @@
           <ul class="py-1">
             <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.START_CAMPAIGN' | translate }}</a></li>
             <li><a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.CATEGORIES' | translate }}</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.TEAM_FUNDRAISING' | translate }}</a></li>
+            <li>
+              <a routerLink="/recaudacion-equipo" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.TEAM_FUNDRAISING' | translate }}
+              </a>
+            </li>
           </ul>
         </div>
       </li>
