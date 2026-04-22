@@ -1,0 +1,56 @@
+<!-- Categoría no encontrada -->
+<div *ngIf="notFound" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+  <span class="text-6xl">😕</span>
+  <h2 class="text-2xl font-bold text-gray-700">Categoría no encontrada</h2>
+  <a routerLink="/categoria"
+     class="px-6 py-3 bg-[#755D7A] text-white rounded-full font-semibold hover:bg-[#7F468A] transition">
+    ← Volver a categorías
+  </a>
+</div>
+
+<!-- Categoría encontrada -->
+<div *ngIf="!notFound">
+
+  <!-- Hero de categoría -->
+  <div class="cat-hero">
+    <div class="cat-hero-inner">
+      <a routerLink="/categoria" class="back-link">← {{ 'CATEGORIES.BACK' | translate }}</a>
+      <div class="cat-icon">{{ icon }}</div>
+      <h1 class="cat-title">{{ translateKey | translate }}</h1>
+      <p class="cat-subtitle">{{ 'CATEGORIES.DETAIL_SUBTITLE' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="cat-content">
+
+    <!-- Filtros / acciones -->
+    <div class="cat-toolbar">
+      <span class="cat-count">{{ 'CATEGORIES.CAMPAIGNS_COUNT' | translate }}</span>
+      <a routerLink="/register" class="btn-create">
+        + {{ 'CATEGORIES.CREATE_CAMPAIGN' | translate }}
+      </a>
+    </div>
+
+    <!-- Placeholder de campañas -->
+    <div class="campaigns-grid">
+      <div class="campaign-card placeholder" *ngFor="let i of [1,2,3,4,5,6]">
+        <div class="campaign-img-placeholder"></div>
+        <div class="campaign-body">
+          <div class="placeholder-line long"></div>
+          <div class="placeholder-line short"></div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" [style.width]="(i * 13) + '%'"></div>
+          </div>
+          <div class="campaign-meta">
+            <span class="placeholder-line tiny"></span>
+            <span class="placeholder-line tiny"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="placeholder-note">{{ 'CATEGORIES.PLACEHOLDER_NOTE' | translate }}</p>
+
+  </div>
+</div>

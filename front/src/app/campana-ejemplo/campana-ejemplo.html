@@ -1,0 +1,180 @@
+<div class="campana-detalle-page">
+
+  <!-- BREADCRUMB -->
+  <div class="campana-breadcrumb">
+    <div class="campana-breadcrumb-inner">
+      <a routerLink="/categoria" class="campana-back">← Volver a categorías</a>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat">{{ campana.categoria }}</span>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat-title">{{ campana.titulo }}</span>
+    </div>
+  </div>
+
+  <div class="campana-layout">
+
+    <!-- ===== COLUMNA PRINCIPAL ===== -->
+    <main class="campana-main">
+
+      <!-- Imagen hero -->
+      <div class="campana-hero-img">
+        <span class="campana-hero-emoji">{{ campana.emoji }}</span>
+        <span class="campana-hero-label">Imagen de la campaña</span>
+        <div class="campana-hero-badges">
+          <span class="campana-badge campana-badge--cat">{{ campana.categoria }}</span>
+          <span class="campana-badge campana-badge--activa">Activa</span>
+          <span *ngIf="campana.verificada" class="campana-badge campana-badge--verificada">✅ Verificada</span>
+        </div>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="campana-header-box">
+        <h1 class="campana-titulo">{{ campana.titulo }}</h1>
+        <div class="campana-meta-row">
+          <span class="campana-meta-item">👤 {{ campana.promotora }}</span>
+          <span class="campana-meta-item campana-meta--verified">✅ Promotora verificada por People</span>
+          <span class="campana-meta-item">📍 {{ campana.ubicacion }}</span>
+        </div>
+      </div>
+
+      <!-- Sobre la campaña -->
+      <div class="campana-section-box">
+        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
+        <h2 class="campana-section-title">¿Por qué necesitamos tu ayuda?</h2>
+        <p class="campana-body">
+          En España, más de 800.000 mujeres en situación de exclusión social no pueden costear sus medicamentos crónicos.
+          Enfermedades como la diabetes tipo 2, la hipertensión o los problemas de tiroides requieren tratamiento continuo,
+          y sin él, las consecuencias pueden ser graves e irreversibles.
+        </p>
+        <p class="campana-body">
+          La Asociación Salud Solidaria lleva desde 2018 trabajando en los barrios más vulnerables de Sevilla,
+          conectando a mujeres sin recursos con médicos voluntarios y medicación donada. Con esta campaña queremos
+          ampliar el programa para cubrir a <strong>150 mujeres durante 6 meses completos</strong>.
+        </p>
+        <p class="campana-body">
+          <strong>¿Dónde va cada euro?</strong> Con 30 € cubrimos un mes completo de tratamiento para una mujer.
+          Con 90 € financiamos un trimestre. Con 180 € aseguramos medio año de salud.
+        </p>
+
+        <!-- Mini tabla de impacto -->
+        <div class="campana-impacto-grid">
+          <div class="campana-impacto-item">
+            <span class="campana-impacto-icon">💊</span>
+            <span class="campana-impacto-valor">30 €</span>
+            <span class="campana-impacto-label">1 mes de tratamiento</span>
+          </div>
+          <div class="campana-impacto-item">
+            <span class="campana-impacto-icon">🩺</span>
+            <span class="campana-impacto-valor">90 €</span>
+            <span class="campana-impacto-label">1 trimestre completo</span>
+          </div>
+          <div class="campana-impacto-item">
+            <span class="campana-impacto-icon">❤️</span>
+            <span class="campana-impacto-valor">180 €</span>
+            <span class="campana-impacto-label">Medio año de salud</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actualizaciones -->
+      <div class="campana-section-box">
+        <span class="campana-section-tag">ACTUALIZACIONES</span>
+        <div class="campana-updates">
+          <div class="campana-update" *ngFor="let u of updates">
+            <div class="campana-update-dot"></div>
+            <div class="campana-update-content">
+              <span class="campana-update-fecha">{{ u.fecha }}</span>
+              <h3 class="campana-update-titulo">{{ u.titulo }}</h3>
+              <p class="campana-update-cuerpo">{{ u.cuerpo }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sobre la promotora -->
+      <div class="campana-section-box">
+        <span class="campana-section-tag">SOBRE LA PROMOTORA</span>
+        <div class="campana-promotora-card">
+          <div class="campana-promotora-avatar">SS</div>
+          <div class="campana-promotora-info">
+            <h3 class="campana-promotora-nombre">Asociación Salud Solidaria</h3>
+            <p class="campana-promotora-desc">
+              Asociación sin ánimo de lucro fundada en Sevilla en 2018 por la Dra. Isabel Cano.
+              Desde su creación ha atendido a más de 2.000 mujeres en situación de vulnerabilidad,
+              con un equipo de 40 médicos y enfermeras voluntarias. Entidad validada y registrada
+              en el Registro de Asociaciones de Andalucía (nº 15.204).
+            </p>
+            <div class="campana-promotora-stats">
+              <span>📋 Validada por People</span>
+              <span>🏥 +2.000 mujeres atendidas</span>
+              <span>📅 Desde 2018</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="campana-sidebar">
+      <div class="campana-sidebar-card">
+
+        <!-- Progreso -->
+        <div class="campana-progreso-wrap">
+          <div class="campana-progreso-header">
+            <span class="campana-monto-recaudado">{{ campana.montoActual | number:'1.0-0' }} €</span>
+            <span class="campana-pct-label">{{ porcentaje }}%</span>
+          </div>
+          <div class="campana-progreso-bar">
+            <div class="campana-progreso-fill" [style.width]="porcentaje + '%'"></div>
+          </div>
+          <p class="campana-progreso-meta">
+            recaudados de <strong>{{ campana.montoObjetivo | number:'1.0-0' }} €</strong> de meta
+          </p>
+        </div>
+
+        <!-- Stats -->
+        <div class="campana-stats-row">
+          <div class="campana-stat">
+            <span class="campana-stat-num">{{ campana.donantes }}</span>
+            <span class="campana-stat-lbl">Donantes</span>
+          </div>
+          <div class="campana-stat campana-stat--dias">
+            <span class="campana-stat-num">{{ diasRestantes }}</span>
+            <span class="campana-stat-lbl">Días restantes</span>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="campana-acciones">
+          <button class="campana-btn campana-btn--primary">💜 Donar ahora</button>
+          <a routerLink="/recaudacion-equipo" class="campana-btn campana-btn--secondary">👥 Unirme a un equipo</a>
+          <button class="campana-btn campana-btn--ghost">🔗 Compartir campaña</button>
+        </div>
+
+        <!-- Seguridad -->
+        <div class="campana-seguridad">
+          <span class="campana-seguridad-icon">🔒</span>
+          <p class="campana-seguridad-texto">
+            Pagos seguros gestionados por <strong>Stripe</strong>. Campaña validada manualmente por el equipo de People.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Card donaciones recientes -->
+      <div class="campana-sidebar-card campana-donaciones-recientes">
+        <h3 class="campana-donaciones-titulo">Donaciones recientes</h3>
+        <div class="campana-donacion" *ngFor="let d of donacionesRecientes">
+          <div class="campana-donacion-avatar">{{ d.inicial }}</div>
+          <div class="campana-donacion-info">
+            <span class="campana-donacion-nombre">{{ d.nombre }}</span>
+            <span class="campana-donacion-importe">{{ d.importe }}</span>
+          </div>
+          <span class="campana-donacion-tiempo">{{ d.tiempo }}</span>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>

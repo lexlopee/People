@@ -1,0 +1,109 @@
+<div class="equipo-page">
+
+  <!-- ===== HERO ===== -->
+  <section class="equipo-hero">
+    <div class="equipo-hero-shapes">
+      <div class="equipo-shape equipo-shape-1"></div>
+      <div class="equipo-shape equipo-shape-2"></div>
+    </div>
+    <div class="equipo-hero-content">
+      <span class="equipo-badge">RECAUDACIÓN EN EQUIPO</span>
+      <h1 class="equipo-hero-title">Juntas recaudamos más</h1>
+      <p class="equipo-hero-subtitle">
+        La recaudación en equipo te permite unir tu red con la de otras personas para apoyar
+        una misma campaña. Cada miembro tiene su propia página, pero todo suma hacia un objetivo común.
+      </p>
+      <div class="equipo-hero-btns">
+        <a routerLink="/categoria" class="equipo-btn equipo-btn--gold">Explorar campañas</a>
+        <a href="#como-funciona" class="equipo-btn equipo-btn--outline">¿Cómo funciona?</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== POR QUÉ EN EQUIPO ===== -->
+  <section class="equipo-section equipo-section--white">
+    <div class="equipo-container">
+      <div class="equipo-section-header">
+        <span class="equipo-tag">¿POR QUÉ EN EQUIPO?</span>
+        <h2 class="equipo-title">El poder de recaudar juntas</h2>
+        <p class="equipo-subtitle">
+          Una campaña en equipo puede llegar a comunidades a las que nunca llegaría una sola persona.
+          Así funciona la magia del crowdfunding colectivo.
+        </p>
+      </div>
+      <div class="equipo-why-grid">
+        <div class="equipo-why-card" *ngFor="let r of porQueEquipo">
+          <span class="equipo-why-emoji">{{ r.emoji }}</span>
+          <h3 class="equipo-why-title">{{ r.titulo }}</h3>
+          <p class="equipo-why-desc">{{ r.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CÓMO FUNCIONA ===== -->
+  <section id="como-funciona" class="equipo-section equipo-section--purple">
+    <div class="equipo-container">
+      <div class="equipo-section-header equipo-section-header--light">
+        <span class="equipo-tag equipo-tag--light">CÓMO FUNCIONA</span>
+        <h2 class="equipo-title equipo-title--light">4 pasos para crear tu equipo</h2>
+      </div>
+      <div class="equipo-pasos">
+        <div class="equipo-paso" *ngFor="let p of pasos">
+          <div class="equipo-paso-num">{{ p.numero }}</div>
+          <div class="equipo-paso-emoji">{{ p.emoji }}</div>
+          <h3 class="equipo-paso-titulo">{{ p.titulo }}</h3>
+          <p class="equipo-paso-desc">{{ p.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EQUIPOS ACTIVOS EJEMPLO ===== -->
+  <section class="equipo-section equipo-section--white">
+    <div class="equipo-container">
+      <div class="equipo-section-header">
+        <span class="equipo-tag">EQUIPOS ACTIVOS AHORA</span>
+        <h2 class="equipo-title">Inspírate con estos equipos</h2>
+        <p class="equipo-subtitle">Ejemplos de equipos reales que están recaudando en este momento.</p>
+      </div>
+      <div class="equipo-cards-grid">
+        <div class="equipo-card" *ngFor="let eq of equiposEjemplo">
+          <div class="equipo-card-top">
+            <span class="equipo-card-emoji">{{ eq.emoji }}</span>
+            <span class="equipo-card-cat">{{ eq.categoria }}</span>
+          </div>
+          <h3 class="equipo-card-nombre">{{ eq.nombre }}</h3>
+          <p class="equipo-card-campana">Apoyando: <strong>{{ eq.campana }}</strong></p>
+          <div class="equipo-card-progreso">
+            <div class="equipo-card-progreso-bar">
+              <div class="equipo-card-progreso-fill" [style.width]="getPct(eq) + '%'"></div>
+            </div>
+            <span class="equipo-card-pct">{{ getPct(eq) }}%</span>
+          </div>
+          <div class="equipo-card-stats">
+            <span>👥 {{ eq.miembros }} miembros</span>
+            <span>💜 {{ eq.recaudado }} € de {{ eq.meta }} €</span>
+          </div>
+          <button class="equipo-card-btn">Unirme a este equipo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL ===== -->
+  <section class="equipo-cta">
+    <div class="equipo-cta-content">
+      <h2 class="equipo-cta-title">¿Lista para crear tu equipo?</h2>
+      <p class="equipo-cta-subtitle">
+        Elige la campaña que más te inspire y empieza a recaudar con tu equipo hoy mismo.
+        Es gratis, es fácil y el impacto es enorme.
+      </p>
+      <div class="equipo-cta-btns">
+        <a routerLink="/categoria" class="equipo-btn equipo-btn--gold">Ver campañas activas</a>
+        <a routerLink="/register" class="equipo-btn equipo-btn--outline-dark">Crear mi cuenta</a>
+      </div>
+    </div>
+  </section>
+
+</div>

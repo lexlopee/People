@@ -1,0 +1,108 @@
+<header class="sticky top-0 z-50 bg-[#755D7A] text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-4">
+    <a routerLink="/" class="flex items-center gap-2 cursor-pointer no-underline text-white">
+      <img src="\assets\img\4TheWomen.png" alt="Logo People" class="w-40 h-20 object-contain" />
+      <span class="text-xl font-semibold">Crowdfunding <p></p> for Women by Women</span>
+    </a>
+
+    <div class="flex-1 max-w-md">
+      <input type="text" placeholder="{{ 'HEADER.SEARCH' | translate }}" class="w-full px-4 py-2 rounded-md text-black focus:outline-none" />
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="relative group cursor-pointer py-2">
+        <span class="flex items-center gap-2">
+          🌐 {{ currentLang.toUpperCase() }}
+        </span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-white text-black rounded-md shadow-lg w-32 z-50">
+          <ul class="py-2">
+            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('es')">Español</li>
+            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" (click)="changeLang('en')">English</li>
+          </ul>
+        </div>
+      </div>
+
+      <a routerLink="/login"
+         class="px-4 py-2 rounded-md bg-white text-[#755D7A] font-semibold hover:bg-[#FFD3A1] transition cursor-pointer">
+        {{ 'HEADER.LOGIN' | translate }}
+      </a>
+
+      <a routerLink="/register"
+         class="px-4 py-2 rounded-md bg-[#FFD3A1] text-black font-semibold hover:bg-[#7F468A] hover:text-white transition cursor-pointer">
+        {{ 'HEADER.REGISTER' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <nav class="bg-[#7F468A] text-white">
+    <ul class="max-w-7xl mx-auto px-6 flex items-center gap-8">
+
+      <!-- QUIÉNES SOMOS -->
+      <li class="relative group cursor-pointer py-3">
+        <a routerLink="/quienes-somos" class="no-underline text-white hover:text-[#FFD3A1] transition-colors">
+          {{ 'HEADER.WHO_WE_ARE' | translate }}
+        </a>
+      </li>
+
+      <!-- DONAR -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.DONATE' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-56 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li>
+              <a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.CATEGORIES' | translate }}
+              </a>
+            </li>
+            <li>
+              <a routerLink="/campana-ejemplo" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.EXAMPLE_CAMPAIGN' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- RECOLECTAR -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.START_CAMPAIGN' | translate }}</a></li>
+            <li><a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.CATEGORIES' | translate }}</a></li>
+            <li>
+              <a routerLink="/recaudacion-equipo" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">
+                {{ 'HEADER.TEAM_FUNDRAISING' | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- BLOG -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.BLOG' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.RECAUDACIONES' | translate }}</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.CONSEJOS' | translate }}</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.IDEAS' | translate }}</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- ACERCA DE -->
+      <li class="relative group cursor-pointer py-3">
+        <span>{{ 'HEADER.ABOUT' | translate }}</span>
+        <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-72 z-50 overflow-hidden">
+          <ul class="py-1">
+            <li><a routerLink="/legal" [fragment]="'transparency'" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HOW_IT_WORKS' | translate }}</a></li>
+            <li><a routerLink="/legal" [fragment]="'transparency'" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.GUARANTEE' | translate }}</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.HELP_CENTER' | translate }}</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </nav>
+</header>

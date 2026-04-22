@@ -1,0 +1,286 @@
+/* ===== BASE ===== */
+.campana-detalle-page {
+  min-height: 100vh;
+  background: #FCF4FB;
+}
+
+/* ===== BREADCRUMB ===== */
+.campana-breadcrumb {
+  background: #fff;
+  border-bottom: 1px solid rgba(117,93,122,0.1);
+  padding: 0.75rem 2rem;
+}
+.campana-breadcrumb-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+.campana-back {
+  color: #755D7A;
+  text-decoration: none;
+  font-weight: 600;
+}
+.campana-back:hover { text-decoration: underline; }
+.campana-sep { color: #aaa; }
+.campana-cat { color: #6b7280; }
+.campana-cat-title { color: #1a1a2e; font-weight: 600; }
+
+/* ===== LAYOUT ===== */
+.campana-layout {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* ===== HERO IMG ===== */
+.campana-hero-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #755D7A, #7F468A);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.campana-hero-emoji { font-size: 4rem; }
+.campana-hero-label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+.campana-hero-badges {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.campana-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.campana-badge--cat    { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.campana-badge--activa { background: #22c55e; color: #fff; }
+.campana-badge--verificada { background: rgba(255,211,161,0.9); color: #1a1a2e; }
+
+/* ===== HEADER BOX ===== */
+.campana-header-box {
+  margin-bottom: 1.5rem;
+}
+.campana-titulo {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+.campana-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.campana-meta--verified { color: #22c55e; font-weight: 600; }
+
+/* ===== SECTION BOX ===== */
+.campana-section-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(117,93,122,0.08);
+  box-shadow: 0 2px 12px rgba(117,93,122,0.05);
+}
+.campana-section-tag {
+  display: inline-block;
+  background: #FCF4FB;
+  color: #7F468A;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.campana-section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1rem;
+}
+.campana-body {
+  font-size: 0.95rem;
+  color: #4a4a6a;
+  line-height: 1.85;
+  margin-bottom: 0.9rem;
+}
+
+/* ===== IMPACTO GRID ===== */
+.campana-impacto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.campana-impacto-item {
+  background: #FCF4FB;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border: 1px solid rgba(117,93,122,0.1);
+}
+.campana-impacto-icon  { font-size: 1.5rem; }
+.campana-impacto-valor { font-size: 1.2rem; font-weight: 800; color: #755D7A; }
+.campana-impacto-label { font-size: 0.78rem; color: #6b7280; }
+
+/* ===== UPDATES ===== */
+.campana-updates { display: flex; flex-direction: column; gap: 1.5rem; }
+.campana-update  { display: flex; gap: 1rem; }
+.campana-update-dot {
+  width: 12px; height: 12px; min-width: 12px;
+  border-radius: 50%;
+  background: #755D7A;
+  margin-top: 5px;
+}
+.campana-update-fecha  { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.2rem; }
+.campana-update-titulo { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.35rem; }
+.campana-update-cuerpo { font-size: 0.88rem; color: #4a4a6a; line-height: 1.75; }
+
+/* ===== PROMOTORA ===== */
+.campana-promotora-card {
+  display: flex; gap: 1.25rem; align-items: flex-start;
+}
+.campana-promotora-avatar {
+  width: 56px; height: 56px; min-width: 56px;
+  background: linear-gradient(135deg, #755D7A, #7F468A);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 1rem;
+}
+.campana-promotora-nombre { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.4rem; }
+.campana-promotora-desc   { font-size: 0.875rem; color: #4a4a6a; line-height: 1.75; margin-bottom: 0.75rem; }
+.campana-promotora-stats  { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.8rem; color: #755D7A; font-weight: 600; }
+
+/* ===== SIDEBAR ===== */
+.campana-sidebar { display: flex; flex-direction: column; gap: 1.25rem; position: sticky; top: 90px; }
+.campana-sidebar-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.75rem;
+  border: 1px solid rgba(117,93,122,0.1);
+  box-shadow: 0 4px 20px rgba(117,93,122,0.08);
+}
+
+/* ===== PROGRESO ===== */
+.campana-progreso-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+.campana-monto-recaudado {
+  font-size: 1.9rem; font-weight: 800; color: #1a1a2e;
+}
+.campana-pct-label {
+  font-size: 1rem; font-weight: 700; color: #755D7A;
+}
+.campana-progreso-bar {
+  width: 100%; height: 10px;
+  background: #FCF4FB; border-radius: 999px; overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.campana-progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #755D7A, #FFD3A1);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.campana-progreso-meta { font-size: 0.85rem; color: #6b7280; margin-bottom: 1.25rem; }
+
+/* ===== STATS ROW ===== */
+.campana-stats-row {
+  display: flex; gap: 1rem; margin-bottom: 1.5rem;
+}
+.campana-stat {
+  flex: 1; text-align: center;
+  background: #FCF4FB; border-radius: 12px; padding: 0.9rem;
+}
+.campana-stat-num { display: block; font-size: 1.4rem; font-weight: 800; color: #1a1a2e; }
+.campana-stat-lbl { font-size: 0.75rem; color: #6b7280; }
+
+/* ===== ACCIONES ===== */
+.campana-acciones { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+.campana-btn {
+  display: block; width: 100%; padding: 13px;
+  border-radius: 999px; font-weight: 700; font-size: 0.95rem;
+  text-align: center; text-decoration: none; cursor: pointer;
+  border: none; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.campana-btn--primary {
+  background: linear-gradient(135deg, #755D7A, #7F468A);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(117,93,122,0.3);
+}
+.campana-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(117,93,122,0.4); }
+.campana-btn--secondary {
+  background: #FCF4FB; color: #755D7A;
+  border: 2px solid rgba(117,93,122,0.2);
+}
+.campana-btn--secondary:hover { background: #FFD3A1; border-color: #FFD3A1; color: #1a1a2e; }
+.campana-btn--ghost {
+  background: transparent; color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+.campana-btn--ghost:hover { background: #f9fafb; }
+
+/* ===== SEGURIDAD ===== */
+.campana-seguridad {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  background: #FCF4FB; border-radius: 12px; padding: 1rem;
+}
+.campana-seguridad-icon  { font-size: 1.25rem; }
+.campana-seguridad-texto { font-size: 0.8rem; color: #6b7280; line-height: 1.6; }
+
+/* ===== DONACIONES RECIENTES ===== */
+.campana-donaciones-titulo { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 1rem; }
+.campana-donacion {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(117,93,122,0.08);
+}
+.campana-donacion:last-child { border-bottom: none; }
+.campana-donacion-avatar {
+  width: 36px; height: 36px; min-width: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #755D7A, #FFD3A1);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 0.85rem;
+}
+.campana-donacion-info { flex: 1; display: flex; flex-direction: column; }
+.campana-donacion-nombre  { font-size: 0.875rem; font-weight: 600; color: #1a1a2e; }
+.campana-donacion-importe { font-size: 0.8rem; color: #755D7A; font-weight: 700; }
+.campana-donacion-tiempo  { font-size: 0.75rem; color: #9ca3af; white-space: nowrap; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .campana-layout {
+    grid-template-columns: 1fr;
+  }
+  .campana-sidebar { position: static; }
+  .campana-impacto-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,49 @@
+# ----------------------------------------
+# Angular build output
+# ----------------------------------------
+/dist
+/tmp
+/out-tsc
+/.angular/cache
+
+# ----------------------------------------
+# Node
+# ----------------------------------------
+/node_modules
+npm-debug.log*
+yarn-error.log*
+
+# ----------------------------------------
+# Environment files (si usáis variables privadas)
+# ----------------------------------------
+src/environments/*.local.ts
+
+# ----------------------------------------
+# IDEs y editores
+# ----------------------------------------
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# VSCode history
+.history/
+
+# ----------------------------------------
+# Miscelánea
+# ----------------------------------------
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+testem.log
+typings/
+__screenshots__/
+
+# ----------------------------------------
+# Archivos del sistema
+# ----------------------------------------
+.DS_Store
+Thumbs.db

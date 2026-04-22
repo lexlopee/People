@@ -1,0 +1,97 @@
+<div class="legal-page">
+
+  <!-- Hero -->
+  <div class="legal-hero">
+    <div class="legal-hero-content">
+      <a routerLink="/" class="legal-back">{{ 'LEGAL.BACK' | translate }}</a>
+      <h1 class="legal-main-title">{{ 'LEGAL.PAGE_TITLE' | translate }}</h1>
+      <p class="legal-main-subtitle">{{ 'LEGAL.PAGE_SUBTITLE' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Índice de navegación -->
+  <div class="legal-nav">
+    <div class="legal-nav-inner">
+      <a href="#terms">{{ 'LEGAL.TERMS_TITLE' | translate }}</a>
+      <a href="#privacy">{{ 'LEGAL.PRIVACY_TITLE' | translate }}</a>
+      <a href="#cookies">{{ 'LEGAL.COOKIES_TITLE' | translate }}</a>
+      <a href="#transparency">{{ 'LEGAL.TRANSPARENCY_TITLE' | translate }}</a>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="legal-body">  
+    <div class="legal-container">
+
+      <!-- TÉRMINOS -->
+      <section id="terms" class="legal-block">
+        <div class="legal-block-header">
+          <span class="legal-block-icon">📋</span>
+          <div>
+            <h2 class="legal-block-title">{{ 'LEGAL.TERMS_TITLE' | translate }}</h2>
+            <p class="legal-updated">{{ 'LEGAL.TERMS_UPDATED' | translate }}</p>
+          </div>
+        </div>
+        <p class="legal-intro">{{ 'LEGAL.TERMS_INTRO' | translate }}</p>
+        <div class="legal-section" *ngFor="let s of termsSections">
+          <h3 class="legal-section-title">{{ s.titleKey | translate }}</h3>
+          <p class="legal-section-body">{{ s.bodyKey | translate }}</p>
+        </div>
+      </section>
+
+      <div class="legal-divider"></div>
+
+      <!-- PRIVACIDAD -->
+      <section id="privacy" class="legal-block">
+        <div class="legal-block-header">
+          <span class="legal-block-icon">🔒</span>
+          <div>
+            <h2 class="legal-block-title">{{ 'LEGAL.PRIVACY_TITLE' | translate }}</h2>
+            <p class="legal-updated">{{ 'LEGAL.PRIVACY_UPDATED' | translate }}</p>
+          </div>
+        </div>
+        <p class="legal-intro">{{ 'LEGAL.PRIVACY_INTRO' | translate }}</p>
+        <div class="legal-section" *ngFor="let s of privacySections">
+          <h3 class="legal-section-title">{{ s.titleKey | translate }}</h3>
+          <p class="legal-section-body">{{ s.bodyKey | translate }}</p>
+        </div>
+      </section>
+
+      <div class="legal-divider"></div>
+
+      <!-- COOKIES -->
+      <section id="cookies" class="legal-block">
+        <div class="legal-block-header">
+          <span class="legal-block-icon">🍪</span>
+          <div>
+            <h2 class="legal-block-title">{{ 'LEGAL.COOKIES_TITLE' | translate }}</h2>
+            <p class="legal-updated">{{ 'LEGAL.COOKIES_UPDATED' | translate }}</p>
+          </div>
+        </div>
+        <p class="legal-intro">{{ 'LEGAL.COOKIES_INTRO' | translate }}</p>
+        <div class="legal-section" *ngFor="let s of cookiesSections">
+          <h3 class="legal-section-title">{{ s.titleKey | translate }}</h3>
+          <p class="legal-section-body">{{ s.bodyKey | translate }}</p>
+        </div>
+      </section>
+
+      <div class="legal-divider"></div>
+
+      <!-- TRANSPARENCIA -->
+      <section id="transparency" class="legal-block">
+        <div class="legal-block-header">
+          <span class="legal-block-icon">🌟</span>
+          <div>
+            <h2 class="legal-block-title">{{ 'LEGAL.TRANSPARENCY_TITLE' | translate }}</h2>
+          </div>
+        </div>
+        <p class="legal-intro">{{ 'LEGAL.TRANSPARENCY_INTRO' | translate }}</p>
+        <div class="legal-section" *ngFor="let s of transparencySections">
+          <h3 class="legal-section-title">{{ s.titleKey | translate }}</h3>
+          <p class="legal-section-body">{{ s.bodyKey | translate }}</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div>
