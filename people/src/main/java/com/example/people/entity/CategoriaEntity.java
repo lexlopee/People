@@ -22,6 +22,6 @@ public class CategoriaEntity implements Serializable {
     private String nombre;
     private String descripcion;
 
-    @ManyToMany(mappedBy = "categorias")
+    @ManyToMany(mappedBy = "categoriaEntities")
     private List<CampaniaEntity> campaniaEntities;
 }

@@ -47,7 +47,7 @@ public class OrganizacionEntity implements Serializable {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
-    @OneToMany(mappedBy = "organizacion", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organizacionEntity", cascade = CascadeType.ALL)
     private List<DocumentoValidacionEntity> documentos;
 
 
