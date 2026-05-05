@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password');
@@ -25,11 +26,15 @@ export class Register {
   showPassword = false;
   showConfirm = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private http: HttpClient
+  ) {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      rol: ['donante', Validators.required],
+      rol: ['DONANTE', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validators: passwordsMatch });
@@ -40,8 +45,27 @@ export class Register {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      console.log('Register:', this.registerForm.value);
-      // Aquí irá la llamada al backend
+      // Preparamos el JSON exactamente con los nombres que espera tu DTO de Java
+      const userData = {
+        nombre: this.registerForm.value.nombre,
+        email: this.registerForm.value.email,
+        rol: this.registerForm.value.rol.toUpperCase(), // Lo enviamos en mayúsculas
+        contrasenia: this.registerForm.value.password // ¡Importante! El backend espera "contrasenia"
+      };
+
+      // Llamada a tu endpoint exacto
+      this.http.post('http://localhost:8080/api/auth/registro', userData, { responseType: 'text' })
+        .subscribe({
+          next: (response) => {
+            console.log('Registro exitoso', response);
+            alert('¡Usuario registrado correctamente!');
+            this.router.navigate(['/login']);
+          },
+          error: (err) => {
+            console.error('Error del servidor', err);
+            alert('Error: ' + (err.error || 'No se pudo registrar el usuario.'));
+          }
+        });
     }
   }
 }
