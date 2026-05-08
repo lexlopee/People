@@ -1,10 +1,11 @@
 package com.example.people.controller.auth;
 
-import com.example.people.config.JwtUtil;
-import com.example.people.dto.AuthResponseDTO;
-import com.example.people.dto.LoginRequestDTO;
-import com.example.people.entity.UsuarioEntity;
-import com.example.people.service.UsuarioService;
+import com.example.people.config.jwt.JwtUtil;
+import com.example.people.dto.auth.AuthResponseDTO;
+import com.example.people.dto.login.LoginRequestDTO;
+import com.example.people.dto.user.UsuarioRequestDTO;
+import com.example.people.entity.user.UsuarioEntity;
+import com.example.people.service.user.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginDTO) {
 
-        // 1. Buscamos el usuario por email
         UsuarioEntity usuario = usuarioService.obtenerPorEmail(loginDTO.getEmail());
 
         if (usuario == null) {
@@ -38,16 +38,13 @@ public class AuthController {
                     .body("Email o contraseña incorrectos");
         }
 
-        // 2. Verificamos la contraseña contra el hash BCrypt
         if (!passwordEncoder.matches(loginDTO.getContrasenia(), usuario.getContrasenia())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Email o contraseña incorrectos");
         }
 
-        // 3. Generamos el token JWT
         String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol());
 
-        // 4. Devolvemos el token y los datos básicos del usuario
         AuthResponseDTO response = new AuthResponseDTO(
                 token,
                 usuario.getId(),
@@ -61,24 +58,40 @@ public class AuthController {
     @PostMapping("/registro")
     public ResponseEntity<?> registro(@Valid @RequestBody UsuarioRequestDTO registroDTO) {
 
-        // Verificamos que el email no esté ya registrado
-        UsuarioEntity existente = usuarioService.obtenerPorEmail(registroDTO.getEmail());
-        if (existente != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("El email ya está registrado");
+        // 👇 LOG para ver exactamente qué llega del frontend
+        System.out.println("=== REGISTRO RECIBIDO ===");
+        System.out.println("Nombre: " + registroDTO.getNombre());
+        System.out.println("Email:  " + registroDTO.getEmail());
+        System.out.println("Rol:    " + registroDTO.getRol());
+        System.out.println("========================");
+
+        try {
+            UsuarioEntity existente = usuarioService.obtenerPorEmail(registroDTO.getEmail());
+            if (existente != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("El email ya está registrado");
+            }
+
+            UsuarioEntity nuevo = new UsuarioEntity();
+            nuevo.setNombre(registroDTO.getNombre());
+            nuevo.setEmail(registroDTO.getEmail());
+            nuevo.setRol(registroDTO.getRol().toLowerCase()); // ✅ siempre minúsculas
+            nuevo.setFechaAlt(LocalDate.now());
+            nuevo.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
+
+            usuarioService.registrarUsuario(nuevo);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Usuario registrado correctamente");
+
+        } catch (Exception e) {
+            // 👇 Devuelve el error real al frontend para que puedas verlo
+            System.err.println("=== ERROR EN REGISTRO ===");
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error detallado: " + e.getMessage() +
+                            (e.getCause() != null ? " | Causa: " + e.getCause().getMessage() : ""));
         }
-
-        // Creamos el usuario con los datos del Frontend
-        UsuarioEntity nuevo = new UsuarioEntity();
-        nuevo.setNombre(registroDTO.getNombre()); // Ahora sí guardamos el nombre
-        nuevo.setEmail(registroDTO.getEmail());
-        nuevo.setRol(registroDTO.getRol()); // Ahora sí guardamos el rol elegido
-        nuevo.setFechaAlt(LocalDate.now()); // Guardamos la fecha de registro
-        nuevo.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
-
-        usuarioService.registrarUsuario(nuevo);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Usuario registrado correctamente");
     }
 }

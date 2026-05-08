@@ -49,7 +49,7 @@ export class Register {
       const userData = {
         nombre: this.registerForm.value.nombre,
         email: this.registerForm.value.email,
-        rol: this.registerForm.value.rol.toUpperCase(), // Lo enviamos en mayúsculas
+        rol: this.registerForm.value.rol, // Lo enviamos en mayúsculas
         contrasenia: this.registerForm.value.password // ¡Importante! El backend espera "contrasenia"
       };
 
