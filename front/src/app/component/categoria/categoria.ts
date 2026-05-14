@@ -1,34 +1,105 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+
+interface CategoriaItem {
+  idCategoria: number;
+  nombre: string;
+  descripcion: string;
+}
+
+const ICONOS: Record<string, string> = {
+  'medicina': '🏥', 'in-memoriam': '🕊️', 'emergencia': '🚨',
+  'sin-animo-de-lucro': '🤝', 'educacion': '📚', 'animales': '🐾',
+  'medioambiente': '🌿', 'empresa': '💼', 'comunidad': '🏘️',
+  'competicion': '🏆', 'artes-creativas': '🎨', 'evento': '🎉',
+  'religion': '🙏', 'familia': '👨‍👩‍👧', 'deportes': '⚽',
+  'viajes': '✈️', 'voluntariado': '💚', 'deseos': '⭐'
+};
 
 @Component({
   selector: 'app-categoria',
   standalone: true,
-  imports: [CommonModule, TranslateModule, RouterLink],
+  imports: [CommonModule, TranslateModule, RouterLink, FormsModule],
   templateUrl: './categoria.html',
   styleUrls: ['./categoria.css']
 })
-export class Categoria {
-  categorias = [
-    { key: 'CATEGORIES.MEDICINE',      slug: 'medicina',           icon: '🏥' },
-    { key: 'CATEGORIES.IN_MEMORIAM',   slug: 'in-memoriam',        icon: '🕊️' },
-    { key: 'CATEGORIES.EMERGENCY',     slug: 'emergencia',         icon: '🚨' },
-    { key: 'CATEGORIES.NONPROFIT',     slug: 'sin-animo-de-lucro', icon: '🤝' },
-    { key: 'CATEGORIES.EDUCATION',     slug: 'educacion',          icon: '📚' },
-    { key: 'CATEGORIES.ANIMALS',       slug: 'animales',           icon: '🐾' },
-    { key: 'CATEGORIES.ENVIRONMENT',   slug: 'medioambiente',      icon: '🌿' },
-    { key: 'CATEGORIES.BUSINESS',      slug: 'empresa',            icon: '💼' },
-    { key: 'CATEGORIES.COMMUNITY',     slug: 'comunidad',          icon: '🏘️' },
-    { key: 'CATEGORIES.COMPETITION',   slug: 'competicion',        icon: '🏆' },
-    { key: 'CATEGORIES.CREATIVE_ARTS', slug: 'artes-creativas',    icon: '🎨' },
-    { key: 'CATEGORIES.EVENT',         slug: 'evento',             icon: '🎉' },
-    { key: 'CATEGORIES.RELIGION',      slug: 'religion',           icon: '🙏' },
-    { key: 'CATEGORIES.FAMILY',        slug: 'familia',            icon: '👨‍👩‍👧' },
-    { key: 'CATEGORIES.SPORTS',        slug: 'deportes',           icon: '⚽' },
-    { key: 'CATEGORIES.TRAVEL',        slug: 'viajes',             icon: '✈️' },
-    { key: 'CATEGORIES.VOLUNTEERING',  slug: 'voluntariado',       icon: '💚' },
-    { key: 'CATEGORIES.WISHES',        slug: 'deseos',             icon: '⭐' },
-  ];
+export class Categoria implements OnInit {
+
+  categorias: CategoriaItem[] = [];
+  cargando = true;
+  error = '';
+  mostrarFormulario = false;
+  nuevaNombre = '';
+  nuevaDescripcion = '';
+  guardando = false;
+  mensajeExito = '';
+
+  constructor(
+    private http: HttpClient,
+    public authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarCategorias();
+  }
+
+  cargarCategorias(): void {
+    this.cargando = true;
+    this.error = '';
+    this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
+      next: (data) => {
+        this.categorias = data;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar las categorías';
+        this.cargando = false;
+      }
+    });
+  }
+
+  getIcono(nombre: string): string {
+    const slug = nombre.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+    return ICONOS[slug] ?? '📁';
+  }
+
+  getSlug(nombre: string): string {
+    return nombre.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+  }
+
+  crearCategoria(): void {
+    if (!this.nuevaNombre.trim()) return;
+    this.guardando = true;
+
+    const token = this.authService.getToken();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    this.http.post<CategoriaItem>(
+      'http://localhost:8080/api/categorias',
+      { nombre: this.nuevaNombre.trim(), descripcion: this.nuevaDescripcion.trim() },
+      { headers }
+    ).subscribe({
+      next: (nueva) => {
+        this.categorias.push(nueva);
+        this.nuevaNombre = '';
+        this.nuevaDescripcion = '';
+        this.mostrarFormulario = false;
+        this.guardando = false;
+        this.mensajeExito = '¡Categoría creada!';
+        setTimeout(() => this.mensajeExito = '', 3000);
+      },
+      error: () => {
+        this.guardando = false;
+        this.error = 'Error al crear la categoría. Asegúrate de estar logueado.';
+      }
+    });
+  }
 }

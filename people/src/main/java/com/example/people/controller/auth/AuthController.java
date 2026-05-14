@@ -19,79 +19,46 @@ import java.time.LocalDate;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private UsuarioService usuarioService;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginDTO) {
 
         UsuarioEntity usuario = usuarioService.obtenerPorEmail(loginDTO.getEmail());
 
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Email o contraseña incorrectos");
-        }
-
-        if (!passwordEncoder.matches(loginDTO.getContrasenia(), usuario.getContrasenia())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Email o contraseña incorrectos");
+        if (usuario == null || !passwordEncoder.matches(loginDTO.getContrasenia(), usuario.getContrasenia())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email o contraseña incorrectos");
         }
 
         String token = jwtUtil.generarToken(usuario.getEmail(), usuario.getRol());
 
-        AuthResponseDTO response = new AuthResponseDTO(
+        return ResponseEntity.ok(new AuthResponseDTO(
                 token,
                 usuario.getId(),
+                usuario.getNombre(),  // ← nombre para el header
                 usuario.getEmail(),
                 usuario.getRol()
-        );
-
-        return ResponseEntity.ok(response);
+        ));
     }
 
     @PostMapping("/registro")
     public ResponseEntity<?> registro(@Valid @RequestBody UsuarioRequestDTO registroDTO) {
-
-        // 👇 LOG para ver exactamente qué llega del frontend
-        System.out.println("=== REGISTRO RECIBIDO ===");
-        System.out.println("Nombre: " + registroDTO.getNombre());
-        System.out.println("Email:  " + registroDTO.getEmail());
-        System.out.println("Rol:    " + registroDTO.getRol());
-        System.out.println("========================");
-
         try {
-            UsuarioEntity existente = usuarioService.obtenerPorEmail(registroDTO.getEmail());
-            if (existente != null) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("El email ya está registrado");
+            if (usuarioService.obtenerPorEmail(registroDTO.getEmail()) != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("El email ya está registrado");
             }
-
             UsuarioEntity nuevo = new UsuarioEntity();
             nuevo.setNombre(registroDTO.getNombre());
             nuevo.setEmail(registroDTO.getEmail());
-            nuevo.setRol(registroDTO.getRol().toLowerCase()); // ✅ siempre minúsculas
+            nuevo.setRol(registroDTO.getRol().toLowerCase());
             nuevo.setFechaAlt(LocalDate.now());
             nuevo.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
-
             usuarioService.registrarUsuario(nuevo);
-
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Usuario registrado correctamente");
-
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado correctamente");
         } catch (Exception e) {
-            // 👇 Devuelve el error real al frontend para que puedas verlo
-            System.err.println("=== ERROR EN REGISTRO ===");
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error detallado: " + e.getMessage() +
-                            (e.getCause() != null ? " | Causa: " + e.getCause().getMessage() : ""));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 }

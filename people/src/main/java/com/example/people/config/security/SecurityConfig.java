@@ -4,6 +4,7 @@ import com.example.people.config.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,30 +26,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Desactivamos CSRF porque usamos JWT (stateless)
                 .csrf(csrf -> csrf.disable())
-
-                // Configuración de CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // Sin sesiones - cada petición se autentica con el token
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Reglas de acceso por endpoint
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos - no requieren token
+                        // Auth: siempre público
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/campanias").permitAll()
-                        .requestMatchers("/api/campanias/{id}").permitAll()
-                        // Solo admins pueden validar documentos y ver reportes
-                        .requestMatchers("/api/documentos/**").hasRole("ADMIN")
-                        .requestMatchers("/api/reportes/**").hasRole("ADMIN")
+                        // Categorías: GET público para todo el mundo
+                        .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+                        // Campañas: GET público
+                        .requestMatchers(HttpMethod.GET, "/api/campanias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/campanias/**").permitAll()
                         // El resto requiere estar autenticado
                         .anyRequest().authenticated()
                 )
-
-                // Añadimos nuestro filtro JWT antes del filtro de autenticación estándar
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -57,14 +50,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        // Orígenes permitidos - ajustad los puertos según vuestro front
         config.setAllowedOrigins(List.of(
-                "http://localhost:3000",  // React
-                "http://localhost:4200",  // Angular
-                "http://localhost:5173"   // Vite
+                "http://localhost:3000",
+                "http://localhost:4200",
+                "http://localhost:5173"
         ));
-
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

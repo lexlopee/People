@@ -1,0 +1,229 @@
+<!-- ===== PASO 1: FORMULARIO ===== -->
+<div *ngIf="paso === 1" class="crear-page">
+
+  <div class="crear-breadcrumb">
+    <div class="crear-breadcrumb-inner">
+      <a routerLink="/categoria" class="crear-back">← Volver a categorías</a>
+      <span class="crear-sep">›</span>
+      <span class="crear-cat">Nueva campaña</span>
+    </div>
+  </div>
+
+  <div class="crear-layout">
+    <main class="crear-main">
+
+      <!-- Cabecera -->
+      <div class="crear-header-box">
+        <span class="crear-section-tag">CREAR CAMPAÑA</span>
+        <h1 class="crear-titulo">Cuéntanos tu proyecto</h1>
+        <p class="crear-subtitulo">Rellena los datos y podrás previsualizarla antes de publicarla.</p>
+      </div>
+
+      <!-- Error global -->
+      <div *ngIf="errorMsg" class="crear-error">⚠️ {{ errorMsg }}</div>
+
+      <form [formGroup]="form" novalidate>
+
+        <!-- Título -->
+        <div class="crear-section-box">
+          <span class="crear-section-tag">PASO 1 · TÍTULO</span>
+          <label class="crear-label">Título de la campaña *</label>
+          <input type="text" formControlName="titulo"
+            class="crear-input" [class.crear-input--error]="campoInvalido('titulo')"
+            placeholder="Ej: Fondo de medicamentos para mujeres sin recursos" />
+          <p *ngIf="campoInvalido('titulo')" class="crear-field-error">
+            Mínimo 10 caracteres
+          </p>
+          <p class="crear-hint">{{ form.value.titulo?.length ?? 0 }} / 200 caracteres</p>
+        </div>
+
+        <!-- Descripción -->
+        <div class="crear-section-box">
+          <span class="crear-section-tag">PASO 2 · DESCRIPCIÓN</span>
+          <label class="crear-label">¿Por qué necesitas ayuda? *</label>
+          <textarea formControlName="descripcionLarga" rows="8"
+            class="crear-textarea" [class.crear-input--error]="campoInvalido('descripcionLarga')"
+            placeholder="Explica el propósito de tu campaña, quién se beneficia, cómo se usarán los fondos...">
+          </textarea>
+          <p *ngIf="campoInvalido('descripcionLarga')" class="crear-field-error">
+            Mínimo 50 caracteres
+          </p>
+          <p class="crear-hint">{{ form.value.descripcionLarga?.length ?? 0 }} caracteres</p>
+        </div>
+
+        <!-- Meta económica + Fecha -->
+        <div class="crear-section-box">
+          <span class="crear-section-tag">PASO 3 · META Y FECHAS</span>
+          <div class="crear-two-col">
+            <div>
+              <label class="crear-label">Meta económica (€) *</label>
+              <input type="number" formControlName="montoObjetivo" min="100"
+                class="crear-input" [class.crear-input--error]="campoInvalido('montoObjetivo')"
+                placeholder="Ej: 5000" />
+              <p *ngIf="campoInvalido('montoObjetivo')" class="crear-field-error">Mínimo 100 €</p>
+            </div>
+            <div>
+              <label class="crear-label">Fecha de fin *</label>
+              <input type="date" formControlName="fechaFin" [min]="fechaMinima"
+                class="crear-input" [class.crear-input--error]="campoInvalido('fechaFin')" />
+              <p *ngIf="campoInvalido('fechaFin')" class="crear-field-error">Elige una fecha futura</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categoría + Ubicación -->
+        <div class="crear-section-box">
+          <span class="crear-section-tag">PASO 4 · CATEGORÍA</span>
+          <div class="crear-two-col">
+            <div>
+              <label class="crear-label">Categoría *</label>
+              <select formControlName="idCategoria"
+                class="crear-input crear-select" [class.crear-input--error]="campoInvalido('idCategoria')">
+                <option [ngValue]="null" disabled>Selecciona una categoría</option>
+                <option *ngFor="let cat of categorias" [ngValue]="cat.idCategoria">
+                  {{ cat.nombre }}
+                </option>
+              </select>
+              <p *ngIf="campoInvalido('idCategoria')" class="crear-field-error">Elige una categoría</p>
+            </div>
+            <div>
+              <label class="crear-label">Ubicación</label>
+              <input type="text" formControlName="ubicacion"
+                class="crear-input" placeholder="Ej: Madrid, España" />
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+    </main>
+
+    <!-- Sidebar informativo -->
+    <aside class="crear-sidebar">
+      <div class="crear-sidebar-card">
+        <h3 class="crear-sidebar-title">💡 Consejos</h3>
+        <ul class="crear-tips">
+          <li>Un título claro aumenta las donaciones hasta un <strong>40%</strong></li>
+          <li>Explica exactamente <strong>cómo se usará el dinero</strong></li>
+          <li>Indica el impacto real: cuántas personas se benefician</li>
+          <li>Elige bien la <strong>categoría</strong> para llegar a tu audiencia</li>
+        </ul>
+      </div>
+
+      <div class="crear-sidebar-card crear-sidebar-card--seguridad">
+        <span class="crear-seguridad-icon">🔒</span>
+        <p class="crear-seguridad-texto">
+          Tu campaña será revisada manualmente por el equipo de People antes de aparecer en público.
+        </p>
+      </div>
+
+      <!-- Botón previsualizar -->
+      <button (click)="previsualizacion()"
+        class="crear-btn crear-btn--primary">
+        👁 Previsualizar campaña
+      </button>
+    </aside>
+  </div>
+</div>
+
+
+<!-- ===== PASO 2: PREVISUALIZACIÓN (mismo estilo que campana-ejemplo) ===== -->
+<div *ngIf="paso === 2" class="campana-detalle-page">
+
+  <div class="campana-breadcrumb">
+    <div class="campana-breadcrumb-inner">
+      <button (click)="volver()" class="campana-back">← Editar campaña</button>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat">{{ nombreCategoria }}</span>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat-title">{{ form.value.titulo }}</span>
+    </div>
+  </div>
+
+  <!-- Banner previsualización -->
+  <div class="preview-banner">
+    👁 Estás viendo una previsualización — aún no está publicada
+    <button (click)="volver()" class="preview-banner-btn">Seguir editando</button>
+  </div>
+
+  <div class="campana-layout">
+
+    <main class="campana-main">
+
+      <!-- Hero -->
+      <div class="campana-hero-img">
+        <span class="campana-hero-emoji">✨</span>
+        <span class="campana-hero-label">Imagen de la campaña</span>
+        <div class="campana-hero-badges">
+          <span class="campana-badge campana-badge--cat">{{ nombreCategoria }}</span>
+          <span class="campana-badge campana-badge--activa">Nueva</span>
+        </div>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="campana-header-box">
+        <h1 class="campana-titulo">{{ form.value.titulo }}</h1>
+        <div class="campana-meta-row">
+          <span class="campana-meta-item">👤 {{ authService.usuario?.nombre }}</span>
+          <span class="campana-meta-item">📍 {{ form.value.ubicacion || 'España' }}</span>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="campana-section-box">
+        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
+        <h2 class="campana-section-title">¿Por qué necesitamos tu ayuda?</h2>
+        <p class="campana-body" style="white-space: pre-line">{{ form.value.descripcionLarga }}</p>
+      </div>
+
+    </main>
+
+    <!-- Sidebar con barra de progreso -->
+    <aside class="campana-sidebar">
+      <div class="campana-sidebar-card">
+        <div class="campana-progreso-wrap">
+          <div class="campana-progreso-header">
+            <span class="campana-monto-recaudado">0 €</span>
+            <span class="campana-pct-label">0%</span>
+          </div>
+          <div class="campana-progreso-bar">
+            <div class="campana-progreso-fill" style="width: 0%"></div>
+          </div>
+          <p class="campana-progreso-meta">
+            recaudados de <strong>{{ form.value.montoObjetivo | number:'1.0-0' }} €</strong> de meta
+          </p>
+        </div>
+
+        <div class="campana-stats-row">
+          <div class="campana-stat">
+            <span class="campana-stat-num">0</span>
+            <span class="campana-stat-lbl">Donantes</span>
+          </div>
+          <div class="campana-stat">
+            <span class="campana-stat-num">{{ diasPreview }}</span>
+            <span class="campana-stat-lbl">Días restantes</span>
+          </div>
+        </div>
+
+        <!-- Error al publicar -->
+        <div *ngIf="errorMsg" class="crear-error" style="margin-bottom:1rem">⚠️ {{ errorMsg }}</div>
+
+        <div class="campana-acciones">
+          <button (click)="publicar()" [disabled]="guardando" class="campana-btn campana-btn--primary">
+            {{ guardando ? '⏳ Publicando...' : '🚀 Publicar campaña' }}
+          </button>
+          <button (click)="volver()" class="campana-btn campana-btn--ghost">
+            ✏️ Seguir editando
+          </button>
+        </div>
+
+        <div class="campana-seguridad">
+          <span class="campana-seguridad-icon">🔒</span>
+          <p class="campana-seguridad-texto">
+            Será revisada manualmente por el equipo de <strong>People</strong> antes de publicarse.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
