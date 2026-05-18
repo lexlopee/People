@@ -1,0 +1,100 @@
+<!-- Cargando -->
+<div *ngIf="cargando" class="flex justify-center items-center min-h-[60vh]">
+  <div class="flex flex-col items-center gap-3 text-[#755D7A]">
+    <div class="w-10 h-10 border-4 border-[#755D7A] border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-sm opacity-70">Cargando campaña...</p>
+  </div>
+</div>
+
+<!-- Error -->
+<div *ngIf="error && !cargando" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+  <span class="text-5xl">😕</span>
+  <p class="text-lg text-gray-600">{{ error }}</p>
+  <a routerLink="/categoria"
+     class="px-6 py-3 bg-[#755D7A] text-white rounded-full font-semibold hover:bg-[#7F468A] transition">
+    ← Volver a categorías
+  </a>
+</div>
+
+<!-- Campaña cargada -->
+<div *ngIf="campana && !cargando" class="campana-detalle-page">
+
+  <div class="campana-breadcrumb">
+    <div class="campana-breadcrumb-inner">
+      <a routerLink="/categoria" class="campana-back">← Categorías</a>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat">{{ campana.nombreCategoria }}</span>
+      <span class="campana-sep">›</span>
+      <span class="campana-cat-title">{{ campana.titulo }}</span>
+    </div>
+  </div>
+
+  <div class="campana-layout">
+    <main class="campana-main">
+
+      <div class="campana-hero-img">
+        <span class="campana-hero-emoji">✨</span>
+        <span class="campana-hero-label">Imagen de la campaña</span>
+        <div class="campana-hero-badges">
+          <span class="campana-badge campana-badge--cat">{{ campana.nombreCategoria }}</span>
+          <span class="campana-badge campana-badge--activa">{{ campana.estado }}</span>
+        </div>
+      </div>
+
+      <div class="campana-header-box">
+        <h1 class="campana-titulo">{{ campana.titulo }}</h1>
+        <div class="campana-meta-row">
+          <span class="campana-meta-item">👤 {{ campana.nombreCreador }}</span>
+        </div>
+      </div>
+
+      <div class="campana-section-box">
+        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
+        <h2 class="campana-section-title">¿Por qué necesitan tu ayuda?</h2>
+        <p class="campana-body" style="white-space: pre-line">{{ campana.descripcionLarga }}</p>
+      </div>
+
+    </main>
+
+    <aside class="campana-sidebar">
+      <div class="campana-sidebar-card">
+
+        <div class="campana-progreso-wrap">
+          <div class="campana-progreso-header">
+            <span class="campana-monto-recaudado">{{ campana.montoActual | number:'1.0-0' }} €</span>
+            <span class="campana-pct-label">{{ campana.porcentajeCompletado | number:'1.0-0' }}%</span>
+          </div>
+          <div class="campana-progreso-bar">
+            <div class="campana-progreso-fill" [style.width]="campana.porcentajeCompletado + '%'"></div>
+          </div>
+          <p class="campana-progreso-meta">
+            recaudados de <strong>{{ campana.montoObjetivo | number:'1.0-0' }} €</strong> de meta
+          </p>
+        </div>
+
+        <div class="campana-stats-row">
+          <div class="campana-stat">
+            <span class="campana-stat-num">0</span>
+            <span class="campana-stat-lbl">Donantes</span>
+          </div>
+          <div class="campana-stat">
+            <span class="campana-stat-num">{{ campana.diasRestantes }}</span>
+            <span class="campana-stat-lbl">Días restantes</span>
+          </div>
+        </div>
+
+        <div class="campana-acciones">
+          <button class="campana-btn campana-btn--primary">💜 Donar ahora</button>
+        </div>
+
+        <div class="campana-seguridad">
+          <span class="campana-seguridad-icon">🔒</span>
+          <p class="campana-seguridad-texto">
+            Campaña validada por el equipo de <strong>People</strong>.
+          </p>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+</div>

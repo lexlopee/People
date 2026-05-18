@@ -1,11 +1,8 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-
-import { provideHttpClient, withFetch } from '@angular/common/http'; // 👈 añade esto
-
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 

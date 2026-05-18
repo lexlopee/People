@@ -21,21 +21,18 @@ export class CrearCampana implements OnInit {
 
   form: FormGroup;
   categorias: CategoriaItem[] = [];
-  paso = 1;          // 1 = formulario  |  2 = previsualización
+  paso = 1;
   guardando = false;
   errorMsg = '';
 
-  // Fecha mínima para el datepicker: mañana
   get fechaMinima(): string {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split('T')[0];
   }
 
-  // Porcentaje ficticio para la preview (siempre 0 al crear)
   get porcentajePreview(): number { return 0; }
 
-  // Días restantes calculados desde la fecha fin elegida
   get diasPreview(): number {
     const fin = this.form.value.fechaFin;
     if (!fin) return 0;
@@ -55,12 +52,12 @@ export class CrearCampana implements OnInit {
     public authService: AuthService
   ) {
     this.form = this.fb.group({
-      titulo:          ['', [Validators.required, Validators.minLength(10)]],
-      descripcionLarga:['', [Validators.required, Validators.minLength(50)]],
-      montoObjetivo:   [null, [Validators.required, Validators.min(100)]],
-      fechaFin:        ['', Validators.required],
-      idCategoria:     [null, Validators.required],
-      ubicacion:       ['España'],
+      titulo:           ['', [Validators.required, Validators.minLength(10)]],
+      descripcionLarga: ['', [Validators.required, Validators.minLength(50)]],
+      montoObjetivo:    [null, [Validators.required, Validators.min(100)]],
+      fechaFin:         ['', Validators.required],
+      idCategoria:      [null, Validators.required],
+      ubicacion:        ['España'],
     });
   }
 
@@ -98,11 +95,13 @@ export class CrearCampana implements OnInit {
       idCategoria:      this.form.value.idCategoria
     };
 
-    this.http.post('http://localhost:8080/api/campanias/crear', payload, { headers, responseType: 'text' })
+    // CAMBIO: recibimos el DTO con idCampania para redirigir al detalle
+    this.http.post<any>('http://localhost:8080/api/campanias/crear', payload, { headers })
       .subscribe({
-        next: () => {
+        next: (campana) => {
           this.guardando = false;
-          this.router.navigate(['/categoria']);
+          // Redirigir a la página de detalle de la campaña creada
+          this.router.navigate(['/campana', campana.idCampania]);
         },
         error: (err) => {
           this.guardando = false;

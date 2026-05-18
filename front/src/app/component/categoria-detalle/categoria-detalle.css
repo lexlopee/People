@@ -173,3 +173,43 @@
   80%  { transform: scale(1.1); }
   100% { transform: scale(1);   opacity: 1; }
 }
+/* ===== TARJETAS CAMPAÑAS REALES ===== */
+.campaign-img-real {
+  width: 100%;
+  height: 175px;
+  background: linear-gradient(135deg, #755D7A, #7F468A);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.campaign-card { display: block; color: inherit; }
+
+.campaign-estado {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  background: #22c55e;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.campaign-titulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.campaign-creador { font-size: 0.8rem; color: #6b7280; margin: 0; }
+.campaign-recaudado { font-weight: 600; color: #755D7A; }
+.campaign-dias { color: #9ca3af; }
+.campaign-pct { font-size: 0.78rem; color: #9ca3af; text-align: right; }

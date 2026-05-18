@@ -33,12 +33,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Auth: siempre público
                         .requestMatchers("/api/auth/**").permitAll()
-                        // Categorías: GET público para todo el mundo
-                        .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
+
+                        // Categorías: GET público
+                        // POST solo ADMINISTRADOR (el JwtFilter pone ROLE_administrador)
+                        .requestMatchers(HttpMethod.GET,  "/api/categorias").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/categorias/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("administrador")
+
                         // Campañas: GET público
-                        .requestMatchers(HttpMethod.GET, "/api/campanias").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/campanias/**").permitAll()
+                        // POST (crear) solo CREADOR o ADMINISTRADOR
+                        .requestMatchers(HttpMethod.GET,  "/api/campanias").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/campanias/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/**").hasAnyRole("creador", "administrador")
+
                         // El resto requiere estar autenticado
                         .anyRequest().authenticated()
                 )

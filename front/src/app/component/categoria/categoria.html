@@ -25,8 +25,8 @@
       <p class="text-sm text-gray-500 mt-1">{{ categorias.length }} categorías disponibles</p>
     </div>
 
-    <!-- Botón crear: visible solo si está logueado -->
-    <button *ngIf="authService.estaLogueado()"
+    <!-- Botón "Nueva categoría": SOLO administrador -->
+    <button *ngIf="authService.esAdmin()"
       (click)="mostrarFormulario = !mostrarFormulario"
       class="flex items-center gap-2 px-4 py-2 bg-[#755D7A] text-white rounded-lg hover:bg-[#7F468A] transition font-semibold text-sm">
       {{ mostrarFormulario ? '✕ Cancelar' : '＋ Nueva categoría' }}
@@ -39,8 +39,8 @@
     ✅ {{ mensajeExito }}
   </div>
 
-  <!-- Formulario nueva categoría -->
-  <div *ngIf="mostrarFormulario && authService.estaLogueado()"
+  <!-- Formulario nueva categoría: SOLO administrador -->
+  <div *ngIf="mostrarFormulario && authService.esAdmin()"
        class="mb-8 bg-white rounded-2xl shadow-md border border-purple-100 p-6">
     <h2 class="text-lg font-bold text-[#755D7A] mb-4">Nueva categoría</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -80,6 +80,9 @@
   <div *ngIf="categorias.length === 0 && !cargando" class="text-center py-20 text-gray-400">
     <span class="text-5xl">📂</span>
     <p class="mt-4 text-lg font-medium">No hay categorías todavía</p>
+    <p *ngIf="authService.esAdmin()" class="text-sm mt-1 text-[#755D7A]">
+      Usa el botón de arriba para crear la primera
+    </p>
   </div>
 
 </div>

@@ -15,9 +15,8 @@ public class CampaniaResponseDTO {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private String estado;
-
-    // Datos cruzados para no tener que hacer múltiples peticiones desde el frontend
     private String nombreCreador;
     private String nombreCategoria;
     private Double porcentajeCompletado;
+    private Integer diasRestantes;
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef, NgZone } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -31,7 +31,7 @@ const ICONOS: Record<string, string> = {
 export class Categoria implements OnInit {
 
   categorias: CategoriaItem[] = [];
-  cargando = true;
+  cargando = false;
   error = '';
   mostrarFormulario = false;
   nuevaNombre = '';
@@ -41,25 +41,35 @@ export class Categoria implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public authService: AuthService
+    public authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    this.cargarCategorias();
+    if (isPlatformBrowser(this.platformId)) {
+      this.cargarCategorias();
+    }
   }
 
   cargarCategorias(): void {
     this.cargando = true;
-    this.error = '';
-    this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
-      next: (data) => {
-        this.categorias = data;
-        this.cargando = false;
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar las categorías';
-        this.cargando = false;
-      }
+    this.cdr.detectChanges();
+
+    this.ngZone.run(() => {
+      this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
+        next: (data) => {
+          this.categorias = data;
+          this.cargando = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.error = 'No se pudieron cargar las categorías';
+          this.cargando = false;
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
 
@@ -77,29 +87,32 @@ export class Categoria implements OnInit {
   crearCategoria(): void {
     if (!this.nuevaNombre.trim()) return;
     this.guardando = true;
-
     const token = this.authService.getToken();
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    this.http.post<CategoriaItem>(
-      'http://localhost:8080/api/categorias',
-      { nombre: this.nuevaNombre.trim(), descripcion: this.nuevaDescripcion.trim() },
-      { headers }
-    ).subscribe({
-      next: (nueva) => {
-        this.categorias.push(nueva);
-        this.nuevaNombre = '';
-        this.nuevaDescripcion = '';
-        this.mostrarFormulario = false;
-        this.guardando = false;
-        this.mensajeExito = '¡Categoría creada!';
-        setTimeout(() => this.mensajeExito = '', 3000);
-      },
-      error: () => {
-        this.guardando = false;
-        this.error = 'Error al crear la categoría. Asegúrate de estar logueado.';
-      }
+    this.ngZone.run(() => {
+      this.http.post<CategoriaItem>(
+        'http://localhost:8080/api/categorias',
+        { nombre: this.nuevaNombre.trim(), descripcion: this.nuevaDescripcion.trim() },
+        { headers }
+      ).subscribe({
+        next: (nueva) => {
+          this.categorias.push(nueva);
+          this.nuevaNombre = '';
+          this.nuevaDescripcion = '';
+          this.mostrarFormulario = false;
+          this.guardando = false;
+          this.mensajeExito = '¡Categoría creada!';
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
+        },
+        error: () => {
+          this.guardando = false;
+          this.error = 'Error al crear la categoría.';
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
 }

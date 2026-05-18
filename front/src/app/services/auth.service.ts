@@ -13,7 +13,7 @@ export interface UsuarioSesion {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly API      = 'http://localhost:8080/api/auth';
+  private readonly API       = 'http://localhost:8080/api/auth';
   private readonly TOKEN_KEY = 'token';
   private readonly USER_KEY  = 'usuario';
 
@@ -49,10 +49,12 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  get usuario(): UsuarioSesion | null  { return this.usuarioSubject.value; }
-  getToken(): string | null            { return localStorage.getItem(this.TOKEN_KEY); }
-  estaLogueado(): boolean              { return !!this.getToken(); }
-  esAdmin(): boolean                   { return this.usuario?.rol === 'administrador'; }
+  get usuario(): UsuarioSesion | null { return this.usuarioSubject.value; }
+  getToken(): string | null           { return localStorage.getItem(this.TOKEN_KEY); }
+  estaLogueado(): boolean             { return !!this.getToken(); }
+  esAdmin(): boolean                  { return this.usuario?.rol === 'administrador'; }
+  esCreador(): boolean                { return this.usuario?.rol === 'creador'; }
+  puedeCrearCampana(): boolean        { return this.esCreador() || this.esAdmin(); }
 
   private cargarGuardado(): UsuarioSesion | null {
     try {
