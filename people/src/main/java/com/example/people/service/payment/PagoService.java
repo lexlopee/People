@@ -7,8 +7,15 @@ import com.example.people.entity.payment.PagosEntity;
 import com.example.people.entity.user.UsuarioEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.paypal.core.PayPalHttpClient;
+import com.paypal.http.HttpResponse;
+import com.paypal.orders.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.time.LocalDate;
 
 
@@ -21,11 +28,13 @@ public class PagoService {
 
     private final PagoDAO pagoDAO;
     private final CampaniaDAO campaniaDAO;
+    private final PayPalHttpClient payPalHttpClient;
 
     @Autowired
-    public PagoService(PagoDAO pagoDAO, CampaniaDAO campaniaDAO) {
+    public PagoService(PagoDAO pagoDAO, CampaniaDAO campaniaDAO, PayPalHttpClient payPalHttpClient) {
         this.pagoDAO = pagoDAO;
         this.campaniaDAO = campaniaDAO;
+        this.payPalHttpClient = payPalHttpClient;
     }
 
     /**
@@ -108,5 +117,33 @@ public class PagoService {
     public boolean usuarioHaPagado(Integer idUsuario, Integer idCampania) {
         return pagoDAO.usuarioHaPagado(idUsuario, idCampania);
     }
+
+
+    // Crear orden
+    public String crearOrden(BigDecimal monto) throws IOException {
+        OrdersCreateRequest request = new OrdersCreateRequest();
+        request.prefer("return=representation");
+
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.checkoutPaymentIntent("CAPTURE");
+
+        PurchaseUnitRequest purchaseUnit = new PurchaseUnitRequest()
+                .amountWithBreakdown(new AmountWithBreakdown()
+                        .currencyCode("EUR")
+                        .value(monto.toString()));
+
+        orderRequest.purchaseUnits(List.of(purchaseUnit));
+        request.requestBody(orderRequest);
+
+        HttpResponse<Order> response = payPalHttpClient.execute(request);
+        return response.result().id();
+    }
+    // Capturar (confirmar) el pago
+    public Order capturarPago(String orderId) throws IOException {
+        OrdersCaptureRequest request = new OrdersCaptureRequest(orderId);
+        HttpResponse<Order> response = payPalHttpClient.execute(request);
+        return response.result();
+    }
+
 }
 
