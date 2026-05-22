@@ -31,22 +31,24 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
+                        // Actuator: permitir TODO
+                        .requestMatchers("/actuator/**").permitAll()
+
                         // Auth: siempre público
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // Categorías: GET público
-                        // POST solo ADMINISTRADOR (el JwtFilter pone ROLE_administrador)
-                        .requestMatchers(HttpMethod.GET,  "/api/categorias").permitAll()
-                        .requestMatchers(HttpMethod.GET,  "/api/categorias/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("administrador")
 
                         // Campañas: GET público
-                        // POST (crear) solo CREADOR o ADMINISTRADOR
-                        .requestMatchers(HttpMethod.GET,  "/api/campanias").permitAll()
-                        .requestMatchers(HttpMethod.GET,  "/api/campanias/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/campanias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/campanias/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/**").hasAnyRole("creador", "administrador")
 
-                        // El resto requiere estar autenticado
+                        // El resto requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -71,3 +73,5 @@ public class SecurityConfig {
         return source;
     }
 }
+
+
