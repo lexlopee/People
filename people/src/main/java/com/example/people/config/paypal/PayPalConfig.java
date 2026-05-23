@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PayPalConfig {
 
-    @Value("${paypal.client-id}")
+    // Si no hay valor en properties, usa "sandbox_id" por defecto
+    @Value("${paypal.client-id:sandbox_id}")
     private String clientId;
 
-    @Value("${paypal.client-secret}")
+    @Value("${paypal.client-secret:sandbox_secret}")
     private String clientSecret;
 
-    @Value("${paypal.mode}")
+    @Value("${paypal.mode:sandbox}")
     private String mode;
 
     @Bean

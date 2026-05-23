@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version> <!-- ⚠️ CORREGIDO: 4.0.3 no existe, la última estable es 3.4.4 -->
+        <version>3.4.4</version>
         <relativePath/>
     </parent>
 
@@ -22,37 +22,37 @@
 
     <dependencies>
 
-        <!-- ✅ WEB - CORREGIDO (spring-boot-starter-webmvc no existe) -->
+        <!-- WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- ✅ JPA -->
+        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- ✅ SECURITY -->
+        <!-- SECURITY -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- ✅ VALIDACIÓN -->
+        <!-- VALIDACIÓN -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- ✅ HATEOAS (si lo estáis usando, si no lo podéis quitar) -->
+        <!-- HATEOAS -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
-        <!-- ✅ JWT - AÑADIDO (necesario para generar y validar tokens) -->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -71,28 +71,28 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ✅ POSTGRESQL -->
+        <!-- POSTGRESQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ✅ H2 - solo para tests, no en producción -->
+        <!-- H2 solo tests -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope> <!-- CORREGIDO: era runtime, debe ser test -->
+            <scope>test</scope>
         </dependency>
 
-        <!-- ✅ LOMBOK -->
+        <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- ✅ TEST - CORREGIDO (un único starter cubre todo) -->
+        <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -104,14 +104,21 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- PAYPAL -->
         <dependency>
             <groupId>com.paypal.sdk</groupId>
             <artifactId>checkout-sdk</artifactId>
             <version>2.0.0</version>
         </dependency>
 
-    </dependencies>
+        <!-- DOTENV - para cargar variables desde .env -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
+    </dependencies>
 
     <build>
         <plugins>
