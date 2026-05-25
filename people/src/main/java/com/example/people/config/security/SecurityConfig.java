@@ -32,23 +32,33 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
-                        // Actuator: permitir TODO
+                        // Actuator
                         .requestMatchers("/actuator/**").permitAll()
 
-                        // Auth: siempre público
+                        // Auth
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Categorías: GET público
+                        // Imagenes subidas
+                        .requestMatchers("/uploads/**").permitAll()
+
+                        // Categorias: GET publico, POST solo administrador y creador
                         .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("administrador")
+                        .requestMatchers(HttpMethod.POST, "/api/categorias")
+                        .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
 
-                        // Campañas: GET público
+                        // Campanas: GET publico
                         .requestMatchers(HttpMethod.GET, "/api/campanias").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/campanias/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/campanias/**").hasAnyRole("creador", "administrador")
 
-                        // El resto requiere autenticación
+                        // Crear campana y subir imagen: creador o administrador
+                        // Usamos hasAnyAuthority con ROLE_ prefix para evitar problemas
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/crear")
+                        .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/*/imagen")
+                        .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
+
+                        // Resto autenticado
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -73,5 +83,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
-

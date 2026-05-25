@@ -1,14 +1,20 @@
-<!-- ===================== HERO ===================== -->
-<section class="hero-section">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-badge">{{ 'HOME.HERO_BADGE' | translate }}</span>
-    <h1 class="hero-title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
-    <p class="hero-subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
-    <div class="hero-buttons">
-      <a routerLink="/register" class="btn-primary">{{ 'HOME.HERO_CTA_PRIMARY' | translate }}</a>
-      <a routerLink="/categoria" class="btn-secondary">{{ 'HOME.HERO_CTA_SECONDARY' | translate }}</a>
+<!-- ===================== CARRUSEL ===================== -->
+<section class="carousel-section">
+  <div class="carousel-track" [style.transform]="'translateX(-' + indiceActual * 100 + '%)'">
+    <div *ngFor="let slide of slides" class="carousel-slide">
+      <img [src]="slide.img" [alt]="slide.titulo" width="1400" height="520" />
+      <div class="carousel-slide-overlay">
+        <h2 class="carousel-slide-title">{{ slide.titulo }}</h2>
+        <p class="carousel-slide-desc">{{ slide.desc }}</p>
+      </div>
     </div>
+  </div>
+  <button class="carousel-btn carousel-btn-prev" (click)="anterior()">‹</button>
+  <button class="carousel-btn carousel-btn-next" (click)="siguiente()">›</button>
+  <div class="carousel-dots">
+    <button *ngFor="let s of slides; let i = index"
+      class="carousel-dot" [class.active]="i === indiceActual"
+      (click)="irA(i)"></button>
   </div>
 </section>
 
@@ -33,10 +39,8 @@
       <a routerLink="/categoria" class="btn-outline">{{ 'HOME.ABOUT_CTA' | translate }}</a>
     </div>
     <div class="about-image-placeholder">
-      <div class="image-placeholder-box">
-        <span class="placeholder-icon">🖼️</span>
-        <span class="placeholder-text">{{ 'HOME.IMAGE_PLACEHOLDER' | translate }}</span>
-      </div>
+      <img src="/assets/img/quienes-somos.jpg" alt="Quienes somos"
+           width="600" height="450" class="section-img" />
     </div>
   </div>
 </section>
@@ -47,7 +51,6 @@
     <span class="section-tag center">{{ 'HOME.HOW_TAG' | translate }}</span>
     <h2 class="section-title center">{{ 'HOME.HOW_TITLE' | translate }}</h2>
     <p class="section-body center">{{ 'HOME.HOW_SUBTITLE' | translate }}</p>
-
     <div class="steps-grid">
       <div class="step-card" *ngFor="let step of steps; let i = index">
         <div class="step-number">{{ i + 1 }}</div>
@@ -64,7 +67,6 @@
   <div class="section-container">
     <span class="section-tag center">{{ 'HOME.VALUES_TAG' | translate }}</span>
     <h2 class="section-title center">{{ 'HOME.VALUES_TITLE' | translate }}</h2>
-
     <div class="values-grid">
       <div class="value-card" *ngFor="let v of values">
         <span class="value-icon">{{ v.icon }}</span>
@@ -79,10 +81,8 @@
 <section class="mission-section">
   <div class="section-container two-col reverse">
     <div class="about-image-placeholder">
-      <div class="image-placeholder-box">
-        <span class="placeholder-icon">🖼️</span>
-        <span class="placeholder-text">{{ 'HOME.IMAGE_PLACEHOLDER' | translate }}</span>
-      </div>
+      <img src="/assets/img/mision.jpg" alt="Nuestra mision"
+           width="600" height="450" class="section-img" />
     </div>
     <div class="about-text">
       <span class="section-tag">{{ 'HOME.MISSION_TAG' | translate }}</span>
@@ -98,7 +98,6 @@
   <div class="section-container">
     <span class="section-tag center">{{ 'HOME.TESTIMONIALS_TAG' | translate }}</span>
     <h2 class="section-title center">{{ 'HOME.TESTIMONIALS_TITLE' | translate }}</h2>
-
     <div class="testimonials-grid">
       <div class="testimonial-card">
         <div class="testimonial-avatar-placeholder"></div>

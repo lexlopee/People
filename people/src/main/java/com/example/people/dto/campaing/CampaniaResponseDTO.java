@@ -19,4 +19,5 @@ public class CampaniaResponseDTO {
     private String nombreCategoria;
     private Double porcentajeCompletado;
     private Integer diasRestantes;
+    private String imagenUrl;  // ← nuevo campo
 }

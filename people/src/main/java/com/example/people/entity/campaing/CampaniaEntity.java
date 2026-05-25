@@ -18,22 +18,33 @@ import java.util.List;
 @Data
 @Table(name = "campaña")
 public class CampaniaEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_campaña")
     private Integer id;
+
     private String titulo;
+
     @Column(name = "descripcion_larga")
     private String descripcionLarga;
+
     @Column(name = "monto_objetivo")
     private BigDecimal montoObjetivo;
+
     @Column(name = "monto_actual")
     private BigDecimal montoActual;
+
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
+
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
+
     private String estado;
+
+    @Column(name = "imagen_url")
+    private String imagenUrl;  // ← nueva columna
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")

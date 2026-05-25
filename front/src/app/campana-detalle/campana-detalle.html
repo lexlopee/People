@@ -2,7 +2,7 @@
 <div *ngIf="cargando" class="flex justify-center items-center min-h-[60vh]">
   <div class="flex flex-col items-center gap-3 text-[#755D7A]">
     <div class="w-10 h-10 border-4 border-[#755D7A] border-t-transparent rounded-full animate-spin"></div>
-    <p class="text-sm opacity-70">Cargando campaña...</p>
+    <p class="text-sm opacity-70">Cargando campana...</p>
   </div>
 </div>
 
@@ -12,16 +12,16 @@
   <p class="text-lg text-gray-600">{{ error }}</p>
   <a routerLink="/categoria"
      class="px-6 py-3 bg-[#755D7A] text-white rounded-full font-semibold hover:bg-[#7F468A] transition">
-    ← Volver a categorías
+    Volver a categorias
   </a>
 </div>
 
-<!-- Campaña cargada -->
+<!-- Campana cargada -->
 <div *ngIf="campana && !cargando" class="campana-detalle-page">
 
   <div class="campana-breadcrumb">
     <div class="campana-breadcrumb-inner">
-      <a routerLink="/categoria" class="campana-back">← Categorías</a>
+      <a routerLink="/categoria" class="campana-back">Categorias</a>
       <span class="campana-sep">›</span>
       <span class="campana-cat">{{ campana.nombreCategoria }}</span>
       <span class="campana-sep">›</span>
@@ -32,9 +32,16 @@
   <div class="campana-layout">
     <main class="campana-main">
 
+      <!-- Hero: imagen real si existe, placeholder si no -->
       <div class="campana-hero-img">
-        <span class="campana-hero-emoji">✨</span>
-        <span class="campana-hero-label">Imagen de la campaña</span>
+        <img *ngIf="getImagenUrl()"
+             [src]="getImagenUrl()"
+             [alt]="campana.titulo"
+             class="campana-hero-real-img" />
+        <ng-container *ngIf="!getImagenUrl()">
+          <span class="campana-hero-emoji">✨</span>
+          <span class="campana-hero-label">Sin imagen</span>
+        </ng-container>
         <div class="campana-hero-badges">
           <span class="campana-badge campana-badge--cat">{{ campana.nombreCategoria }}</span>
           <span class="campana-badge campana-badge--activa">{{ campana.estado }}</span>
@@ -49,8 +56,8 @@
       </div>
 
       <div class="campana-section-box">
-        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
-        <h2 class="campana-section-title">¿Por qué necesitan tu ayuda?</h2>
+        <span class="campana-section-tag">SOBRE ESTA CAMPANA</span>
+        <h2 class="campana-section-title">Por que necesitan tu ayuda?</h2>
         <p class="campana-body" style="white-space: pre-line">{{ campana.descripcionLarga }}</p>
       </div>
 
@@ -79,7 +86,7 @@
           </div>
           <div class="campana-stat">
             <span class="campana-stat-num">{{ campana.diasRestantes }}</span>
-            <span class="campana-stat-lbl">Días restantes</span>
+            <span class="campana-stat-lbl">Dias restantes</span>
           </div>
         </div>
 
@@ -90,7 +97,7 @@
         <div class="campana-seguridad">
           <span class="campana-seguridad-icon">🔒</span>
           <p class="campana-seguridad-texto">
-            Campaña validada por el equipo de <strong>People</strong>.
+            Campana validada por el equipo de <strong>People</strong>.
           </p>
         </div>
 
