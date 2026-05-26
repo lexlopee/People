@@ -59,10 +59,17 @@
       <a *ngFor="let c of campanas"
          [routerLink]="['/campana', c.idCampania]"
          class="campaign-card no-underline">
-        <div class="campaign-img-placeholder campaign-img-real">
-          <span class="text-4xl">{{ icon }}</span>
+
+        <!-- 🔥 BLOQUE MODIFICADO: ahora muestra la imagen real -->
+        <div class="campaign-img-real">
+          <img 
+            [src]="c.imagenUrl ? 'http://localhost:8080' + c.imagenUrl : 'assets/img/icono-medicina.png'"
+            alt="{{ c.titulo }}"
+            class="campaign-img"
+          />
           <span class="campaign-estado">{{ c.estado }}</span>
         </div>
+
         <div class="campaign-body">
           <h3 class="campaign-titulo">{{ c.titulo }}</h3>
           <p class="campaign-creador">👤 {{ c.nombreCreador }}</p>
