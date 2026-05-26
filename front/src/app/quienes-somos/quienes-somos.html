@@ -1,6 +1,5 @@
 <div class="about-page">
 
-  <!-- HERO -->
   <section class="about-hero">
     <div class="about-hero-content">
       <a routerLink="/" class="about-back">{{ 'ABOUT.BACK' | translate }}</a>
@@ -14,7 +13,6 @@
     </div>
   </section>
 
-  <!-- HISTORIA -->
   <section class="about-section about-section--white">
     <div class="about-container about-two-col">
       <div class="about-text">
@@ -23,20 +21,24 @@
         <p class="about-body">{{ 'ABOUT.STORY_P1' | translate }}</p>
         <p class="about-body">{{ 'ABOUT.STORY_P2' | translate }}</p>
       </div>
-      <div class="about-image-box">
-        <span class="about-image-icon">💜</span>
-        <span class="about-image-label">People</span>
+
+      <div class="about-image-box"
+        style="padding: 0; overflow: hidden; border: none; display: flex; align-items: center; justify-content: center; background: transparent;">
+        <img src="assets/img/quienes-somos.jpg" alt="Nuestra Historia"
+          style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
       </div>
     </div>
   </section>
 
-  <!-- MISIÓN -->
   <section class="about-section about-section--purple">
     <div class="about-container about-two-col about-two-col--reverse">
-      <div class="about-image-box about-image-box--light">
-        <span class="about-image-icon">🌟</span>
-        <span class="about-image-label">4TheWomen</span>
+
+      <div class="about-image-box about-image-box--light"
+        style="padding: 0; overflow: hidden; border: none; display: flex; align-items: center; justify-content: center; background: transparent;">
+        <img src="assets/img/4TheWomen.png" alt="4TheWomen Logo"
+          style="max-width: 100%; max-height: 100%; object-fit: contain;">
       </div>
+
       <div class="about-text">
         <span class="about-tag about-tag--light">{{ 'ABOUT.MISSION_TAG' | translate }}</span>
         <h2 class="about-title about-title--light">{{ 'ABOUT.MISSION_TITLE' | translate }}</h2>
@@ -46,7 +48,6 @@
     </div>
   </section>
 
-  <!-- VALORES -->
   <section class="about-section about-section--white">
     <div class="about-container">
       <div class="about-center-header">
@@ -63,7 +64,6 @@
     </div>
   </section>
 
-  <!-- LEMA / CTA -->
   <section class="about-cta">
     <div class="about-cta-content">
       <h2 class="about-cta-title">{{ 'ABOUT.CTA_TITLE' | translate }}</h2>
