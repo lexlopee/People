@@ -25,12 +25,23 @@
       <p class="text-sm text-gray-500 mt-1">{{ categorias.length }} categorías disponibles</p>
     </div>
 
-    <!-- Botón "Nueva categoría": SOLO administrador -->
-    <button *ngIf="authService.esAdmin()"
-      (click)="mostrarFormulario = !mostrarFormulario"
-      class="flex items-center gap-2 px-4 py-2 bg-[#755D7A] text-white rounded-lg hover:bg-[#7F468A] transition font-semibold text-sm">
-      {{ mostrarFormulario ? '✕ Cancelar' : '＋ Nueva categoría' }}
-    </button>
+    <!-- Botones de acción -->
+    <div class="flex items-center gap-3 flex-wrap">
+
+      <!-- Crear campaña: oculto por ahora, cambiar *ngIf="false" por *ngIf="authService.puedeCrearCampana()" cuando se quiera activar -->
+      <a *ngIf="false"
+        routerLink="/crear-campana"
+        class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#755D7A] to-[#7F468A] text-white rounded-full hover:opacity-90 transition font-bold text-sm shadow-md">
+        🚀 Crear campaña
+      </a>
+
+      <!-- Nueva categoría: SOLO administrador -->
+      <button *ngIf="authService.esAdmin()"
+        (click)="mostrarFormulario = !mostrarFormulario"
+        class="flex items-center gap-2 px-4 py-2.5 bg-white text-[#755D7A] border-2 border-[#755D7A] rounded-full hover:bg-[#FCF4FB] transition font-semibold text-sm">
+        {{ mostrarFormulario ? '✕ Cancelar' : '＋ Nueva categoría' }}
+      </button>
+    </div>
   </div>
 
   <!-- Éxito -->

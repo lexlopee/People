@@ -77,7 +77,7 @@
                 </a>
               </li>
               <li *ngIf="authService.esAdmin()">
-                <a href="#" class="flex items-center gap-2 px-4 py-2 hover:bg-[#FCF4FB] transition text-sm">
+                <a routerLink="/admin" class="flex items-center gap-2 px-4 py-2 hover:bg-[#FCF4FB] transition text-sm font-semibold text-[#755D7A]">
                   ⚙️ Panel admin
                 </a>
               </li>
@@ -120,7 +120,7 @@
         <span>{{ 'HEADER.FUNDRAISE' | translate }}</span>
         <div class="absolute left-0 top-full hidden group-hover:block bg-[#FCF4FB] text-black rounded-md shadow-lg w-64 z-50 overflow-hidden">
           <ul class="py-1">
-            <li><a href="#" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.START_CAMPAIGN' | translate }}</a></li>
+            <li><a routerLink="/crear-campana" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.START_CAMPAIGN' | translate }}</a></li>
             <li><a routerLink="/categoria" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.CATEGORIES' | translate }}</a></li>
             <li><a routerLink="/recaudacion-equipo" class="block px-4 py-2 hover:bg-[#FFD3A1] transition-colors">{{ 'HEADER.TEAM_FUNDRAISING' | translate }}</a></li>
           </ul>

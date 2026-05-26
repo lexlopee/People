@@ -1,7 +1,6 @@
 package com.example.people.dto.user;
 
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Data
@@ -12,4 +11,5 @@ public class UsuarioResponseDTO {
     private String rol;
     private LocalDate fechaAlta;
     private String nombreRango;
+    private boolean activo;
 }

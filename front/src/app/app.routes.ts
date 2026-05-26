@@ -10,6 +10,7 @@ import { CampanaEjemplo } from './campana-ejemplo/campana-ejemplo';
 import { RecaudacionEquipo } from './recaudacion-equipo/recaudacion-equipo';
 import { CrearCampana } from './crear-campana/crear-campana';
 import { CampanaDetalle } from './campana-detalle/campana-detalle';
+import { AdminPanel } from './admin-panel/admin-panel';
 
 export const routes: Routes = [
   { path: '',                   component: Home },
@@ -23,5 +24,6 @@ export const routes: Routes = [
   { path: 'recaudacion-equipo', component: RecaudacionEquipo },
   { path: 'crear-campana',      component: CrearCampana },
   { path: 'campana/:id',        component: CampanaDetalle },
+  { path: 'admin',              component: AdminPanel },
   { path: '**',                 redirectTo: '' }
 ];

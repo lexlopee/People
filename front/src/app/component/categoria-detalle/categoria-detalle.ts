@@ -15,6 +15,7 @@ interface Campana {
   porcentajeCompletado: number;
   diasRestantes: number;
   estado: string;
+  imagenUrl: string | null;
 }
 
 @Component({

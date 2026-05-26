@@ -1,0 +1,164 @@
+<div class="admin-page">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <span class="admin-logo-icon">⚙️</span>
+      <span class="admin-logo-text">Panel Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <button class="admin-nav-item" [class.active]="seccionActiva==='dashboard'" (click)="seccionActiva='dashboard'">
+        📊 Dashboard
+      </button>
+      <button class="admin-nav-item" [class.active]="seccionActiva==='campanias'" (click)="seccionActiva='campanias'">
+        🚀 Campañas <span class="admin-nav-badge">{{campanias.length}}</span>
+      </button>
+      <button class="admin-nav-item" [class.active]="seccionActiva==='usuarios'" (click)="seccionActiva='usuarios'">
+        👥 Usuarios <span class="admin-nav-badge">{{usuarios.length}}</span>
+      </button>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a routerLink="/" class="admin-back-link">← Volver a la web</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-header">
+      <div>
+        <h1 class="admin-title">
+          {{seccionActiva==='dashboard'?'Dashboard':seccionActiva==='campanias'?'Gestión de Campañas':'Gestión de Usuarios'}}
+        </h1>
+        <p class="admin-subtitle">Panel de administración · 4TheWomen</p>
+      </div>
+      <span class="admin-user-badge">{{authService.usuario?.nombre}}</span>
+    </div>
+
+    <div *ngIf="mensajeExito" class="admin-alert admin-alert--ok">✅ {{mensajeExito}}</div>
+    <div *ngIf="mensajeError" class="admin-alert admin-alert--err">⚠️ {{mensajeError}}</div>
+
+    <!-- DASHBOARD -->
+    <div *ngIf="seccionActiva==='dashboard'">
+      <div class="admin-stats-grid" *ngIf="stats">
+        <div class="admin-stat-card">
+          <span class="admin-stat-icon">🚀</span>
+          <div><span class="admin-stat-num">{{stats.totalCampanias}}</span><span class="admin-stat-lbl">Campañas activas</span></div>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-icon">👥</span>
+          <div><span class="admin-stat-num">{{stats.totalUsuarios}}</span><span class="admin-stat-lbl">Usuarios totales</span></div>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-icon">✏️</span>
+          <div><span class="admin-stat-num">{{stats.totalCreadores}}</span><span class="admin-stat-lbl">Creadoras</span></div>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-icon">💜</span>
+          <div><span class="admin-stat-num">{{stats.totalDonantes}}</span><span class="admin-stat-lbl">Donantes</span></div>
+        </div>
+        <div class="admin-stat-card admin-stat-card--highlight">
+          <span class="admin-stat-icon">💰</span>
+          <div><span class="admin-stat-num">{{stats.totalRecaudado | number:'1.0-0'}} €</span><span class="admin-stat-lbl">Total recaudado</span></div>
+        </div>
+      </div>
+      <div class="admin-quick-actions">
+        <h2 class="admin-section-title">Accesos rápidos</h2>
+        <div class="admin-quick-grid">
+          <button class="admin-quick-btn" (click)="seccionActiva='campanias'">🚀 Ver campañas</button>
+          <button class="admin-quick-btn" (click)="seccionActiva='usuarios'">👥 Ver usuarios</button>
+          <a routerLink="/categoria" class="admin-quick-btn">🗂️ Ver categorías</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPAÑAS -->
+    <div *ngIf="seccionActiva==='campanias'">
+      <div class="admin-toolbar">
+        <input type="text" [(ngModel)]="filtroCampania" class="admin-search" placeholder="🔍 Buscar..." />
+        <span class="admin-count">{{campaniasFiltradas.length}} resultados</span>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Título</th><th>Creadora</th><th>Categoría</th><th>Meta</th><th>Progreso</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of campaniasFiltradas">
+              <td class="admin-td-id">#{{c.idCampania}}</td>
+              <td class="admin-td-titulo">{{c.titulo}}</td>
+              <td>{{c.nombreCreador}}</td>
+              <td><span class="admin-badge admin-badge--cat">{{c.nombreCategoria}}</span></td>
+              <td>{{c.montoObjetivo | number:'1.0-0'}} €</td>
+              <td>
+                <div class="admin-progress"><div class="admin-progress-bar" [style.width]="(c.porcentajeCompletado||0)+'%'"></div></div>
+                <span class="admin-progress-label">{{c.porcentajeCompletado | number:'1.0-0'}}%</span>
+              </td>
+              <td>
+                <select class="admin-select-estado" [value]="c.estado"
+                  (change)="cambiarEstado(c.idCampania, $any($event.target).value)">
+                  <option value="ACTIVA">ACTIVA</option>
+                  <option value="CERRADA">CERRADA</option>
+                  <option value="SUSPENDIDA">SUSPENDIDA</option>
+                </select>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <a [routerLink]="['/campana', c.idCampania]" target="_blank" class="admin-btn admin-btn--view" title="Ver">👁</a>
+                  <button class="admin-btn admin-btn--del" (click)="borrarCampania(c.idCampania, c.titulo)" title="Eliminar">🗑</button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="campaniasFiltradas.length===0">
+              <td colspan="8" class="admin-empty">No hay campañas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div *ngIf="seccionActiva==='usuarios'">
+      <div class="admin-toolbar">
+        <input type="text" [(ngModel)]="filtroUsuario" class="admin-search" placeholder="🔍 Buscar..." />
+        <span class="admin-count">{{usuariosFiltrados.length}} resultados</span>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Alta</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of usuariosFiltrados" [class.admin-row--baja]="!u.activo">
+              <td class="admin-td-id">#{{u.idUsuario}}</td>
+              <td class="admin-td-titulo">{{u.nombre}}</td>
+              <td class="admin-td-email">{{u.email}}</td>
+              <td>
+                <select class="admin-select-rol" [value]="u.rol" [disabled]="!u.activo"
+                  (change)="cambiarRol(u.idUsuario, $any($event.target).value)">
+                  <option value="donante">Donante</option>
+                  <option value="creador">Creador</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </td>
+              <td>{{u.fechaAlta | date:'dd/MM/yyyy'}}</td>
+              <td>
+                <span class="admin-badge" [class.admin-badge--activo]="u.activo" [class.admin-badge--baja]="!u.activo">
+                  {{u.activo ? 'Activo' : 'Baja'}}
+                </span>
+              </td>
+              <td>
+                <button *ngIf="u.activo" class="admin-btn admin-btn--del" (click)="darDeBaja(u.idUsuario, u.nombre)" title="Dar de baja">🚫</button>
+                <span *ngIf="!u.activo" class="admin-td-baja">Dado de baja</span>
+              </td>
+            </tr>
+            <tr *ngIf="usuariosFiltrados.length===0">
+              <td colspan="7" class="admin-empty">No hay usuarios</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>

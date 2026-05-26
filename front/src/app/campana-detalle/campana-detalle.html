@@ -2,7 +2,7 @@
 <div *ngIf="cargando" class="flex justify-center items-center min-h-[60vh]">
   <div class="flex flex-col items-center gap-3 text-[#755D7A]">
     <div class="w-10 h-10 border-4 border-[#755D7A] border-t-transparent rounded-full animate-spin"></div>
-    <p class="text-sm opacity-70">Cargando campana...</p>
+    <p class="text-sm opacity-70">Cargando campaña...</p>
   </div>
 </div>
 
@@ -10,18 +10,16 @@
 <div *ngIf="error && !cargando" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
   <span class="text-5xl">😕</span>
   <p class="text-lg text-gray-600">{{ error }}</p>
-  <a routerLink="/categoria"
-     class="px-6 py-3 bg-[#755D7A] text-white rounded-full font-semibold hover:bg-[#7F468A] transition">
-    Volver a categorias
-  </a>
+  <a routerLink="/categoria" class="px-6 py-3 bg-[#755D7A] text-white rounded-full font-semibold">← Volver</a>
 </div>
 
-<!-- Campana cargada -->
+<!-- Campaña cargada -->
 <div *ngIf="campana && !cargando" class="campana-detalle-page">
 
+  <!-- BREADCRUMB -->
   <div class="campana-breadcrumb">
     <div class="campana-breadcrumb-inner">
-      <a routerLink="/categoria" class="campana-back">Categorias</a>
+      <a routerLink="/categoria" class="campana-back">← Volver a categorías</a>
       <span class="campana-sep">›</span>
       <span class="campana-cat">{{ campana.nombreCategoria }}</span>
       <span class="campana-sep">›</span>
@@ -30,17 +28,16 @@
   </div>
 
   <div class="campana-layout">
+
+    <!-- ===== COLUMNA PRINCIPAL ===== -->
     <main class="campana-main">
 
-      <!-- Hero: imagen real si existe, placeholder si no -->
+      <!-- Imagen hero -->
       <div class="campana-hero-img">
-        <img *ngIf="getImagenUrl()"
-             [src]="getImagenUrl()"
-             [alt]="campana.titulo"
-             class="campana-hero-real-img" />
+        <img *ngIf="getImagenUrl()" [src]="getImagenUrl()" [alt]="campana.titulo" class="campana-hero-real-img" />
         <ng-container *ngIf="!getImagenUrl()">
           <span class="campana-hero-emoji">✨</span>
-          <span class="campana-hero-label">Sin imagen</span>
+          <span class="campana-hero-label">Imagen de la campaña</span>
         </ng-container>
         <div class="campana-hero-badges">
           <span class="campana-badge campana-badge--cat">{{ campana.nombreCategoria }}</span>
@@ -48,24 +45,80 @@
         </div>
       </div>
 
+      <!-- Encabezado -->
       <div class="campana-header-box">
         <h1 class="campana-titulo">{{ campana.titulo }}</h1>
         <div class="campana-meta-row">
           <span class="campana-meta-item">👤 {{ campana.nombreCreador }}</span>
+          <span class="campana-meta-item campana-meta--verified">✅ Validada por People</span>
         </div>
       </div>
 
+      <!-- Descripción -->
       <div class="campana-section-box">
-        <span class="campana-section-tag">SOBRE ESTA CAMPANA</span>
-        <h2 class="campana-section-title">Por que necesitan tu ayuda?</h2>
+        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
+        <h2 class="campana-section-title">¿Por qué necesitan tu ayuda?</h2>
         <p class="campana-body" style="white-space: pre-line">{{ campana.descripcionLarga }}</p>
+      </div>
+
+      <!-- Comentarios -->
+      <div class="campana-section-box">
+        <span class="campana-section-tag">COMENTARIOS</span>
+        <h2 class="campana-section-title">{{ comentarios.length }} comentario{{ comentarios.length !== 1 ? 's' : '' }}</h2>
+
+        <!-- Formulario nuevo comentario -->
+        <div *ngIf="authService.estaLogueado()" class="campana-comentario-form">
+          <div class="campana-comentario-avatar-wrap">
+            <div class="campana-comentario-avatar campana-comentario-avatar--yo">
+              {{ authService.usuario?.nombre?.charAt(0)?.toUpperCase() }}
+            </div>
+          </div>
+          <div class="campana-comentario-input-wrap">
+            <textarea
+              [(ngModel)]="nuevoComentario"
+              placeholder="Escribe un comentario..."
+              rows="3"
+              class="campana-comentario-textarea"
+              [disabled]="enviandoComentario">
+            </textarea>
+            <button
+              (click)="enviarComentario()"
+              [disabled]="!nuevoComentario.trim() || enviandoComentario"
+              class="campana-comentario-btn">
+              {{ enviandoComentario ? 'Enviando...' : 'Publicar comentario' }}
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!authService.estaLogueado()" class="campana-comentario-login">
+          <a routerLink="/login" class="campana-comentario-login-link">Inicia sesión</a> para dejar un comentario
+        </div>
+
+        <!-- Lista de comentarios -->
+        <div class="campana-comentarios-lista">
+          <div *ngIf="comentarios.length === 0" class="campana-comentarios-empty">
+            Sé el primero en comentar esta campaña 💬
+          </div>
+          <div *ngFor="let c of comentarios" class="campana-comentario-item">
+            <div class="campana-comentario-avatar">{{ c.inicial }}</div>
+            <div class="campana-comentario-contenido">
+              <div class="campana-comentario-meta">
+                <span class="campana-comentario-nombre">{{ c.nombreUsuario }}</span>
+                <span class="campana-comentario-fecha">{{ c.fecha | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <p class="campana-comentario-texto">{{ c.contenido }}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
     </main>
 
+    <!-- ===== SIDEBAR ===== -->
     <aside class="campana-sidebar">
       <div class="campana-sidebar-card">
 
+        <!-- Progreso -->
         <div class="campana-progreso-wrap">
           <div class="campana-progreso-header">
             <span class="campana-monto-recaudado">{{ campana.montoActual | number:'1.0-0' }} €</span>
@@ -79,25 +132,61 @@
           </p>
         </div>
 
+        <!-- Stats -->
         <div class="campana-stats-row">
           <div class="campana-stat">
-            <span class="campana-stat-num">0</span>
-            <span class="campana-stat-lbl">Donantes</span>
+            <span class="campana-stat-num">{{ comentarios.length }}</span>
+            <span class="campana-stat-lbl">Comentarios</span>
           </div>
-          <div class="campana-stat">
+          <div class="campana-stat campana-stat--dias">
             <span class="campana-stat-num">{{ campana.diasRestantes }}</span>
-            <span class="campana-stat-lbl">Dias restantes</span>
+            <span class="campana-stat-lbl">Días restantes</span>
           </div>
         </div>
 
+        <!-- Botones -->
         <div class="campana-acciones">
           <button class="campana-btn campana-btn--primary">💜 Donar ahora</button>
+          <a routerLink="/recaudacion-equipo" class="campana-btn campana-btn--secondary">👥 Unirme a un equipo</a>
+          <button class="campana-btn campana-btn--ghost" (click)="mostrarCompartir = !mostrarCompartir">
+            🔗 Compartir campaña
+          </button>
         </div>
 
+        <!-- Panel compartir -->
+        <div *ngIf="mostrarCompartir" class="campana-compartir-panel">
+          <p class="campana-compartir-titulo">Comparte en:</p>
+          <div class="campana-compartir-redes">
+            <button class="campana-compartir-red campana-red--wa" (click)="compartirEn('whatsapp')" title="WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.524 5.845L.057 23.49a.75.75 0 00.906.975l5.826-1.527A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.68-.52-5.2-1.427l-.372-.222-3.853 1.01 1.03-3.764-.241-.389A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </button>
+            <button class="campana-compartir-red campana-red--tw" (click)="compartirEn('twitter')" title="X / Twitter">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </button>
+            <button class="campana-compartir-red campana-red--fb" (click)="compartirEn('facebook')" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </button>
+            <button class="campana-compartir-red campana-red--tg" (click)="compartirEn('telegram')" title="Telegram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            </button>
+            <button class="campana-compartir-red campana-red--li" (click)="compartirEn('linkedin')" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </button>
+          </div>
+          <!-- Copiar URL -->
+          <div class="campana-compartir-url">
+            <input type="text" [value]="urlActual" readonly class="campana-compartir-input" />
+            <button (click)="copiarUrl()" class="campana-compartir-copy">
+              {{ urlCopiada ? '✅ Copiado' : '📋 Copiar' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Seguridad -->
         <div class="campana-seguridad">
           <span class="campana-seguridad-icon">🔒</span>
           <p class="campana-seguridad-texto">
-            Campana validada por el equipo de <strong>People</strong>.
+            Pagos seguros gestionados por <strong>Stripe</strong>. Campaña validada por el equipo de People.
           </p>
         </div>
 

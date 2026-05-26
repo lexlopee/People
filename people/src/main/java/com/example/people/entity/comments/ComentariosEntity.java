@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "comentario")
+@Table(name = "comentarios")
 public class ComentariosEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
