@@ -246,19 +246,27 @@
 }
 .preview-banner-btn:hover { background: #7F468A; }
 
-/* Estilos campana-ejemplo reutilizados en el paso 2
-   (ya están en campana-ejemplo.css pero los copiamos aquí
-    para que funcionen sin depender del otro componente) */
-.campana-detalle-page { min-height: 100vh; background: #FCF4FB; }
-.campana-breadcrumb { background:#fff; border-bottom:1px solid rgba(117,93,122,.1); padding:.75rem 2rem; }
-.campana-breadcrumb-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:.5rem; font-size:.85rem; flex-wrap:wrap; }
-.campana-back { color:#755D7A; text-decoration:none; font-weight:600; background:none; border:none; cursor:pointer; font-size:.85rem; padding:0; }
-.campana-back:hover { text-decoration:underline; }
-.campana-sep { color:#aaa; }
-.campana-cat { color:#6b7280; }
-.campana-cat-title { color:#1a1a2e; font-weight:600; }
-.campana-layout { max-width:1200px; margin:2rem auto; padding:0 1.5rem 4rem; display:grid; grid-template-columns:1fr 380px; gap:2rem; align-items:start; }
-.campana-hero-img { width:100%; aspect-ratio:16/9; background:linear-gradient(135deg,#755D7A,#7F468A); border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem; margin-bottom:1.5rem; position:relative; overflow:hidden; }
+/* ============================
+   CAMBIO APLICADO AQUÍ
+   ============================ */
+.campana-hero-img {
+  width: 100%;
+  min-height: 400px; /* aquiiiiiiiiiiiiii */
+  background-size: contain; 
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+/* RESTO IGUAL */
 .campana-hero-emoji { font-size:4rem; }
 .campana-hero-label { color:rgba(255,255,255,.6); font-size:.85rem; }
 .campana-hero-badges { position:absolute; bottom:1rem; left:1rem; display:flex; gap:.5rem; flex-wrap:wrap; }
