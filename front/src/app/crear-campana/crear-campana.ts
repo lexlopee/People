@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, inject, ChangeDetectorRef, NgZone } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
@@ -55,7 +55,10 @@ export class CrearCampana implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     public authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.form = this.fb.group({
@@ -70,9 +73,22 @@ export class CrearCampana implements OnInit {
   ngOnInit(): void {
     if (!this.authService.estaLogueado()) { this.router.navigate(['/login']); return; }
     if (isPlatformBrowser(this.platformId)) {
-      this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
-        next: (data) => this.categorias = data,
-        error: () => this.errorMsg = 'No se pudieron cargar las categorías'
+      this.ngZone.run(() => {
+        this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
+          next: (data) => {
+            this.categorias = data;
+            // Preseleccionar la categoría desde la que se llegó
+            const categoriaId = this.route.snapshot.queryParamMap.get('categoriaId');
+            if (categoriaId) {
+              const id = parseInt(categoriaId, 10);
+              if (!this.categoriasSeleccionadas.includes(id)) {
+                this.categoriasSeleccionadas = [id];
+              }
+            }
+            this.cdr.detectChanges();
+          },
+          error: () => { this.errorMsg = 'No se pudieron cargar las categorías'; this.cdr.detectChanges(); }
+        });
       });
     }
   }

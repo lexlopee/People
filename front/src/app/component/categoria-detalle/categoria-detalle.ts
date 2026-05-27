@@ -133,7 +133,7 @@ export class CategoriaDetalle implements OnInit {
     } else if (!this.authService.puedeCrearCampana()) {
       alert('Solo las creadoras pueden publicar campañas.');
     } else {
-      this.router.navigate(['/crear-campana']);
+      this.router.navigate(['/crear-campana'], { queryParams: { categoriaId: this.idCategoriaActual } });
     }
   }
 }

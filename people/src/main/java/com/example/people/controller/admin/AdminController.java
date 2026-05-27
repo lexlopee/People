@@ -6,8 +6,11 @@ import com.example.people.entity.campaing.CampaniaEntity;
 import com.example.people.entity.user.UsuarioEntity;
 import com.example.people.service.campaing.CampaniaService;
 import com.example.people.service.user.UsuarioService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -24,13 +27,13 @@ public class AdminController {
 
     @Autowired private CampaniaService campaniaService;
     @Autowired private UsuarioService usuarioService;
+    @PersistenceContext private EntityManager em;
 
-    // ── ESTADISTICAS ───────────────────────────────────────────────────────
+    // ── STATS ─────────────────────────────────────────────────────────────
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         List<CampaniaEntity> campanias = campaniaService.listarActivas();
         List<UsuarioEntity> usuarios = usuarioService.listarTodos();
-
         BigDecimal totalRecaudado = campanias.stream()
                 .map(c -> c.getMontoActual() != null ? c.getMontoActual() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -44,19 +47,32 @@ public class AdminController {
         return ResponseEntity.ok(stats);
     }
 
-    // ── CAMPANAS ───────────────────────────────────────────────────────────
+    // ── CAMPAÑAS ───────────────────────────────────────────────────────────
     @GetMapping("/campanias")
     public ResponseEntity<List<CampaniaResponseDTO>> getCampanias() {
         return ResponseEntity.ok(campaniaService.listarActivas()
                 .stream().map(this::toCampaniaDTO).collect(Collectors.toList()));
     }
 
+    // FIX: borra directamente con SQL nativo para evitar el 500 por FK
     @DeleteMapping("/campanias/{id}")
+    @Transactional
     public ResponseEntity<String> borrarCampania(@PathVariable Integer id) {
         CampaniaEntity c = campaniaService.obtenerPorId(id);
         if (c == null) return ResponseEntity.notFound().build();
-        campaniaService.cerrarCampania(id);
-        return ResponseEntity.ok("Campana eliminada");
+
+        try {
+            // Borrar en orden para respetar FKs (aunque ya hay CASCADE en BD)
+            em.createNativeQuery("DELETE FROM people.comentario_likes cl WHERE cl.id_comentario IN (SELECT id_comentario FROM people.comentarios WHERE \"id_campaña\" = ?)").setParameter(1, id).executeUpdate();
+            em.createNativeQuery("DELETE FROM people.comentarios WHERE \"id_campaña\" = ?").setParameter(1, id).executeUpdate();
+            em.createNativeQuery("DELETE FROM people.campaign_updates WHERE \"id_campaña\" = ?").setParameter(1, id).executeUpdate();
+            em.createNativeQuery("DELETE FROM people.\"campaña_categoria\" WHERE \"id_campaña\" = ?").setParameter(1, id).executeUpdate();
+            em.createNativeQuery("DELETE FROM people.donacion WHERE \"id_campaña\" = ?").setParameter(1, id).executeUpdate();
+            em.createNativeQuery("DELETE FROM people.\"campaña\" WHERE \"id_campaña\" = ?").setParameter(1, id).executeUpdate();
+            return ResponseEntity.ok("Campana eliminada");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error al eliminar: " + e.getMessage());
+        }
     }
 
     @PutMapping("/campanias/{id}/estado")
@@ -105,9 +121,15 @@ public class AdminController {
         dto.setFechaFin(c.getFechaFin());
         dto.setEstado(c.getEstado());
         dto.setImagenUrl(c.getImagenUrl());
-        if (c.getUsuarioEntity() != null) dto.setNombreCreador(c.getUsuarioEntity().getNombre());
-        if (c.getCategoriaEntities() != null && !c.getCategoriaEntities().isEmpty())
+        if (c.getUsuarioEntity() != null) {
+            dto.setIdCreador(c.getUsuarioEntity().getId());
+            dto.setNombreCreador(c.getUsuarioEntity().getNombre());
+        }
+        if (c.getCategoriaEntities() != null && !c.getCategoriaEntities().isEmpty()) {
             dto.setNombreCategoria(c.getCategoriaEntities().get(0).getNombre());
+            dto.setCategorias(c.getCategoriaEntities().stream()
+                    .map(cat -> cat.getNombre()).collect(Collectors.toList()));
+        }
         if (c.getMontoObjetivo() != null && c.getMontoActual() != null
                 && c.getMontoObjetivo().compareTo(BigDecimal.ZERO) > 0)
             dto.setPorcentajeCompletado(Math.min(
