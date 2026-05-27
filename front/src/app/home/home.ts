@@ -14,17 +14,17 @@ export class Home implements OnInit, OnDestroy {
 
   slides = [
     {
-      img: '/assets/img/carousel/slide1.jpg',
+      img: 'https://oldddqafpvavreghvsdh.supabase.co/storage/v1/object/public/Images/home/slide1.jpg',
       titulo: 'Impulsa proyectos liderados por mujeres',
       desc: 'Cada donacion es un paso hacia un mundo mas igualitario'
     },
     {
-      img: '/assets/img/carousel/slide2.jpg',
+      img: 'https://oldddqafpvavreghvsdh.supabase.co/storage/v1/object/public/Images/home/slide2.jpg',
       titulo: 'Crea tu campana en minutos',
       desc: 'Comparte tu historia y conecta con personas que quieren ayudarte'
     },
     {
-      img: '/assets/img/carousel/slide3.jpg',
+      img: 'https://oldddqafpvavreghvsdh.supabase.co/storage/v1/object/public/Images/home/slide3.jpg',
       titulo: 'Juntas somos mas fuertes',
       desc: 'Miles de mujeres ya han hecho realidad sus proyectos'
     }

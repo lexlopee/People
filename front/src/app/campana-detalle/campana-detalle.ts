@@ -107,7 +107,7 @@ export class CampanaDetalle implements OnInit {
   }
 
   getImagenUrl(): string {
-    return this.campana?.imagenUrl ? `http://localhost:8080${this.campana.imagenUrl}` : '';
+    return this.campana?.imagenUrl ?? '';
   }
 
   esDuenoCampana(): boolean {

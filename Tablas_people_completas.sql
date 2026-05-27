@@ -1,4 +1,4 @@
-DROP SCHEMA IF EXISTS people CASCADE;
+--DROP SCHEMA IF EXISTS people CASCADE;
 CREATE SCHEMA people AUTHORIZATION postgres;
 
 SET search_path TO people;

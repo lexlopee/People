@@ -36,8 +36,11 @@ public class CampaniaController {
     @Autowired private CategoriaService categoriaService;
     @Autowired private UsuarioService usuarioService;
 
-    @Value("${upload.dir:uploads/campanias}")
-    private String uploadDir;
+    @Value("${SUPABASE_URL}")
+    private String supabaseUrl;
+
+    @Value("${SUPABASE_SERVICE_KEY}")
+    private String supabaseServiceKey;
 
     // GET todas las activas
     @GetMapping
@@ -98,7 +101,6 @@ public class CampaniaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardada));
     }
 
-    // POST imagen
     @PostMapping("/{id}/imagen")
     public ResponseEntity<?> subirImagen(
             @PathVariable Integer id,
@@ -121,18 +123,34 @@ public class CampaniaController {
             return ResponseEntity.badRequest().body("Maximo 5MB");
 
         try {
-            Path dir = Paths.get(uploadDir);
-            Files.createDirectories(dir);
             String ext = archivo.getOriginalFilename() != null
                     ? archivo.getOriginalFilename().substring(archivo.getOriginalFilename().lastIndexOf("."))
                     : ".jpg";
             String nombre = "campana_" + id + "_" + UUID.randomUUID() + ext;
-            Files.write(dir.resolve(nombre), archivo.getBytes());
-            String url = "/uploads/campanias/" + nombre;
-            campania.setImagenUrl(url);
+
+            java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                    .uri(java.net.URI.create(supabaseUrl + "/storage/v1/object/Images/campania/" + nombre))
+                    .header("Authorization", "Bearer " + supabaseServiceKey)
+                    .header("Content-Type", archivo.getContentType())
+                    .header("x-upsert", "true")
+                    .PUT(java.net.http.HttpRequest.BodyPublishers.ofByteArray(archivo.getBytes()))
+                    .build();
+
+            java.net.http.HttpResponse<String> response =
+                    client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error al subir imagen a Supabase: " + response.body());
+            }
+
+            String imagenUrl = supabaseUrl + "/storage/v1/object/public/Images/campania/" + nombre;
+            campania.setImagenUrl(imagenUrl);
             campaniaService.actualizarCampania(campania);
-            return ResponseEntity.ok(url);
-        } catch (IOException e) {
+            return ResponseEntity.ok(imagenUrl);
+
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar imagen");
         }
     }

@@ -63,7 +63,7 @@
         <!-- 🔥 BLOQUE MODIFICADO: ahora muestra la imagen real -->
         <div class="campaign-img-real">
           <img 
-            [src]="c.imagenUrl ? 'http://localhost:8080' + c.imagenUrl : 'assets/img/icono-medicina.png'"
+            [src]="c.imagenUrl || 'https://placehold.co/400x225?text=Sin+imagen'"
             alt="{{ c.titulo }}"
             class="campaign-img"
           />
