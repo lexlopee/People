@@ -198,3 +198,38 @@
   .campana-layout { grid-template-columns:1fr; }
   .campana-sidebar { position:static; }
 }
+
+/* ===== ACCIONES COMENTARIO ===== */
+.comentario-acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.comentario-like-btn--ya {
+  background: #fef2f2 !important;
+  border-color: #f87171 !important;
+  color: #ef4444 !important;
+  cursor: default !important;
+}
+
+.comentario-like-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.comentario-del-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.comentario-del-btn:hover {
+  opacity: 1;
+  background: #fee2e2;
+}

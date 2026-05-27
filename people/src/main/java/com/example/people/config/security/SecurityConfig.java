@@ -52,10 +52,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/imagen")
                         .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
 
-                        // Comentarios: GET publico, POST y like autenticado
+                        // Comentarios: GET publico, POST autenticado, like autenticado, DELETE solo admin
                         .requestMatchers(HttpMethod.GET, "/api/campanias/*/comentarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios/*/like").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/campanias/*/comentarios/*")
+                        .hasAuthority("ROLE_administrador")
 
                         // Actualizaciones: GET publico, POST/DELETE autenticado
                         .requestMatchers(HttpMethod.GET, "/api/campanias/*/updates").permitAll()

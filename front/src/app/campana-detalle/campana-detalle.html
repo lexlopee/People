@@ -149,13 +149,23 @@
                 <span class="campana-comentario-fecha">{{ c.fecha | date:'dd/MM/yyyy' }}</span>
               </div>
               <p class="campana-comentario-texto">{{ c.contenido }}</p>
-              <!-- Like -->
-              <button class="comentario-like-btn"
-                (click)="darLike(c)"
-                [class.comentario-like-btn--activo]="authService.estaLogueado()"
-                [title]="authService.estaLogueado() ? 'Me gusta' : 'Inicia sesión para dar like'">
-                ❤️ {{ c.likes || 0 }}
-              </button>
+              <!-- Acciones comentario -->
+              <div class="comentario-acciones">
+                <button class="comentario-like-btn"
+                  (click)="darLike(c)"
+                  [class.comentario-like-btn--ya]="c.yaLeDioLike"
+                  [disabled]="c.yaLeDioLike || !authService.estaLogueado()"
+                  [title]="!authService.estaLogueado() ? 'Inicia sesión para dar like' : c.yaLeDioLike ? 'Ya diste like' : 'Me gusta'">
+                  {{ c.yaLeDioLike ? '❤️' : '🤍' }} {{ c.likes || 0 }}
+                </button>
+                <!-- Borrar: solo administrador -->
+                <button *ngIf="authService.esAdmin()"
+                  class="comentario-del-btn"
+                  (click)="borrarComentario(c.id)"
+                  title="Eliminar comentario (admin)">
+                  🗑
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -30,6 +30,7 @@ interface Comentario {
   nombreUsuario: string;
   inicial: string;
   likes: number;
+  yaLeDioLike: boolean;
 }
 
 interface Actualizacion {
@@ -163,12 +164,25 @@ export class CampanaDetalle implements OnInit {
 
   darLike(comentario: Comentario): void {
     if (!this.authService.estaLogueado() || !this.campana) return;
+    if (comentario.yaLeDioLike) return; // ya dio like
     const headers = { Authorization: `Bearer ${this.authService.getToken()}` };
-    this.http.post<{id: number, likes: number}>(
+    this.http.post<{id: number, likes: number, yaLeDioLike: boolean}>(
       `http://localhost:8080/api/campanias/${this.campana.idCampania}/comentarios/${comentario.id}/like`,
       {}, { headers }
     ).subscribe({
-      next: (res) => { comentario.likes = res.likes; this.cdr.detectChanges(); },
+      next: (res) => { comentario.likes = res.likes; comentario.yaLeDioLike = true; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+  }
+
+  borrarComentario(idComentario: number): void {
+    if (!confirm('¿Eliminar este comentario?')) return;
+    const headers = { Authorization: `Bearer ${this.authService.getToken()}` };
+    this.http.delete(
+      `http://localhost:8080/api/campanias/${this.campana!.idCampania}/comentarios/${idComentario}`,
+      { headers, responseType: 'text' }
+    ).subscribe({
+      next: () => { this.comentarios = this.comentarios.filter(c => c.id !== idComentario); this.cdr.detectChanges(); },
       error: () => {}
     });
   }
