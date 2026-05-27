@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,19 +36,24 @@ public class CampaniaController {
     @Autowired private CategoriaService categoriaService;
     @Autowired private UsuarioService usuarioService;
 
-    // Carpeta donde se guardan las imágenes (configurable en application.properties)
     @Value("${upload.dir:uploads/campanias}")
     private String uploadDir;
 
-    // GET /api/campanias
+    // GET todas las activas
     @GetMapping
     public ResponseEntity<List<CampaniaResponseDTO>> getCampaniasActivas() {
-        List<CampaniaResponseDTO> lista = campaniaService.listarActivas()
-                .stream().map(this::toDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
+        return ResponseEntity.ok(campaniaService.listarActivas()
+                .stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
-    // GET /api/campanias/{id}
+    // GET por categoría — filtra en BD directamente
+    @GetMapping("/categoria/{idCategoria}")
+    public ResponseEntity<List<CampaniaResponseDTO>> getPorCategoria(@PathVariable Integer idCategoria) {
+        return ResponseEntity.ok(campaniaService.listarPorCategoria(idCategoria)
+                .stream().map(this::toDTO).collect(Collectors.toList()));
+    }
+
+    // GET detalle
     @GetMapping("/{id}")
     public ResponseEntity<CampaniaResponseDTO> getDetalleCampania(@PathVariable Integer id) {
         CampaniaEntity c = campaniaService.obtenerPorId(id);
@@ -55,22 +61,29 @@ public class CampaniaController {
         return ResponseEntity.ok(toDTO(c));
     }
 
-    // POST /api/campanias/crear — crea campaña con datos JSON
+    // POST crear
     @PostMapping("/crear")
     public ResponseEntity<?> crearCampania(
             @Valid @RequestBody CampaniaRequestDTO dto,
             Authentication auth) {
 
-        String email = auth.getName();
-        UsuarioEntity usuario = usuarioService.obtenerPorEmail(email);
-        if (usuario == null) {
+        UsuarioEntity usuario = usuarioService.obtenerPorEmail(auth.getName());
+        if (usuario == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
+
+        List<CategoriaEntity> categorias = new ArrayList<>();
+        if (dto.getIdCategorias() != null && !dto.getIdCategorias().isEmpty()) {
+            for (Integer id : dto.getIdCategorias()) {
+                CategoriaEntity cat = categoriaService.obtenerPorId(id);
+                if (cat != null) categorias.add(cat);
+            }
+        } else if (dto.getIdCategoria() != null) {
+            CategoriaEntity cat = categoriaService.obtenerPorId(dto.getIdCategoria());
+            if (cat != null) categorias.add(cat);
         }
 
-        CategoriaEntity categoria = categoriaService.obtenerPorId(dto.getIdCategoria());
-        if (categoria == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Categoría no válida");
-        }
+        if (categorias.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Selecciona al menos una categoria");
 
         CampaniaEntity entidad = new CampaniaEntity();
         entidad.setTitulo(dto.getTitulo());
@@ -79,13 +92,13 @@ public class CampaniaController {
         entidad.setFechaInicio(LocalDate.now());
         entidad.setFechaFin(dto.getFechaFin());
         entidad.setUsuarioEntity(usuario);
-        entidad.setCategoriaEntities(List.of(categoria));
+        entidad.setCategoriaEntities(categorias);
 
         CampaniaEntity guardada = campaniaService.crearCampania(entidad);
         return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(guardada));
     }
 
-    // POST /api/campanias/{id}/imagen — sube imagen a una campaña existente
+    // POST imagen
     @PostMapping("/{id}/imagen")
     public ResponseEntity<?> subirImagen(
             @PathVariable Integer id,
@@ -93,55 +106,34 @@ public class CampaniaController {
             Authentication auth) {
 
         CampaniaEntity campania = campaniaService.obtenerPorId(id);
-        if (campania == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campaña no encontrada");
-        }
+        if (campania == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Campana no encontrada");
 
-        // Verificar que el usuario es el dueño o admin
-        String email = auth.getName();
-        UsuarioEntity usuario = usuarioService.obtenerPorEmail(email);
-        boolean esAdmin = usuario.getRol().equals("administrador");
+        UsuarioEntity usuario = usuarioService.obtenerPorEmail(auth.getName());
+        boolean esAdmin = "administrador".equals(usuario.getRol());
         boolean esDueno = campania.getUsuarioEntity().getId().equals(usuario.getId());
-        if (!esAdmin && !esDueno) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No tienes permiso");
-        }
+        if (!esAdmin && !esDueno)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Sin permiso");
 
-        // Validar tipo de archivo
-        String contentType = archivo.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solo se permiten imágenes");
-        }
-
-        // Validar tamaño (máximo 5MB)
-        if (archivo.getSize() > 5 * 1024 * 1024) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La imagen no puede superar 5MB");
-        }
+        if (archivo.getContentType() == null || !archivo.getContentType().startsWith("image/"))
+            return ResponseEntity.badRequest().body("Solo imagenes");
+        if (archivo.getSize() > 5 * 1024 * 1024)
+            return ResponseEntity.badRequest().body("Maximo 5MB");
 
         try {
-            // Crear directorio si no existe
-            Path dirPath = Paths.get(uploadDir);
-            Files.createDirectories(dirPath);
-
-            // Nombre único para evitar colisiones
-            String extension = archivo.getOriginalFilename() != null
+            Path dir = Paths.get(uploadDir);
+            Files.createDirectories(dir);
+            String ext = archivo.getOriginalFilename() != null
                     ? archivo.getOriginalFilename().substring(archivo.getOriginalFilename().lastIndexOf("."))
                     : ".jpg";
-            String nombreArchivo = "campana_" + id + "_" + UUID.randomUUID() + extension;
-
-            // Guardar archivo
-            Path rutaArchivo = dirPath.resolve(nombreArchivo);
-            Files.write(rutaArchivo, archivo.getBytes());
-
-            // Guardar URL en la BD
-            String imagenUrl = "/uploads/campanias/" + nombreArchivo;
-            campania.setImagenUrl(imagenUrl);
+            String nombre = "campana_" + id + "_" + UUID.randomUUID() + ext;
+            Files.write(dir.resolve(nombre), archivo.getBytes());
+            String url = "/uploads/campanias/" + nombre;
+            campania.setImagenUrl(url);
             campaniaService.actualizarCampania(campania);
-
-            return ResponseEntity.ok(imagenUrl);
-
+            return ResponseEntity.ok(url);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al guardar la imagen");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar imagen");
         }
     }
 
@@ -156,25 +148,22 @@ public class CampaniaController {
         dto.setFechaFin(c.getFechaFin());
         dto.setEstado(c.getEstado());
         dto.setImagenUrl(c.getImagenUrl());
-
-        if (c.getUsuarioEntity() != null) dto.setNombreCreador(c.getUsuarioEntity().getNombre());
+        if (c.getUsuarioEntity() != null) {
+            dto.setIdCreador(c.getUsuarioEntity().getId());
+            dto.setNombreCreador(c.getUsuarioEntity().getNombre());
+        }
         if (c.getCategoriaEntities() != null && !c.getCategoriaEntities().isEmpty()) {
             dto.setNombreCategoria(c.getCategoriaEntities().get(0).getNombre());
+            dto.setCategorias(c.getCategoriaEntities().stream()
+                    .map(CategoriaEntity::getNombre).collect(Collectors.toList()));
         }
-
         if (c.getMontoObjetivo() != null && c.getMontoActual() != null
-                && c.getMontoObjetivo().compareTo(java.math.BigDecimal.ZERO) > 0) {
-            double pct = c.getMontoActual().doubleValue() / c.getMontoObjetivo().doubleValue() * 100;
-            dto.setPorcentajeCompletado(Math.min(pct, 100.0));
-        } else {
-            dto.setPorcentajeCompletado(0.0);
-        }
-
-        if (c.getFechaFin() != null) {
-            long dias = ChronoUnit.DAYS.between(LocalDate.now(), c.getFechaFin());
-            dto.setDiasRestantes((int) Math.max(0, dias));
-        }
-
+                && c.getMontoObjetivo().compareTo(java.math.BigDecimal.ZERO) > 0)
+            dto.setPorcentajeCompletado(Math.min(
+                    c.getMontoActual().doubleValue() / c.getMontoObjetivo().doubleValue() * 100, 100.0));
+        else dto.setPorcentajeCompletado(0.0);
+        if (c.getFechaFin() != null)
+            dto.setDiasRestantes((int) Math.max(0, ChronoUnit.DAYS.between(LocalDate.now(), c.getFechaFin())));
         return dto;
     }
 }

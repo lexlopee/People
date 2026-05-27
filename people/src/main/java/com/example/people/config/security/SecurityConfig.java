@@ -46,15 +46,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/campanias").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/campanias/**").permitAll()
 
-                        // Comentarios GET publico, POST autenticado
-                        .requestMatchers(HttpMethod.GET, "/api/campanias/*/comentarios").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios").authenticated()
-
                         // Crear campana e imagen
                         .requestMatchers(HttpMethod.POST, "/api/campanias/crear")
                         .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/imagen")
                         .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
+
+                        // Comentarios: GET publico, POST y like autenticado
+                        .requestMatchers(HttpMethod.GET, "/api/campanias/*/comentarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios/*/like").authenticated()
+
+                        // Actualizaciones: GET publico, POST/DELETE autenticado
+                        .requestMatchers(HttpMethod.GET, "/api/campanias/*/updates").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/campanias/*/updates").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/campanias/*/updates/**").authenticated()
 
                         .anyRequest().authenticated()
                 )

@@ -37,10 +37,46 @@
         <div class="crear-section-box">
           <span class="crear-section-tag">PASO 2 · DESCRIPCIÓN</span>
           <label class="crear-label">¿Por qué necesitas ayuda? *</label>
-          <textarea formControlName="descripcionLarga" rows="8" class="crear-textarea"
+
+          <!-- Barra de herramientas Markdown -->
+          <div class="md-toolbar">
+            <div class="md-toolbar-group">
+              <button type="button" class="md-btn" title="Negrita" (click)="insertarFormato('negrita')"><strong>B</strong></button>
+              <button type="button" class="md-btn" title="Cursiva" (click)="insertarFormato('cursiva')"><em>I</em></button>
+              <button type="button" class="md-btn" title="Título" (click)="insertarFormato('titulo')">H2</button>
+            </div>
+            <div class="md-toolbar-sep"></div>
+            <div class="md-toolbar-group">
+              <button type="button" class="md-btn" title="Lista" (click)="insertarFormato('lista')">☰</button>
+              <button type="button" class="md-btn" title="Lista numerada" (click)="insertarFormato('lista-num')">1.</button>
+              <button type="button" class="md-btn" title="Separador" (click)="insertarFormato('separador')">—</button>
+            </div>
+            <div class="md-toolbar-sep"></div>
+            <div class="md-toolbar-group md-toolbar-emojis">
+              <button type="button" class="md-btn md-btn--emoji" title="Corazón" (click)="insertarFormato('emoji-corazon')">💜</button>
+              <button type="button" class="md-btn md-btn--emoji" title="Check" (click)="insertarFormato('emoji-check')">✅</button>
+              <button type="button" class="md-btn md-btn--emoji" title="Info" (click)="insertarFormato('emoji-info')">ℹ️</button>
+              <button type="button" class="md-btn md-btn--emoji" title="Atención" (click)="insertarFormato('emoji-warning')">⚠️</button>
+              <button type="button" class="md-btn md-btn--emoji" title="Estrella" (click)="insertarFormato('emoji-estrella')">⭐</button>
+            </div>
+          </div>
+
+          <textarea formControlName="descripcionLarga" rows="10" class="crear-textarea"
             [class.crear-input--error]="campoInvalido('descripcionLarga')"
-            placeholder="Explica el propósito de tu campaña..."></textarea>
+            placeholder="Explica el propósito de tu campaña...
+
+Puedes usar formato:
+**negrita**, *cursiva*
+## Títulos de sección
+- Listas con puntos
+1. Listas numeradas
+
+Y emojis para llamar la atención 💜">
+          </textarea>
           <p *ngIf="campoInvalido('descripcionLarga')" class="crear-field-error">Mínimo 50 caracteres</p>
+
+          <div class="md-preview-label">👁 Vista previa en tiempo real:</div>
+          <div class="md-preview" [innerHTML]="descripcionHtml"></div>
         </div>
 
         <!-- Meta + Fecha -->
@@ -67,13 +103,26 @@
           <span class="crear-section-tag">PASO 4 · CATEGORÍA</span>
           <div class="crear-two-col">
             <div>
-              <label class="crear-label">Categoría *</label>
-              <select formControlName="idCategoria" class="crear-input crear-select"
-                [class.crear-input--error]="campoInvalido('idCategoria')">
-                <option [ngValue]="null" disabled>Selecciona una categoría</option>
-                <option *ngFor="let cat of categorias" [ngValue]="cat.idCategoria">{{ cat.nombre }}</option>
-              </select>
-              <p *ngIf="campoInvalido('idCategoria')" class="crear-field-error">Elige una categoría</p>
+              <label class="crear-label">Categorías *</label>
+              <p class="crear-hint" style="margin-bottom: 0.75rem; color: #755D7A;">
+                💡 Puedes seleccionar <strong>varias categorías</strong> para que tu campaña llegue a más personas. Haz clic en cada una para añadirla o quitarla.
+              </p>
+              <div class="cat-selector-grid">
+                <button *ngFor="let cat of categorias"
+                  type="button"
+                  (click)="toggleCategoria(cat.idCategoria)"
+                  class="cat-selector-btn"
+                  [class.cat-selector-btn--active]="esCategoriaSeleccionada(cat.idCategoria)">
+                  {{ cat.nombre }}
+                  <span *ngIf="esCategoriaSeleccionada(cat.idCategoria)"> ✓</span>
+                </button>
+              </div>
+              <p *ngIf="categoriasSeleccionadas.length === 0" class="crear-field-error">
+                Selecciona al menos una categoría
+              </p>
+              <p *ngIf="categoriasSeleccionadas.length > 0" class="crear-hint" style="margin-top: 0.5rem;">
+                ✅ {{ categoriasSeleccionadas.length }} categoría{{ categoriasSeleccionadas.length !== 1 ? 's' : '' }} seleccionada{{ categoriasSeleccionadas.length !== 1 ? 's' : '' }}: {{ nombresCategoriasSeleccionadas }}
+              </p>
             </div>
             <div>
               <label class="crear-label">Ubicación</label>
@@ -138,7 +187,7 @@
     <div class="campana-breadcrumb-inner">
       <button (click)="volver()" class="campana-back">← Editar campaña</button>
       <span class="campana-sep">›</span>
-      <span class="campana-cat">{{ nombreCategoria }}</span>
+      <span class="campana-cat">{{ nombresCategoriasSeleccionadas }}</span>
       <span class="campana-sep">›</span>
       <span class="campana-cat-title">{{ form.value.titulo }}</span>
     </div>
@@ -160,7 +209,7 @@
           <span class="campana-hero-label">Sin imagen seleccionada</span>
         </ng-container>
         <div class="campana-hero-badges">
-          <span class="campana-badge campana-badge--cat">{{ nombreCategoria }}</span>
+          <span class="campana-badge campana-badge--cat">{{ nombresCategoriasSeleccionadas }}</span>
           <span class="campana-badge campana-badge--activa">Nueva</span>
         </div>
       </div>

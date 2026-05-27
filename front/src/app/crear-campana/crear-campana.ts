@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface CategoriaItem { idCategoria: number; nombre: string; }
 
@@ -16,13 +17,15 @@ interface CategoriaItem { idCategoria: number; nombre: string; }
 })
 export class CrearCampana implements OnInit {
 
+  private sanitizer = inject(DomSanitizer);
+
   form: FormGroup;
   categorias: CategoriaItem[] = [];
+  categoriasSeleccionadas: number[] = [];  // múltiples categorías
   paso = 1;
   guardando = false;
   errorMsg = '';
 
-  // Imagen
   imagenSeleccionada: File | null = null;
   imagenPreview: string | null = null;
 
@@ -37,9 +40,15 @@ export class CrearCampana implements OnInit {
     return Math.max(0, Math.ceil((new Date(fin).getTime() - Date.now()) / 86400000));
   }
 
-  get nombreCategoria(): string {
-    const id = this.form.value.idCategoria;
-    return this.categorias.find(c => c.idCategoria == id)?.nombre ?? '';
+  get nombresCategoriasSeleccionadas(): string {
+    return this.categorias
+      .filter(c => this.categoriasSeleccionadas.includes(c.idCategoria))
+      .map(c => c.nombre)
+      .join(', ') || 'Ninguna seleccionada';
+  }
+
+  get descripcionHtml(): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(this.markdownToHtml(this.form.value.descripcionLarga ?? ''));
   }
 
   constructor(
@@ -54,7 +63,6 @@ export class CrearCampana implements OnInit {
       descripcionLarga: ['', [Validators.required, Validators.minLength(50)]],
       montoObjetivo:    [null, [Validators.required, Validators.min(100)]],
       fechaFin:         ['', Validators.required],
-      idCategoria:      [null, Validators.required],
       ubicacion:        ['España']
     });
   }
@@ -69,46 +77,106 @@ export class CrearCampana implements OnInit {
     }
   }
 
-  onImagenSeleccionada(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-
-      // Validar tipo
-      if (!file.type.startsWith('image/')) {
-        this.errorMsg = 'Solo se permiten imágenes (JPG, PNG, etc.)';
-        return;
-      }
-      // Validar tamaño (5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        this.errorMsg = 'La imagen no puede superar 5MB';
-        return;
-      }
-
-      this.imagenSeleccionada = file;
-      this.errorMsg = '';
-
-      // Mostrar preview
-      const reader = new FileReader();
-      reader.onload = (e) => this.imagenPreview = e.target?.result as string;
-      reader.readAsDataURL(file);
+  toggleCategoria(id: number): void {
+    const idx = this.categoriasSeleccionadas.indexOf(id);
+    if (idx === -1) {
+      this.categoriasSeleccionadas = [...this.categoriasSeleccionadas, id];
+    } else {
+      this.categoriasSeleccionadas = this.categoriasSeleccionadas.filter(c => c !== id);
     }
   }
 
-  quitarImagen(): void {
-    this.imagenSeleccionada = null;
-    this.imagenPreview = null;
+  esCategoriaSeleccionada(id: number): boolean {
+    return this.categoriasSeleccionadas.includes(id);
   }
+
+  insertarFormato(tipo: string): void {
+    const textarea = document.querySelector('.crear-textarea') as HTMLTextAreaElement;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const texto = textarea.value;
+    const seleccion = texto.substring(start, end);
+    const antes = texto.substring(0, start);
+    const despues = texto.substring(end);
+    let nuevo = '';
+    let cursorOffset = 0;
+    switch (tipo) {
+      case 'negrita':       nuevo = `**${seleccion || 'texto en negrita'}**`; cursorOffset = seleccion ? nuevo.length : 2; break;
+      case 'cursiva':       nuevo = `*${seleccion || 'texto en cursiva'}*`; cursorOffset = seleccion ? nuevo.length : 1; break;
+      case 'lista':         nuevo = seleccion ? seleccion.split('\n').map(l => `- ${l}`).join('\n') : `\n- Elemento 1\n- Elemento 2\n- Elemento 3`; cursorOffset = nuevo.length; break;
+      case 'lista-num':     nuevo = seleccion ? seleccion.split('\n').map((l,i) => `${i+1}. ${l}`).join('\n') : `\n1. Primer punto\n2. Segundo punto\n3. Tercer punto`; cursorOffset = nuevo.length; break;
+      case 'titulo':        nuevo = `\n## ${seleccion || 'Título de sección'}`; cursorOffset = nuevo.length; break;
+      case 'separador':     nuevo = `\n\n---\n\n`; cursorOffset = nuevo.length; break;
+      case 'emoji-corazon': nuevo = '💜'; cursorOffset = 2; break;
+      case 'emoji-check':   nuevo = '✅'; cursorOffset = 2; break;
+      case 'emoji-info':    nuevo = 'ℹ️'; cursorOffset = 2; break;
+      case 'emoji-warning': nuevo = '⚠️'; cursorOffset = 2; break;
+      case 'emoji-estrella':nuevo = '⭐'; cursorOffset = 2; break;
+      default: return;
+    }
+    this.form.patchValue({ descripcionLarga: antes + nuevo + despues });
+    setTimeout(() => { textarea.focus(); const pos = start + cursorOffset; textarea.setSelectionRange(pos, pos); }, 10);
+  }
+
+  private markdownToHtml(md: string): string {
+    if (!md) return '<p class="text-gray-400 italic">La descripción aparecerá aquí...</p>';
+    let html = md
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/^### (.+)$/gm, '<h3 class="md-h3">$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2 class="md-h2">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 class="md-h1">$1</h1>')
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/^---$/gm, '<hr class="md-hr">')
+      .replace(/^- (.+)$/gm, '<li class="md-li">$1</li>')
+      .replace(/^\d+\. (.+)$/gm, '<li class="md-li md-li-num">$1</li>')
+      .replace(/\n\n/g, '</p><p class="md-p">')
+      .replace(/\n/g, '<br>');
+    html = html
+      .replace(/(<li class="md-li">.*?<\/li>(\s*<br>)*)+/g, m => `<ul class="md-ul">${m}</ul>`)
+      .replace(/(<li class="md-li md-li-num">.*?<\/li>(\s*<br>)*)+/g, m => `<ol class="md-ol">${m}</ol>`);
+    return `<p class="md-p">${html}</p>`;
+  }
+
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.[0]) return;
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) { this.errorMsg = 'Solo se permiten imágenes'; return; }
+    if (file.size > 5 * 1024 * 1024) { this.errorMsg = 'Máximo 5MB'; return; }
+    this.imagenSeleccionada = file;
+    this.errorMsg = '';
+    const reader = new FileReader();
+    reader.onload = (e) => this.imagenPreview = e.target?.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  onDragOver(event: DragEvent): void { event.preventDefault(); }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (!file) return;
+    this.onImagenSeleccionada({ target: { files: [file] } } as any);
+  }
+
+  quitarImagen(): void { this.imagenSeleccionada = null; this.imagenPreview = null; }
 
   previsualizacion(): void {
+    if (this.categoriasSeleccionadas.length === 0) {
+      this.errorMsg = 'Selecciona al menos una categoría';
+      return;
+    }
     if (this.form.valid) this.paso = 2;
-    else this.form.markAllAsTouched();
+    else { this.form.markAllAsTouched(); this.errorMsg = 'Rellena todos los campos obligatorios'; }
   }
 
-  volver(): void { this.paso = 1; }
+  volver(): void { this.paso = 1; this.errorMsg = ''; }
 
   publicar(): void {
-    if (!this.form.valid) return;
+    if (!this.form.valid || this.categoriasSeleccionadas.length === 0) return;
     this.guardando = true;
     this.errorMsg = '';
 
@@ -118,43 +186,24 @@ export class CrearCampana implements OnInit {
       descripcionLarga: this.form.value.descripcionLarga,
       montoObjetivo:    this.form.value.montoObjetivo,
       fechaFin:         this.form.value.fechaFin,
-      idCategoria:      this.form.value.idCategoria
+      idCategorias:     this.categoriasSeleccionadas
     };
 
-    this.http.post<any>('http://localhost:8080/api/campanias/crear', payload, { headers })
-      .subscribe({
-        next: (campana) => {
-          // Si hay imagen, subirla después de crear la campaña
-          if (this.imagenSeleccionada) {
-            this.subirImagen(campana.idCampania, headers);
-          } else {
-            this.guardando = false;
-            this.router.navigate(['/campana', campana.idCampania]);
-          }
-        },
-        error: (err) => {
-          this.guardando = false;
-          this.errorMsg = err.error ?? 'Error al publicar la campaña.';
-        }
-      });
+    this.http.post<any>('http://localhost:8080/api/campanias/crear', payload, { headers }).subscribe({
+      next: (campana) => {
+        if (this.imagenSeleccionada) this.subirImagen(campana.idCampania, headers);
+        else { this.guardando = false; this.router.navigate(['/campana', campana.idCampania]); }
+      },
+      error: (err) => { this.guardando = false; this.errorMsg = err.error ?? 'Error al publicar'; }
+    });
   }
 
-  private subirImagen(idCampania: number, headers: any): void {
+  private subirImagen(id: number, headers: any): void {
     const formData = new FormData();
     formData.append('imagen', this.imagenSeleccionada!);
-
-    this.http.post(`http://localhost:8080/api/campanias/${idCampania}/imagen`, formData, { headers, responseType: 'text' })
-      .subscribe({
-        next: () => {
-          this.guardando = false;
-          this.router.navigate(['/campana', idCampania]);
-        },
-        error: () => {
-          // La campaña se creó bien, solo falló la imagen
-          this.guardando = false;
-          this.router.navigate(['/campana', idCampania]);
-        }
-      });
+    this.http.post(`http://localhost:8080/api/campanias/${id}/imagen`, formData, { headers, responseType: 'text' })
+      .subscribe({ next: () => { this.guardando = false; this.router.navigate(['/campana', id]); },
+                   error: () => { this.guardando = false; this.router.navigate(['/campana', id]); } });
   }
 
   campoInvalido(campo: string): boolean {

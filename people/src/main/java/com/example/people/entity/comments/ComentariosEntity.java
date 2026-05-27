@@ -16,21 +16,23 @@ import java.time.LocalDate;
 @Data
 @Table(name = "comentarios")
 public class ComentariosEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_comentario")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_campaña")
     private CampaniaEntity campaniaEntity;
 
     private String contenido;
     private LocalDate fecha;
 
-
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    private Integer likes = 0;
 }

@@ -5,6 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
+interface CategoriaItem { idCategoria: number; nombre: string; }
+
 interface Campana {
   idCampania: number;
   titulo: string;
@@ -12,6 +14,7 @@ interface Campana {
   montoActual: number;
   nombreCreador: string;
   nombreCategoria: string;
+  categorias: string[];
   porcentajeCompletado: number;
   diasRestantes: number;
   estado: string;
@@ -48,24 +51,13 @@ export class CategoriaDetalle implements OnInit {
     'viajes': '✈️', 'voluntariado': '💚', 'deseos': '⭐'
   };
 
-  private nombreMap: Record<string, string> = {
-    'medicina': 'Medicina', 'in-memoriam': 'In Memoriam',
-    'emergencia': 'Emergencia', 'sin-animo-de-lucro': 'Sin ánimo de lucro',
-    'educacion': 'Educación', 'animales': 'Animales',
-    'medioambiente': 'Medioambiente', 'empresa': 'Empresa',
-    'comunidad': 'Comunidad', 'competicion': 'Competición',
-    'artes-creativas': 'Artes creativas', 'evento': 'Evento',
-    'religion': 'Religión', 'familia': 'Familia',
-    'deportes': 'Deportes', 'viajes': 'Viajes',
-    'voluntariado': 'Voluntariado', 'deseos': 'Deseos'
-  };
-
   slug = '';
   translateKey = '';
   icon = '';
   notFound = false;
   campanas: Campana[] = [];
   cargandoCampanas = false;
+  idCategoriaActual: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,35 +75,56 @@ export class CategoriaDetalle implements OnInit {
       this.translateKey = this.slugMap[this.slug] ?? '';
       this.icon = this.iconMap[this.slug] ?? '📁';
       this.notFound = !this.translateKey;
-      this.cdr.detectChanges();
 
       if (!this.notFound && isPlatformBrowser(this.platformId)) {
-        this.cargarCampanas();
+        // Primero buscamos el idCategoria por nombre desde el backend
+        this.buscarIdCategoria();
       }
     });
   }
 
-  cargarCampanas(): void {
+  // Obtiene todas las categorías y busca el id que corresponde al slug actual
+  buscarIdCategoria(): void {
     this.cargandoCampanas = true;
     this.cdr.detectChanges();
 
-    // Usamos ngZone.run para asegurar que Angular detecta los cambios
     this.ngZone.run(() => {
-      this.http.get<Campana[]>('http://localhost:8080/api/campanias').subscribe({
-        next: (todas) => {
-          const nombreCat = this.nombreMap[this.slug] ?? '';
-          this.campanas = todas.filter(c =>
-            c.nombreCategoria?.toLowerCase() === nombreCat.toLowerCase()
-          );
+      this.http.get<CategoriaItem[]>('http://localhost:8080/api/categorias').subscribe({
+        next: (cats) => {
+          // Busca la categoría cuyo slug coincide
+          const cat = cats.find(c => this.toSlug(c.nombre) === this.slug);
+          if (cat) {
+            this.idCategoriaActual = cat.idCategoria;
+            this.cargarCampanas(cat.idCategoria);
+          } else {
+            this.cargandoCampanas = false;
+            this.cdr.detectChanges();
+          }
+        },
+        error: () => { this.cargandoCampanas = false; this.cdr.detectChanges(); }
+      });
+    });
+  }
+
+  // Llama al endpoint del backend que ya filtra por categoría en BD
+  cargarCampanas(idCategoria: number): void {
+    this.ngZone.run(() => {
+      this.http.get<Campana[]>(`http://localhost:8080/api/campanias/categoria/${idCategoria}`).subscribe({
+        next: (data) => {
+          this.campanas = data;
           this.cargandoCampanas = false;
           this.cdr.detectChanges();
         },
-        error: () => {
-          this.cargandoCampanas = false;
-          this.cdr.detectChanges();
-        }
+        error: () => { this.cargandoCampanas = false; this.cdr.detectChanges(); }
       });
     });
+  }
+
+  // Convierte nombre a slug igual que en el backend
+  private toSlug(nombre: string): string {
+    return nombre.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '-');
   }
 
   irACrearCampana(): void {
