@@ -1,0 +1,64 @@
+<div class="mis-sol-page">
+  <div class="mis-sol-container">
+
+    <div class="mis-sol-header">
+      <a routerLink="/categoria" class="mis-sol-back">← Volver a categorías</a>
+      <h1 class="mis-sol-titulo">Mis solicitudes</h1>
+      <p class="mis-sol-subtitulo">Aquí puedes ver el estado de las campañas que has enviado a revisión.</p>
+    </div>
+
+    <!-- Cargando -->
+    <div *ngIf="cargando" class="mis-sol-loading">
+      <div class="mis-sol-spinner"></div>
+      <p>Cargando...</p>
+    </div>
+
+    <!-- Vacío -->
+    <div *ngIf="!cargando && solicitudes.length === 0" class="mis-sol-empty">
+      <span class="mis-sol-empty-icon">📭</span>
+      <p class="mis-sol-empty-titulo">Aún no has enviado ninguna solicitud</p>
+      <a routerLink="/crear-campana" class="mis-sol-crear-btn">🚀 Crear mi primera campaña</a>
+    </div>
+
+    <!-- Lista -->
+    <div *ngIf="!cargando && solicitudes.length > 0" class="mis-sol-lista">
+      <div *ngFor="let s of solicitudes" class="mis-sol-card"
+        [class.mis-sol-card--pend]="s.estado==='PENDIENTE'"
+        [class.mis-sol-card--apr]="s.estado==='APROBADA'"
+        [class.mis-sol-card--rec]="s.estado==='RECHAZADA'">
+
+        <div class="mis-sol-card-top">
+          <h3 class="mis-sol-card-titulo">{{ s.titulo }}</h3>
+          <span class="mis-sol-estado"
+            [class.mis-sol-estado--pend]="s.estado==='PENDIENTE'"
+            [class.mis-sol-estado--apr]="s.estado==='APROBADA'"
+            [class.mis-sol-estado--rec]="s.estado==='RECHAZADA'">
+            {{ estadoEmoji(s.estado) }} {{ estadoTexto(s.estado) }}
+          </span>
+        </div>
+
+        <div class="mis-sol-card-info">
+          <span>🎯 {{ s.montoObjetivo | number:'1.0-0' }} €</span>
+          <span>🏢 {{ s.organizacion }}</span>
+          <span>📅 {{ s.fechaSolicitud | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <!-- Mensaje de rechazo -->
+        <div *ngIf="s.estado==='RECHAZADA' && s.motivoRechazo" class="mis-sol-rechazo">
+          <strong>Motivo:</strong> {{ s.motivoRechazo }}
+        </div>
+
+        <!-- Botón ver campaña si aprobada -->
+        <div *ngIf="s.estado==='APROBADA' && s.idCampanaCreada" class="mis-sol-card-acciones">
+          <a [routerLink]="['/campana', s.idCampanaCreada]" class="mis-sol-ver-btn">Ver mi campaña publicada →</a>
+        </div>
+
+        <!-- Pendiente -->
+        <div *ngIf="s.estado==='PENDIENTE'" class="mis-sol-pendiente-nota">
+          ⏳ Tu campaña está siendo revisada por nuestro equipo. Te avisaremos por email.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

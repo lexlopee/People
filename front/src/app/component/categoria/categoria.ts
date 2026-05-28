@@ -38,6 +38,14 @@ export class Categoria implements OnInit {
   nuevaDescripcion = '';
   guardando = false;
   mensajeExito = '';
+  // Proponer categoría (creadoras)
+  mostrarFormProponer = false;
+  proponerNombre = '';
+  proponerMotivo = '';
+  proponerOrganizacion = '';
+  guardandoProponer = false;
+  mensajeProponer = '';
+  errorProponer = '';
 
   constructor(
     private http: HttpClient,
@@ -110,6 +118,52 @@ export class Categoria implements OnInit {
         error: () => {
           this.guardando = false;
           this.error = 'Error al crear la categoría.';
+          this.cdr.detectChanges();
+        }
+      });
+    });
+  }
+
+  proponerCategoria(): void {
+    if (!this.proponerNombre.trim() || !this.proponerMotivo.trim() || !this.proponerOrganizacion.trim()) {
+      this.errorProponer = 'Rellena todos los campos';
+      this.cdr.detectChanges();
+      return;
+    }
+    this.guardandoProponer = true;
+    this.errorProponer = '';
+    const token = this.authService.getToken();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    this.ngZone.run(() => {
+      this.http.post(
+        'http://localhost:8080/api/solicitudes',
+        {
+          tipo: 'CATEGORIA',
+          titulo: this.proponerNombre.trim(),
+          descripcion: this.proponerMotivo.trim(),
+          motivo: this.proponerMotivo.trim(),
+          organizacion: this.proponerOrganizacion.trim()
+        },
+        { headers }
+      ).subscribe({
+        next: () => {
+          this.proponerNombre = '';
+          this.proponerMotivo = '';
+          this.proponerOrganizacion = '';
+          this.guardandoProponer = false;
+          this.mensajeProponer = '✅ Propuesta enviada. El equipo la revisará pronto.';
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.mensajeProponer = '';
+            this.mostrarFormProponer = false;
+            this.cdr.detectChanges();
+          }, 3500);
+        },
+        error: () => {
+          this.guardandoProponer = false;
+          this.errorProponer = 'Error al enviar la propuesta';
           this.cdr.detectChanges();
         }
       });

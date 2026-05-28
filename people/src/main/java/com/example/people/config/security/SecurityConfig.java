@@ -36,6 +36,14 @@ public class SecurityConfig {
                         // Admin
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_administrador")
 
+                        // Solicitudes
+                        .requestMatchers(HttpMethod.POST, "/api/solicitudes").hasAnyAuthority("ROLE_administrador", "ROLE_creador")
+                        .requestMatchers(HttpMethod.GET, "/api/solicitudes/mias").hasAnyAuthority("ROLE_administrador", "ROLE_creador")
+                        .requestMatchers(HttpMethod.GET, "/api/solicitudes/pendientes").hasAuthority("ROLE_administrador")
+                        .requestMatchers(HttpMethod.GET, "/api/solicitudes").hasAuthority("ROLE_administrador")
+                        .requestMatchers(HttpMethod.PUT, "/api/solicitudes/*/aprobar").hasAuthority("ROLE_administrador")
+                        .requestMatchers(HttpMethod.PUT, "/api/solicitudes/*/rechazar").hasAuthority("ROLE_administrador")
+
                         // Categorias
                         .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
@@ -52,14 +60,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/imagen")
                         .hasAnyAuthority("ROLE_administrador", "ROLE_creador")
 
-                        // Comentarios: GET publico, POST autenticado, like autenticado, DELETE solo admin
+                        // Comentarios
                         .requestMatchers(HttpMethod.GET, "/api/campanias/*/comentarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/comentarios/*/like").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/campanias/*/comentarios/*")
                         .hasAuthority("ROLE_administrador")
 
-                        // Actualizaciones: GET publico, POST/DELETE autenticado
+                        // Actualizaciones
                         .requestMatchers(HttpMethod.GET, "/api/campanias/*/updates").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/campanias/*/updates").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/campanias/*/updates/**").authenticated()

@@ -86,73 +86,41 @@
   .admin-nav-item { flex-shrink:0; }
   .admin-stats-grid { grid-template-columns:repeat(2,1fr); }
 }
-/* ===== MODAL DE CONFIRMACION ===== */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-box {
-  background: white;
-  border-radius: 20px;
-  padding: 2rem;
-  max-width: 420px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  animation: slideUp 0.2s ease;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
+/* ===== MODAL ===== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999; animation: fadeIn 0.15s ease; padding: 1rem; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box { background: white; border-radius: 20px; padding: 2rem; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
+.modal-box--detalle { max-width: 560px; text-align: left; max-height: 85vh; overflow-y: auto; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 .modal-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-
-.modal-mensaje {
-  font-size: 1rem;
-  color: #1a1a2e;
-  font-weight: 500;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.modal-btns {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-}
-
-.modal-btn {
-  padding: 10px 24px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-}
-
-.modal-btn--cancel {
-  background: #f3f4f6;
-  color: #6b7280;
-}
+.modal-mensaje { font-size: 1rem; color: #1a1a2e; font-weight: 500; line-height: 1.6; margin-bottom: 1.5rem; }
+.modal-textarea { width: 100%; padding: 10px 14px; border: 1.5px solid rgba(117,93,122,0.2); border-radius: 12px; font-size: 0.9rem; resize: vertical; outline: none; font-family: inherit; box-sizing: border-box; margin-bottom: 1.25rem; }
+.modal-textarea:focus { border-color: #755D7A; }
+.modal-btns { display: flex; gap: 0.75rem; justify-content: center; }
+.modal-btn { padding: 10px 22px; border-radius: 999px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s; }
+.modal-btn--cancel { background: #f3f4f6; color: #6b7280; }
 .modal-btn--cancel:hover { background: #e5e7eb; }
-
-.modal-btn--confirm {
-  background: #ef4444;
-  color: white;
-}
+.modal-btn--confirm { background: #ef4444; color: white; }
 .modal-btn--confirm:hover { background: #dc2626; }
+.modal-btn--ok { background: #22c55e; color: white; }
+.modal-btn--ok:hover { background: #16a34a; }
+
+/* Detalle solicitud */
+.detalle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; }
+.detalle-header h2 { font-size: 1.3rem; font-weight: 800; color: #1a1a2e; margin: 0; }
+.detalle-estado { padding: 4px 14px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.detalle-estado--pend { background: #fef3c7; color: #92400e; }
+.detalle-estado--apr { background: #dcfce7; color: #166534; }
+.detalle-estado--rec { background: #fee2e2; color: #991b1b; }
+.detalle-body p { font-size: 0.9rem; color: #4a4a6a; margin: 0.4rem 0; line-height: 1.5; }
+.detalle-body hr { border: none; border-top: 1px solid #eee; margin: 1rem 0; }
+.detalle-texto { background: #FCF4FB; border-radius: 10px; padding: 0.9rem; white-space: pre-line; word-break: break-word; }
+.detalle-rechazo { background: #fef2f2; border-left: 3px solid #ef4444; padding: 0.75rem 1rem; border-radius: 6px; margin-top: 1rem; color: #991b1b; font-size: 0.875rem; }
+.detalle-acciones { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+/* Badges nuevos */
+.admin-badge--pend { background: #fef3c7; color: #92400e; }
+.admin-nav-badge--alert { background: #ef4444 !important; color: white !important; }
+.admin-stat-card--alert { border: 2px solid #fca5a5; background: #fef2f2; }
+.admin-btn--ok { background: #dcfce7; }
+.admin-btn--ok:hover { background: #bbf7d0; }

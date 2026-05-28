@@ -1,0 +1,40 @@
+.mis-sol-page { min-height: 100vh; background: #FCF4FB; padding: 2.5rem 1.5rem 4rem; }
+.mis-sol-container { max-width: 800px; margin: 0 auto; }
+
+.mis-sol-header { margin-bottom: 2rem; }
+.mis-sol-back { color: #755D7A; text-decoration: none; font-weight: 600; font-size: 0.875rem; }
+.mis-sol-back:hover { text-decoration: underline; }
+.mis-sol-titulo { font-size: 2rem; font-weight: 800; color: #1a1a2e; margin: 0.75rem 0 0.4rem; }
+.mis-sol-subtitulo { font-size: 0.95rem; color: #6b7280; }
+
+.mis-sol-loading { text-align: center; padding: 4rem; color: #755D7A; }
+.mis-sol-spinner { width: 40px; height: 40px; border: 4px solid #e5d5e8; border-top-color: #755D7A; border-radius: 50%; margin: 0 auto 1rem; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.mis-sol-empty { text-align: center; padding: 4rem 1rem; }
+.mis-sol-empty-icon { font-size: 3.5rem; display: block; margin-bottom: 1rem; }
+.mis-sol-empty-titulo { font-size: 1.1rem; color: #6b7280; margin-bottom: 1.5rem; }
+.mis-sol-crear-btn { display: inline-block; background: linear-gradient(135deg, #755D7A, #7F468A); color: white; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 700; transition: transform 0.2s; }
+.mis-sol-crear-btn:hover { transform: translateY(-2px); }
+
+.mis-sol-lista { display: flex; flex-direction: column; gap: 1rem; }
+.mis-sol-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(117,93,122,0.1); border-left: 4px solid #d1d5db; box-shadow: 0 2px 12px rgba(117,93,122,0.05); }
+.mis-sol-card--pend { border-left-color: #f59e0b; }
+.mis-sol-card--apr { border-left-color: #22c55e; }
+.mis-sol-card--rec { border-left-color: #ef4444; }
+
+.mis-sol-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+.mis-sol-card-titulo { font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin: 0; word-break: break-word; }
+.mis-sol-estado { padding: 5px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.mis-sol-estado--pend { background: #fef3c7; color: #92400e; }
+.mis-sol-estado--apr { background: #dcfce7; color: #166534; }
+.mis-sol-estado--rec { background: #fee2e2; color: #991b1b; }
+
+.mis-sol-card-info { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: #6b7280; margin-bottom: 0.75rem; }
+
+.mis-sol-rechazo { background: #fef2f2; border-radius: 10px; padding: 0.9rem; font-size: 0.875rem; color: #991b1b; line-height: 1.5; word-break: break-word; }
+.mis-sol-pendiente-nota { background: #fffbeb; border-radius: 10px; padding: 0.9rem; font-size: 0.85rem; color: #92400e; line-height: 1.5; }
+
+.mis-sol-card-acciones { margin-top: 0.5rem; }
+.mis-sol-ver-btn { color: #755D7A; font-weight: 700; text-decoration: none; font-size: 0.9rem; }
+.mis-sol-ver-btn:hover { text-decoration: underline; }

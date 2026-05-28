@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID, inject, ChangeDetectorRef, NgZone } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -11,7 +11,7 @@ interface CategoriaItem { idCategoria: number; nombre: string; }
 @Component({
   selector: 'app-crear-campana',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './crear-campana.html',
   styleUrls: ['./crear-campana.css']
 })
@@ -23,6 +23,10 @@ export class CrearCampana implements OnInit {
   categorias: CategoriaItem[] = [];
   categoriasSeleccionadas: number[] = [];  // múltiples categorías
   paso = 1;
+  // Mini-formulario de solicitud
+  solicitudMotivo = '';
+  solicitudOrganizacion = '';
+  solicitudEnviada = false;
   guardando = false;
   errorMsg = '';
 
@@ -47,6 +51,10 @@ export class CrearCampana implements OnInit {
       .join(', ') || 'Ninguna seleccionada';
   }
 
+  get categoriasSeleccionadasObj(): CategoriaItem[] {
+    return this.categorias.filter(c => this.categoriasSeleccionadas.includes(c.idCategoria));
+  }
+
   get descripcionHtml(): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(this.markdownToHtml(this.form.value.descripcionLarga ?? ''));
   }
@@ -54,7 +62,7 @@ export class CrearCampana implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute,
     public authService: AuthService,
     private cdr: ChangeDetectorRef,
@@ -81,7 +89,7 @@ export class CrearCampana implements OnInit {
             const categoriaId = this.route.snapshot.queryParamMap.get('categoriaId');
             if (categoriaId) {
               const id = parseInt(categoriaId, 10);
-              if (!this.categoriasSeleccionadas.includes(id)) {
+              if (!isNaN(id) && !this.categoriasSeleccionadas.includes(id)) {
                 this.categoriasSeleccionadas = [id];
               }
             }
@@ -100,6 +108,7 @@ export class CrearCampana implements OnInit {
     } else {
       this.categoriasSeleccionadas = this.categoriasSeleccionadas.filter(c => c !== id);
     }
+    this.cdr.detectChanges();
   }
 
   esCategoriaSeleccionada(id: number): boolean {
@@ -191,26 +200,46 @@ export class CrearCampana implements OnInit {
 
   volver(): void { this.paso = 1; this.errorMsg = ''; }
 
+  // Antes "publicar" - ahora abre el mini-formulario de solicitud
   publicar(): void {
     if (!this.form.valid || this.categoriasSeleccionadas.length === 0) return;
+    this.paso = 3; // ir al mini-formulario
+    this.errorMsg = '';
+    this.cdr.detectChanges();
+  }
+
+  // Envia la SOLICITUD (no crea la campaña, la crea el admin al aprobar)
+  enviarSolicitud(): void {
+    if (!this.solicitudMotivo.trim() || !this.solicitudOrganizacion.trim()) {
+      this.errorMsg = 'Rellena el motivo y la organización';
+      return;
+    }
     this.guardando = true;
     this.errorMsg = '';
 
     const headers = { Authorization: `Bearer ${this.authService.getToken()}` };
     const payload = {
-      titulo:           this.form.value.titulo,
-      descripcionLarga: this.form.value.descripcionLarga,
-      montoObjetivo:    this.form.value.montoObjetivo,
-      fechaFin:         this.form.value.fechaFin,
-      idCategorias:     this.categoriasSeleccionadas
+      titulo:        this.form.value.titulo,
+      descripcion:   this.form.value.descripcionLarga,
+      montoObjetivo: this.form.value.montoObjetivo,
+      fechaFin:      this.form.value.fechaFin,
+      categoriasIds: this.categoriasSeleccionadas.join(','),
+      motivo:        this.solicitudMotivo.trim(),
+      organizacion:  this.solicitudOrganizacion.trim()
     };
 
-    this.http.post<any>('http://localhost:8080/api/campanias/crear', payload, { headers }).subscribe({
-      next: (campana) => {
-        if (this.imagenSeleccionada) this.subirImagen(campana.idCampania, headers);
-        else { this.guardando = false; this.router.navigate(['/campana', campana.idCampania]); }
+    this.http.post<any>('http://localhost:8080/api/solicitudes', payload, { headers }).subscribe({
+      next: () => {
+        this.guardando = false;
+        this.solicitudEnviada = true;
+        this.paso = 4; // pantalla de confirmacion
+        this.cdr.detectChanges();
       },
-      error: (err) => { this.guardando = false; this.errorMsg = err.error ?? 'Error al publicar'; }
+      error: (err) => {
+        this.guardando = false;
+        this.errorMsg = err.error ?? 'Error al enviar la solicitud';
+        this.cdr.detectChanges();
+      }
     });
   }
 

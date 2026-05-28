@@ -10,6 +10,56 @@
   </div>
 </div>
 
+<!-- Modal de rechazo -->
+<div *ngIf="mostrarModalRechazo" class="modal-overlay" (click)="cancelarRechazo()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-icon">✋</div>
+    <p class="modal-mensaje">¿Por qué rechazas la solicitud "{{ solicitudARechazar?.titulo }}"?</p>
+    <textarea [(ngModel)]="motivoRechazo" rows="3" class="modal-textarea"
+      placeholder="Explica el motivo del rechazo (se enviará al creador)..."></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn--cancel" (click)="cancelarRechazo()">Cancelar</button>
+      <button class="modal-btn modal-btn--confirm" (click)="confirmarRechazo()">Rechazar solicitud</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal detalle solicitud -->
+<div *ngIf="solicitudDetalle" class="modal-overlay" (click)="cerrarDetalle()">
+  <div class="modal-box modal-box--detalle" (click)="$event.stopPropagation()">
+    <div class="detalle-header">
+      <h2>{{ solicitudDetalle.titulo }}</h2>
+      <span class="detalle-estado" [class.detalle-estado--pend]="solicitudDetalle.estado==='PENDIENTE'"
+        [class.detalle-estado--apr]="solicitudDetalle.estado==='APROBADA'"
+        [class.detalle-estado--rec]="solicitudDetalle.estado==='RECHAZADA'">
+        {{ solicitudDetalle.estado }}
+      </span>
+    </div>
+    <div class="detalle-body">
+      <p><strong>Solicitante:</strong> {{ solicitudDetalle.nombreSolicitante }} ({{ solicitudDetalle.emailSolicitante }})</p>
+      <p><strong>Organización:</strong> {{ solicitudDetalle.organizacion }}</p>
+      <p><strong>Meta:</strong> {{ solicitudDetalle.montoObjetivo | number:'1.0-0' }} €</p>
+      <p><strong>Fecha fin:</strong> {{ solicitudDetalle.fechaFin | date:'dd/MM/yyyy' }}</p>
+      <hr>
+      <p><strong>Descripción de la campaña:</strong></p>
+      <p class="detalle-texto">{{ solicitudDetalle.descripcion }}</p>
+      <hr>
+      <p><strong>Motivo de la solicitud:</strong></p>
+      <p class="detalle-texto">{{ solicitudDetalle.motivo }}</p>
+      <div *ngIf="solicitudDetalle.motivoRechazo" class="detalle-rechazo">
+        <strong>Motivo de rechazo:</strong> {{ solicitudDetalle.motivoRechazo }}
+      </div>
+    </div>
+    <div class="detalle-acciones" *ngIf="solicitudDetalle.estado==='PENDIENTE'">
+      <button class="modal-btn modal-btn--cancel" (click)="abrirRechazo(solicitudDetalle)">✋ Rechazar</button>
+      <button class="modal-btn modal-btn--ok" (click)="aprobarSolicitud(solicitudDetalle)">✅ Aprobar y publicar</button>
+    </div>
+    <div class="detalle-acciones" *ngIf="solicitudDetalle.estado!=='PENDIENTE'">
+      <button class="modal-btn modal-btn--cancel" (click)="cerrarDetalle()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div class="admin-page">
 
   <!-- Sidebar -->
@@ -21,6 +71,10 @@
     <nav class="admin-nav">
       <button class="admin-nav-item" [class.active]="seccionActiva==='dashboard'" (click)="seccionActiva='dashboard'">
         📊 Dashboard
+      </button>
+      <button class="admin-nav-item" [class.active]="seccionActiva==='solicitudes'" (click)="seccionActiva='solicitudes'">
+        📥 Solicitudes
+        <span class="admin-nav-badge admin-nav-badge--alert" *ngIf="solicitudesPendientes.length > 0">{{solicitudesPendientes.length}}</span>
       </button>
       <button class="admin-nav-item" [class.active]="seccionActiva==='campanias'" (click)="seccionActiva='campanias'">
         🚀 Campañas <span class="admin-nav-badge">{{campanias.length}}</span>
@@ -40,7 +94,7 @@
     <div class="admin-header">
       <div>
         <h1 class="admin-title">
-          {{seccionActiva==='dashboard'?'Dashboard':seccionActiva==='campanias'?'Gestión de Campañas':'Gestión de Usuarios'}}
+          {{seccionActiva==='dashboard'?'Dashboard':seccionActiva==='solicitudes'?'Solicitudes de Campañas':seccionActiva==='campanias'?'Gestión de Campañas':'Gestión de Usuarios'}}
         </h1>
         <p class="admin-subtitle">Panel de administración · 4TheWomen</p>
       </div>
@@ -56,6 +110,10 @@
         <div class="admin-stat-card">
           <span class="admin-stat-icon">🚀</span>
           <div><span class="admin-stat-num">{{stats.totalCampanias}}</span><span class="admin-stat-lbl">Campañas activas</span></div>
+        </div>
+        <div class="admin-stat-card admin-stat-card--alert" *ngIf="solicitudesPendientes.length > 0" (click)="seccionActiva='solicitudes'" style="cursor:pointer">
+          <span class="admin-stat-icon">📥</span>
+          <div><span class="admin-stat-num">{{solicitudesPendientes.length}}</span><span class="admin-stat-lbl">Solicitudes pendientes</span></div>
         </div>
         <div class="admin-stat-card">
           <span class="admin-stat-icon">👥</span>
@@ -77,10 +135,52 @@
       <div class="admin-quick-actions">
         <h2 class="admin-section-title">Accesos rápidos</h2>
         <div class="admin-quick-grid">
+          <button class="admin-quick-btn" (click)="seccionActiva='solicitudes'">📥 Ver solicitudes</button>
           <button class="admin-quick-btn" (click)="seccionActiva='campanias'">🚀 Ver campañas</button>
           <button class="admin-quick-btn" (click)="seccionActiva='usuarios'">👥 Ver usuarios</button>
           <a routerLink="/categoria" class="admin-quick-btn">🗂️ Ver categorías</a>
         </div>
+      </div>
+    </div>
+
+    <!-- SOLICITUDES -->
+    <div *ngIf="seccionActiva==='solicitudes'">
+      <div class="admin-toolbar">
+        <span class="admin-count">{{solicitudesPendientes.length}} pendientes · {{solicitudes.length}} en total</span>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>ID</th><th>Campaña</th><th>Solicitante</th><th>Organización</th><th>Meta</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of solicitudes">
+              <td class="admin-td-id">#{{s.id}}</td>
+              <td class="admin-td-titulo">{{s.titulo}}</td>
+              <td>{{s.nombreSolicitante}}</td>
+              <td>{{s.organizacion}}</td>
+              <td>{{s.montoObjetivo | number:'1.0-0'}} €</td>
+              <td>
+                <span class="admin-badge"
+                  [class.admin-badge--pend]="s.estado==='PENDIENTE'"
+                  [class.admin-badge--activo]="s.estado==='APROBADA'"
+                  [class.admin-badge--baja]="s.estado==='RECHAZADA'">
+                  {{s.estado}}
+                </span>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <button class="admin-btn admin-btn--view" (click)="verDetalle(s)" title="Ver detalle">👁</button>
+                  <button *ngIf="s.estado==='PENDIENTE'" class="admin-btn admin-btn--ok" (click)="aprobarSolicitud(s)" title="Aprobar">✅</button>
+                  <button *ngIf="s.estado==='PENDIENTE'" class="admin-btn admin-btn--del" (click)="abrirRechazo(s)" title="Rechazar">✋</button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="solicitudes.length===0">
+              <td colspan="7" class="admin-empty">No hay solicitudes todavía</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

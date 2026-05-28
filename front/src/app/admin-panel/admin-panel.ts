@@ -5,34 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 
-interface Stats {
-  totalCampanias: number;
-  totalUsuarios: number;
-  totalCreadores: number;
-  totalDonantes: number;
-  totalRecaudado: number;
-}
-
-interface CampaniaAdmin {
-  idCampania: number;
-  titulo: string;
-  nombreCreador: string;
-  nombreCategoria: string;
-  montoObjetivo: number;
-  montoActual: number;
-  estado: string;
-  porcentajeCompletado: number;
-  diasRestantes: number;
-}
-
-interface UsuarioAdmin {
-  idUsuario: number;
-  nombre: string;
-  email: string;
-  rol: string;
-  fechaAlta: string;
-  activo: boolean;
-}
+interface Stats { totalCampanias: number; totalUsuarios: number; totalCreadores: number; totalDonantes: number; totalRecaudado: number; }
+interface CampaniaAdmin { idCampania: number; titulo: string; nombreCreador: string; nombreCategoria: string; montoObjetivo: number; montoActual: number; estado: string; porcentajeCompletado: number; diasRestantes: number; }
+interface UsuarioAdmin { idUsuario: number; nombre: string; email: string; rol: string; fechaAlta: string; activo: boolean; }
+interface Solicitud { id: number; tipo: string; estado: string; titulo: string; descripcion: string; montoObjetivo: number; fechaFin: string; categoriasIds: string; motivo: string; organizacion: string; motivoRechazo: string; nombreSolicitante: string; emailSolicitante: string; fechaSolicitud: string; }
 
 @Component({
   selector: 'app-admin-panel',
@@ -43,19 +19,25 @@ interface UsuarioAdmin {
 })
 export class AdminPanel implements OnInit {
 
-  seccionActiva: 'dashboard' | 'campanias' | 'usuarios' = 'dashboard';
+  seccionActiva: 'dashboard' | 'campanias' | 'usuarios' | 'solicitudes' = 'dashboard';
   stats: Stats | null = null;
   campanias: CampaniaAdmin[] = [];
   usuarios: UsuarioAdmin[] = [];
+  solicitudes: Solicitud[] = [];
   mensajeExito = '';
   mensajeError = '';
   filtroCampania = '';
   filtroUsuario = '';
 
-  // Modal de confirmacion personalizado
   mostrarModal = false;
   modalMensaje = '';
   modalCallback: (() => void) | null = null;
+
+  mostrarModalRechazo = false;
+  solicitudARechazar: Solicitud | null = null;
+  motivoRechazo = '';
+
+  solicitudDetalle: Solicitud | null = null;
 
   constructor(
     private http: HttpClient,
@@ -72,11 +54,11 @@ export class AdminPanel implements OnInit {
     this.cargarStats();
     this.cargarCampanias();
     this.cargarUsuarios();
+    this.cargarSolicitudes();
   }
 
-  get headers() {
-    return { Authorization: `Bearer ${this.authService.getToken()}` };
-  }
+  get headers() { return { Authorization: `Bearer ${this.authService.getToken()}` }; }
+  get solicitudesPendientes(): Solicitud[] { return this.solicitudes.filter(s => s.estado === 'PENDIENTE'); }
 
   cargarStats(): void {
     this.ngZone.run(() => {
@@ -84,133 +66,123 @@ export class AdminPanel implements OnInit {
         .subscribe({ next: (d) => { this.stats = d; this.cdr.detectChanges(); }, error: () => {} });
     });
   }
-
   cargarCampanias(): void {
     this.ngZone.run(() => {
       this.http.get<CampaniaAdmin[]>('http://localhost:8080/api/admin/campanias', { headers: this.headers })
         .subscribe({ next: (d) => { this.campanias = d; this.cdr.detectChanges(); }, error: () => {} });
     });
   }
-
   cargarUsuarios(): void {
     this.ngZone.run(() => {
       this.http.get<UsuarioAdmin[]>('http://localhost:8080/api/admin/usuarios', { headers: this.headers })
         .subscribe({ next: (d) => { this.usuarios = d; this.cdr.detectChanges(); }, error: () => {} });
     });
   }
+  cargarSolicitudes(): void {
+    this.ngZone.run(() => {
+      this.http.get<Solicitud[]>('http://localhost:8080/api/solicitudes', { headers: this.headers })
+        .subscribe({ next: (d) => { this.solicitudes = d; this.cdr.detectChanges(); }, error: () => {} });
+    });
+  }
 
-  // ── MODAL ────────────────────────────────────────────────────────────────
   abrirModal(mensaje: string, callback: () => void): void {
-    this.modalMensaje = mensaje;
-    this.modalCallback = callback;
-    this.mostrarModal = true;
-    this.cdr.detectChanges();
+    this.modalMensaje = mensaje; this.modalCallback = callback; this.mostrarModal = true; this.cdr.detectChanges();
   }
-
   ejecutarModal(): void {
-    this.mostrarModal = false;
-    if (this.modalCallback) this.modalCallback();
-    this.modalCallback = null;
-    this.cdr.detectChanges();
+    this.mostrarModal = false; if (this.modalCallback) this.modalCallback(); this.modalCallback = null; this.cdr.detectChanges();
   }
+  cancelarModal(): void { this.mostrarModal = false; this.modalCallback = null; this.cdr.detectChanges(); }
 
-  cancelarModal(): void {
-    this.mostrarModal = false;
-    this.modalCallback = null;
-    this.cdr.detectChanges();
-  }
+  verDetalle(s: Solicitud): void { this.solicitudDetalle = s; this.cdr.detectChanges(); }
+  cerrarDetalle(): void { this.solicitudDetalle = null; this.cdr.detectChanges(); }
 
-  // ── CAMPAÑAS ─────────────────────────────────────────────────────────────
-  borrarCampania(id: number, titulo: string): void {
+  aprobarSolicitud(s: Solicitud): void {
     this.abrirModal(
-      `¿Eliminar la campaña "${titulo}"? Esta acción no se puede deshacer.`,
+      `¿Aprobar la campaña "${s.titulo}" de ${s.nombreSolicitante}? Se creará y publicará automáticamente.`,
       () => {
-        this.http.delete(`http://localhost:8080/api/admin/campanias/${id}`,
-          { headers: this.headers, responseType: 'text' })
+        this.http.put(`http://localhost:8080/api/solicitudes/${s.id}/aprobar`, {}, { headers: this.headers })
           .subscribe({
             next: () => {
-              this.campanias = this.campanias.filter(c => c.idCampania !== id);
-              this.ok('Campaña eliminada correctamente');
-              this.cdr.detectChanges();
+              s.estado = 'APROBADA';
+              this.ok(`Campaña "${s.titulo}" aprobada y publicada`);
+              this.cargarCampanias(); this.cargarStats();
+              this.solicitudDetalle = null; this.cdr.detectChanges();
             },
-            error: () => this.err('Error al eliminar la campaña')
+            error: () => this.err('Error al aprobar la solicitud')
           });
       }
     );
   }
 
-  cambiarEstado(id: number, estado: string): void {
-    this.http.put(`http://localhost:8080/api/admin/campanias/${id}/estado?estado=${estado}`,
-      {}, { headers: this.headers, responseType: 'text' })
+  abrirRechazo(s: Solicitud): void {
+    this.solicitudARechazar = s; this.motivoRechazo = ''; this.mostrarModalRechazo = true; this.cdr.detectChanges();
+  }
+  confirmarRechazo(): void {
+    if (!this.solicitudARechazar) return;
+    const s = this.solicitudARechazar;
+    this.http.put(`http://localhost:8080/api/solicitudes/${s.id}/rechazar`,
+      { motivoRechazo: this.motivoRechazo || 'No especificado' }, { headers: this.headers })
       .subscribe({
         next: () => {
-          const c = this.campanias.find(x => x.idCampania === id);
-          if (c) { c.estado = estado.toUpperCase(); this.cdr.detectChanges(); }
-          this.ok('Estado actualizado');
+          s.estado = 'RECHAZADA'; s.motivoRechazo = this.motivoRechazo;
+          this.ok(`Solicitud "${s.titulo}" rechazada`);
+          this.mostrarModalRechazo = false; this.solicitudARechazar = null;
+          this.solicitudDetalle = null; this.cdr.detectChanges();
         },
+        error: () => this.err('Error al rechazar la solicitud')
+      });
+  }
+  cancelarRechazo(): void {
+    this.mostrarModalRechazo = false; this.solicitudARechazar = null; this.motivoRechazo = ''; this.cdr.detectChanges();
+  }
+
+  borrarCampania(id: number, titulo: string): void {
+    this.abrirModal(`¿Eliminar la campaña "${titulo}"? Esta acción no se puede deshacer.`, () => {
+      this.http.delete(`http://localhost:8080/api/admin/campanias/${id}`, { headers: this.headers, responseType: 'text' })
+        .subscribe({
+          next: () => { this.campanias = this.campanias.filter(c => c.idCampania !== id); this.ok('Campaña eliminada correctamente'); this.cdr.detectChanges(); },
+          error: () => this.err('Error al eliminar la campaña')
+        });
+    });
+  }
+
+  cambiarEstado(id: number, estado: string): void {
+    this.http.put(`http://localhost:8080/api/admin/campanias/${id}/estado?estado=${estado}`, {}, { headers: this.headers, responseType: 'text' })
+      .subscribe({
+        next: () => { const c = this.campanias.find(x => x.idCampania === id); if (c) { c.estado = estado.toUpperCase(); this.cdr.detectChanges(); } this.ok('Estado actualizado'); },
         error: () => this.err('Error al cambiar estado')
       });
   }
 
-  // ── USUARIOS ─────────────────────────────────────────────────────────────
   cambiarRol(id: number, rol: string): void {
-    this.http.put(`http://localhost:8080/api/admin/usuarios/${id}/rol?rol=${rol}`,
-      {}, { headers: this.headers, responseType: 'text' })
+    this.http.put(`http://localhost:8080/api/admin/usuarios/${id}/rol?rol=${rol}`, {}, { headers: this.headers, responseType: 'text' })
       .subscribe({
-        next: () => {
-          const u = this.usuarios.find(x => x.idUsuario === id);
-          if (u) { u.rol = rol; this.cdr.detectChanges(); }
-          this.ok('Rol actualizado');
-        },
+        next: () => { const u = this.usuarios.find(x => x.idUsuario === id); if (u) { u.rol = rol; this.cdr.detectChanges(); } this.ok('Rol actualizado'); },
         error: () => this.err('Error al cambiar rol')
       });
   }
 
   darDeBaja(id: number, nombre: string): void {
-    this.abrirModal(
-      `¿Dar de baja al usuario "${nombre}"? Perderá acceso a la plataforma.`,
-      () => {
-        this.http.put(`http://localhost:8080/api/admin/usuarios/${id}/baja`,
-          {}, { headers: this.headers, responseType: 'text' })
-          .subscribe({
-            next: () => {
-              const u = this.usuarios.find(x => x.idUsuario === id);
-              if (u) { u.activo = false; this.cdr.detectChanges(); }
-              this.ok('Usuario dado de baja');
-            },
-            error: () => this.err('Error al dar de baja')
-          });
-      }
-    );
+    this.abrirModal(`¿Dar de baja al usuario "${nombre}"? Perderá acceso a la plataforma.`, () => {
+      this.http.put(`http://localhost:8080/api/admin/usuarios/${id}/baja`, {}, { headers: this.headers, responseType: 'text' })
+        .subscribe({
+          next: () => { const u = this.usuarios.find(x => x.idUsuario === id); if (u) { u.activo = false; this.cdr.detectChanges(); } this.ok('Usuario dado de baja'); },
+          error: () => this.err('Error al dar de baja')
+        });
+    });
   }
 
-  // ── FILTROS ──────────────────────────────────────────────────────────────
   get campaniasFiltradas(): CampaniaAdmin[] {
     if (!this.filtroCampania) return this.campanias;
     const f = this.filtroCampania.toLowerCase();
-    return this.campanias.filter(c =>
-      c.titulo?.toLowerCase().includes(f) ||
-      c.nombreCreador?.toLowerCase().includes(f) ||
-      c.nombreCategoria?.toLowerCase().includes(f));
+    return this.campanias.filter(c => c.titulo?.toLowerCase().includes(f) || c.nombreCreador?.toLowerCase().includes(f) || c.nombreCategoria?.toLowerCase().includes(f));
   }
-
   get usuariosFiltrados(): UsuarioAdmin[] {
     if (!this.filtroUsuario) return this.usuarios;
     const f = this.filtroUsuario.toLowerCase();
-    return this.usuarios.filter(u =>
-      u.nombre?.toLowerCase().includes(f) ||
-      u.email?.toLowerCase().includes(f) ||
-      u.rol?.toLowerCase().includes(f));
+    return this.usuarios.filter(u => u.nombre?.toLowerCase().includes(f) || u.email?.toLowerCase().includes(f) || u.rol?.toLowerCase().includes(f));
   }
 
-  // ── HELPERS ──────────────────────────────────────────────────────────────
-  private ok(msg: string): void {
-    this.mensajeExito = msg;
-    setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
-  }
-
-  private err(msg: string): void {
-    this.mensajeError = msg;
-    setTimeout(() => { this.mensajeError = ''; this.cdr.detectChanges(); }, 4000);
-  }
+  private ok(msg: string): void { this.mensajeExito = msg; setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000); }
+  private err(msg: string): void { this.mensajeError = msg; setTimeout(() => { this.mensajeError = ''; this.cdr.detectChanges(); }, 4000); }
 }

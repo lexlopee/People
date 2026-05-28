@@ -76,6 +76,11 @@
                   👤 Mi perfil
                 </a>
               </li>
+              <li *ngIf="authService.puedeCrearCampana()">
+                <a routerLink="/mis-solicitudes" class="flex items-center gap-2 px-4 py-2 hover:bg-[#FCF4FB] transition text-sm">
+                  📋 Mis solicitudes
+                </a>
+              </li>
               <li *ngIf="authService.esAdmin()">
                 <a routerLink="/admin" class="flex items-center gap-2 px-4 py-2 hover:bg-[#FCF4FB] transition text-sm font-semibold text-[#755D7A]">
                   ⚙️ Panel admin

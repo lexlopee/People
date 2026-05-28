@@ -62,7 +62,6 @@
           </div>
 
           <textarea formControlName="descripcionLarga" rows="10" class="crear-textarea"
-            style="word-break:break-word;overflow-wrap:break-word;white-space:pre-wrap;overflow-x:hidden;resize:vertical;width:100%;max-width:100%;box-sizing:border-box;"
             [class.crear-input--error]="campoInvalido('descripcionLarga')"
             placeholder="Explica el propósito de tu campaña...
 
@@ -182,88 +181,160 @@ Y emojis para llamar la atención 💜">
 
 
 <!-- ===== PASO 2: PREVISUALIZACIÓN ===== -->
-<div *ngIf="paso === 2" class="campana-detalle-page">
+<div *ngIf="paso === 2" class="preview-page">
 
-  <div class="campana-breadcrumb">
-    <div class="campana-breadcrumb-inner">
-      <button (click)="volver()" class="campana-back">← Editar campaña</button>
-      <span class="campana-sep">›</span>
-      <span class="campana-cat">{{ nombresCategoriasSeleccionadas }}</span>
-      <span class="campana-sep">›</span>
-      <span class="campana-cat-title">{{ form.value.titulo }}</span>
+  <!-- Banner superior -->
+  <div class="preview-banner">
+    <div class="preview-banner-inner">
+      <span class="preview-banner-text">
+        <span class="preview-banner-icon">👁</span>
+        Estás viendo una <strong>previsualización</strong> — así verán tu campaña los donantes
+      </span>
+      <button (click)="volver()" class="preview-banner-btn">✏️ Seguir editando</button>
     </div>
   </div>
 
-  <div class="preview-banner">
-    👁 Estás viendo una previsualización — aún no está publicada
-    <button (click)="volver()" class="preview-banner-btn">Seguir editando</button>
-  </div>
+  <div class="preview-layout">
+    <main class="preview-main">
 
-  <div class="campana-layout">
-    <main class="campana-main">
-
-      <!-- Hero: imagen real si está seleccionada -->
-      <div class="campana-hero-img" [style.background-image]="imagenPreview ? 'url(' + imagenPreview + ')' : ''"
-           [class.campana-hero-con-imagen]="!!imagenPreview">
+      <!-- Hero imagen -->
+      <div class="preview-hero" [style.background-image]="imagenPreview ? 'url(' + imagenPreview + ')' : ''"
+           [class.preview-hero--img]="!!imagenPreview">
         <ng-container *ngIf="!imagenPreview">
-          <span class="campana-hero-emoji">✨</span>
-          <span class="campana-hero-label">Sin imagen seleccionada</span>
+          <span class="preview-hero-emoji">🖼️</span>
+          <span class="preview-hero-label">Sin imagen — añade una para destacar</span>
         </ng-container>
-        <div class="campana-hero-badges">
-          <span class="campana-badge campana-badge--cat">{{ nombresCategoriasSeleccionadas }}</span>
-          <span class="campana-badge campana-badge--activa">Nueva</span>
+        <div class="preview-hero-badges">
+          <span class="preview-badge preview-badge--nueva">✨ Nueva</span>
         </div>
       </div>
 
-      <div class="campana-header-box">
-        <h1 class="campana-titulo">{{ form.value.titulo }}</h1>
-        <div class="campana-meta-row">
-          <span class="campana-meta-item">👤 {{ authService.usuario?.nombre }}</span>
-          <span class="campana-meta-item">📍 {{ form.value.ubicacion || 'España' }}</span>
+      <!-- Categorías -->
+      <div class="preview-cats">
+        <span *ngFor="let cat of categoriasSeleccionadasObj"
+              class="preview-cat-tag">{{ cat.nombre }}</span>
+      </div>
+
+      <!-- Título y autor -->
+      <div class="preview-header">
+        <h1 class="preview-titulo">{{ form.value.titulo }}</h1>
+        <div class="preview-meta">
+          <span class="preview-meta-item">
+            <span class="preview-avatar">{{ authService.usuario?.nombre?.charAt(0)?.toUpperCase() }}</span>
+            {{ authService.usuario?.nombre }}
+          </span>
+          <span class="preview-meta-sep">•</span>
+          <span class="preview-meta-item">📍 {{ form.value.ubicacion || 'España' }}</span>
         </div>
       </div>
 
-      <div class="campana-section-box">
-        <span class="campana-section-tag">SOBRE ESTA CAMPAÑA</span>
-        <p class="campana-body" style="white-space: pre-line">{{ form.value.descripcionLarga }}</p>
+      <!-- Descripción con formato Markdown -->
+      <div class="preview-section">
+        <span class="preview-section-tag">SOBRE ESTA CAMPAÑA</span>
+        <h2 class="preview-section-title">¿Por qué necesito tu ayuda?</h2>
+        <div class="preview-body md-content" [innerHTML]="descripcionHtml"></div>
       </div>
 
     </main>
 
-    <aside class="campana-sidebar">
-      <div class="campana-sidebar-card">
-        <div class="campana-progreso-wrap">
-          <div class="campana-progreso-header">
-            <span class="campana-monto-recaudado">0 €</span>
-            <span class="campana-pct-label">0%</span>
+    <!-- Sidebar -->
+    <aside class="preview-sidebar">
+      <div class="preview-card">
+        <div class="preview-progreso">
+          <div class="preview-progreso-top">
+            <span class="preview-monto">0 €</span>
+            <span class="preview-pct">0%</span>
           </div>
-          <div class="campana-progreso-bar">
-            <div class="campana-progreso-fill" style="width: 0%"></div>
-          </div>
-          <p class="campana-progreso-meta">
-            recaudados de <strong>{{ form.value.montoObjetivo | number:'1.0-0' }} €</strong> de meta
+          <div class="preview-bar"><div class="preview-bar-fill" style="width: 0%"></div></div>
+          <p class="preview-progreso-meta">
+            de <strong>{{ form.value.montoObjetivo | number:'1.0-0' }} €</strong> objetivo
           </p>
         </div>
-        <div class="campana-stats-row">
-          <div class="campana-stat">
-            <span class="campana-stat-num">0</span>
-            <span class="campana-stat-lbl">Donantes</span>
+
+        <div class="preview-stats">
+          <div class="preview-stat">
+            <span class="preview-stat-num">0</span>
+            <span class="preview-stat-lbl">Donantes</span>
           </div>
-          <div class="campana-stat">
-            <span class="campana-stat-num">{{ diasPreview }}</span>
-            <span class="campana-stat-lbl">Días restantes</span>
+          <div class="preview-stat">
+            <span class="preview-stat-num">{{ diasPreview }}</span>
+            <span class="preview-stat-lbl">Días restantes</span>
           </div>
         </div>
 
-        <div *ngIf="errorMsg" class="crear-error" style="margin-bottom:1rem">⚠️ {{ errorMsg }}</div>
+        <div *ngIf="errorMsg" class="preview-error">⚠️ {{ errorMsg }}</div>
 
-        <div class="campana-acciones">
-          <button (click)="publicar()" [disabled]="guardando" class="campana-btn campana-btn--primary">
-            {{ guardando ? '⏳ Publicando...' : '🚀 Publicar campaña' }}
+        <div class="preview-acciones">
+          <button (click)="publicar()" [disabled]="guardando" class="preview-btn preview-btn--primary">
+            📤 Enviar a revisión
           </button>
-          <button (click)="volver()" class="campana-btn campana-btn--ghost">✏️ Seguir editando</button>
+          <button (click)="volver()" class="preview-btn preview-btn--ghost">✏️ Seguir editando</button>
+        </div>
+
+        <div class="preview-info">
+          <span>🔒</span>
+          <p>Tu campaña será revisada antes de publicarse.</p>
         </div>
       </div>
     </aside>
+  </div>
+</div>
+
+<!-- ===== PASO 3: MINI-FORMULARIO DE SOLICITUD ===== -->
+<div *ngIf="paso === 3" class="solicitud-page">
+  <div class="solicitud-box">
+    <span class="solicitud-tag">ÚLTIMO PASO</span>
+    <h1 class="solicitud-titulo">Cuéntanos un poco más</h1>
+    <p class="solicitud-subtitulo">
+      Antes de publicar tu campaña, nuestro equipo la revisará. Ayúdanos con esta información.
+    </p>
+
+    <div *ngIf="errorMsg" class="solicitud-error">⚠️ {{ errorMsg }}</div>
+
+    <div class="solicitud-campo">
+      <label class="solicitud-label">¿Por qué quieres crear esta campaña? *</label>
+      <textarea [(ngModel)]="solicitudMotivo" rows="4" class="solicitud-textarea"
+        placeholder="Explica brevemente el motivo y a quién ayudará..."></textarea>
+    </div>
+
+    <div class="solicitud-campo">
+      <label class="solicitud-label">Organización o entidad a la que perteneces *</label>
+      <input type="text" [(ngModel)]="solicitudOrganizacion" class="solicitud-input"
+        placeholder="Ej: Asociación Salud Solidaria (o 'Particular' si eres independiente)" />
+    </div>
+
+    <div class="solicitud-resumen">
+      <h3>📋 Resumen de tu campaña</h3>
+      <p><strong>Título:</strong> {{ form.value.titulo }}</p>
+      <p><strong>Meta:</strong> {{ form.value.montoObjetivo | number:'1.0-0' }} €</p>
+      <p><strong>Categorías:</strong> {{ nombresCategoriasSeleccionadas }}</p>
+    </div>
+
+    <div class="solicitud-acciones">
+      <button (click)="paso = 2" class="solicitud-btn solicitud-btn--ghost">← Volver</button>
+      <button (click)="enviarSolicitud()" [disabled]="guardando" class="solicitud-btn solicitud-btn--primary">
+        {{ guardando ? '⏳ Enviando...' : '✅ Enviar solicitud' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PASO 4: CONFIRMACIÓN ===== -->
+<div *ngIf="paso === 4" class="solicitud-page">
+  <div class="solicitud-box solicitud-box--exito">
+    <div class="solicitud-exito-icon">🎉</div>
+    <h1 class="solicitud-titulo">¡Solicitud enviada!</h1>
+    <p class="solicitud-subtitulo">
+      Tu campaña <strong>"{{ form.value.titulo }}"</strong> ha sido enviada a revisión.
+      Nuestro equipo la revisará y recibirás un email cuando sea aprobada.
+    </p>
+    <div class="solicitud-acciones solicitud-acciones--centro">
+      <button (click)="router.navigate(['/mis-solicitudes'])" class="solicitud-btn solicitud-btn--primary">
+        Ver mis solicitudes
+      </button>
+      <button (click)="router.navigate(['/categoria'])" class="solicitud-btn solicitud-btn--ghost">
+        Ir a categorías
+      </button>
+    </div>
   </div>
 </div>
